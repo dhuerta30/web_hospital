@@ -13,9 +13,6 @@ class WebController
 {
     public function index()
     {
-        $artify = DB::ArtifyCrud();
-        $render = $artify->dbTable("dhsjdghs")->render();
-
         $stencil = new ArtifyStencil();
         echo $stencil->render('web/home');
     }

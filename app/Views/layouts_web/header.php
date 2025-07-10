@@ -98,45 +98,47 @@ body.pojo-a11y-focusable a:focus{ outline-style: solid !important;	outline-width
         <div class="wrap">
             <nav id="menu-principal">
                 <!-- Menu Principal - Móvil -->
-                <ul id="menu-main-menu" class="menu-main"><li id="menu-item-48" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48"><a href="http://www.saludresponde.cl">Inicio</a></li>
-<li id="menu-item-31" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-31"><a>Salud Responde</a>
-<ul class="sub-menu">
-	<li id="menu-item-6068" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6068"><a href="#">Qué es Salud Responde</a></li>
-</ul>
-</li>
-<li id="menu-item-32" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-32"><a href="#">Información Administrativa</a>
-<ul class="sub-menu">
-	<li id="menu-item-20032" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20032"><a href="https://saludresponde.minsal.cl/ley-n21-746-modifica-normativa-sobre-licencias-medicas/">Ley N°21.746 modifica normativa sobre licencias médicas</a></li>
-</ul>
-</li>
-<li id="menu-item-38" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-38"><a>Preguntas Frecuentes</a>
-<ul class="sub-menu">
-	<li id="menu-item-20002" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20002"><a href="https://saludresponde.minsal.cl/puesta-al-dia-vacunas-2025/">Puesta al día Vacunación VPH y Sarampión</a></li>
-	<ul class="sub-menu">
-		<li id="menu-item-3464" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3464"><a href="https://saludresponde.minsal.cl/formularios-pnac/">Formularios PNAC</a></li>
-		<li id="menu-item-10203" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10203"><a href="https://saludresponde.minsal.cl/proyecto-de-fortalecimiento-lactancia-materna-y-pnac/">Fortalecimiento lactancia materna y PNAC</a></li>
-		<li id="menu-item-3955" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3955"><a href="https://saludresponde.minsal.cl/programa-alergia-proteina-leche-de-vaca/">Entrega Alimentos por Alergia a la Proteína de la Leche de Vaca</a></li>
-	</ul>
-</li>
-	<li id="menu-item-3949" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3949"><a href="https://saludresponde.minsal.cl/profilaxis-pre-exposicion-o-prep/">Profilaxis Pre Exposición VIH</a></li>
-</ul>
-</li>
-<li id="menu-item-33" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-33"><a>Difusión</a>
-<ul class="sub-menu">
-	<li id="menu-item-13844" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13844"><a href="https://saludresponde.minsal.cl/universalizacion-de-la-atencion-primaria-de-salud/">Universalización de la Atención Primaria de Salud</a></li>
-	<li id="menu-item-13264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13264"><a href="https://saludresponde.minsal.cl/calendario-epidemiologico/">Calendario Epidemiológico 2025</a></li>
-	<li id="menu-item-670" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-670"><a href="https://saludresponde.minsal.cl/historico-de-noticias/">Noticias</a></li>
-	<li id="menu-item-669" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-669"><a href="https://saludresponde.minsal.cl/boletines-salud-responde/">Boletines</a></li>
-</ul>
-</li>
-<li id="menu-item-10108" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-10108"><a>Intranet</a>
-<ul class="sub-menu">
-	<li id="menu-item-5735" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5735"><a href="https://saludresponde.minsal.cl/capacitacion/">Capacitación (acceso solo funcionarios)</a></li>
-	<li id="menu-item-10109" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10109"><a href="https://saludresponde.minsal.cl/monitoreo-de-calidad-de-la-llamada/">Monitoreo Calidad (acceso solo funcionarios)</a></li>
-	<li id="menu-item-18937" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-18937"><a href="https://saludresponde.minsal.cl/resultado-aseguramiento-calidad/">Sistema de aseguramiento de la calidad</a></li>
-</ul>
-</li>
-</ul>            </nav>
+                <ul id="menu-main-menu" class="menu-main">
+					<li id="menu-item-48" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48"><a href="http://www.saludresponde.cl">Inicio</a></li>
+				<li id="menu-item-31" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-31"><a>Salud Responde</a>
+				<ul class="sub-menu">
+					<li id="menu-item-6068" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6068"><a href="#">Qué es Salud Responde</a></li>
+				</ul>
+				</li>
+				<li id="menu-item-32" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-32"><a href="#">Información Administrativa</a>
+				<ul class="sub-menu">
+					<li id="menu-item-20032" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20032"><a href="https://saludresponde.minsal.cl/ley-n21-746-modifica-normativa-sobre-licencias-medicas/">Ley N°21.746 modifica normativa sobre licencias médicas</a></li>
+				</ul>
+				</li>
+				<li id="menu-item-38" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-38"><a>Preguntas Frecuentes</a>
+				<ul class="sub-menu">
+					<li id="menu-item-20002" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20002"><a href="https://saludresponde.minsal.cl/puesta-al-dia-vacunas-2025/">Puesta al día Vacunación VPH y Sarampión</a></li>
+					<ul class="sub-menu">
+						<li id="menu-item-3464" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3464"><a href="https://saludresponde.minsal.cl/formularios-pnac/">Formularios PNAC</a></li>
+						<li id="menu-item-10203" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10203"><a href="https://saludresponde.minsal.cl/proyecto-de-fortalecimiento-lactancia-materna-y-pnac/">Fortalecimiento lactancia materna y PNAC</a></li>
+						<li id="menu-item-3955" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3955"><a href="https://saludresponde.minsal.cl/programa-alergia-proteina-leche-de-vaca/">Entrega Alimentos por Alergia a la Proteína de la Leche de Vaca</a></li>
+					</ul>
+				</li>
+					<li id="menu-item-3949" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3949"><a href="https://saludresponde.minsal.cl/profilaxis-pre-exposicion-o-prep/">Profilaxis Pre Exposición VIH</a></li>
+				</ul>
+				</li>
+				<li id="menu-item-33" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-33"><a>Difusión</a>
+				<ul class="sub-menu">
+					<li id="menu-item-13844" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13844"><a href="https://saludresponde.minsal.cl/universalizacion-de-la-atencion-primaria-de-salud/">Universalización de la Atención Primaria de Salud</a></li>
+					<li id="menu-item-13264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13264"><a href="https://saludresponde.minsal.cl/calendario-epidemiologico/">Calendario Epidemiológico 2025</a></li>
+					<li id="menu-item-670" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-670"><a href="https://saludresponde.minsal.cl/historico-de-noticias/">Noticias</a></li>
+					<li id="menu-item-669" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-669"><a href="https://saludresponde.minsal.cl/boletines-salud-responde/">Boletines</a></li>
+				</ul>
+				</li>
+				<li id="menu-item-10108" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-10108"><a>Intranet</a>
+				<ul class="sub-menu">
+					<li id="menu-item-5735" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5735"><a href="https://saludresponde.minsal.cl/capacitacion/">Capacitación (acceso solo funcionarios)</a></li>
+					<li id="menu-item-10109" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10109"><a href="https://saludresponde.minsal.cl/monitoreo-de-calidad-de-la-llamada/">Monitoreo Calidad (acceso solo funcionarios)</a></li>
+					<li id="menu-item-18937" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-18937"><a href="https://saludresponde.minsal.cl/resultado-aseguramiento-calidad/">Sistema de aseguramiento de la calidad</a></li>
+				</ul>
+				</li>
+				</ul>            
+			</nav>
         </div>
     </div>
 
