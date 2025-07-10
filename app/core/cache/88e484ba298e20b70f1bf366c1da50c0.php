@@ -47,12 +47,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
     <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 
-    <!-- WordPress and oEmbed Links -->
-    <link rel="https://api.w.org/" href="https://saludresponde.minsal.cl/wp-json/" />
-    <link rel="alternate" type="application/json" href="https://saludresponde.minsal.cl/wp-json/wp/v2/pages/49" />
-    <link rel="alternate" type="application/json+oembed" href="https://saludresponde.minsal.cl/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fsaludresponde.minsal.cl%2F" />
-    <link rel="alternate" type="text/xml+oembed" href="https://saludresponde.minsal.cl/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fsaludresponde.minsal.cl%2F&amp;format=xml" />
-
     <!-- Inline Styles for Compatibility -->
     <style>
         img.wp-smiley, img.emoji {
