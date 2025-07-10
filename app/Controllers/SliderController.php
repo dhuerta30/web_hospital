@@ -72,6 +72,7 @@ class SliderController
         $artify->fieldTypes("imagen", "FILE_NEW");
         $artify->setSettings("searchbox", true);
         $artify->buttonHide("submitBtnSaveBack");
+        $artify->colRename("id_slider", "ID");
         $render = $artify->dbTable("slider")->render();
 
         $stencil = new ArtifyStencil();
