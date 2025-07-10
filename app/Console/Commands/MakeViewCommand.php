@@ -24,8 +24,8 @@ class MakeViewCommand extends Command
 
         // Lógica para generar el contenido de la vista
         $viewContent = '
-        <?php require "layouts/header.php"; ?>
-        <?php require "layouts/sidebar.php"; ?>
+        @include(\'layouts/header\')
+        @include(\'layouts/sidebar\')
         <div class="content-wrapper">
             <section class="content">
                 <div class="card mt-4">
@@ -33,9 +33,7 @@ class MakeViewCommand extends Command
 
                         <div class="row">
                             <div class="col-md-12">
-                                <h5>titulo</h5>
-                                <hr>
-                            
+                                {!! $render !!}
                             </div>
                         </div>
 
@@ -44,9 +42,9 @@ class MakeViewCommand extends Command
             </section>
         </div>
         <div id="artify-ajax-loader">
-            <img width="300" src="<?=$_ENV["BASE_URL"]?>app/libs/artify/images/ajax-loader.gif" class="artify-img-ajax-loader"/>
+            <img width="300" src="{{ $_ENV["BASE_URL"] }}app/libs/artify/images/ajax-loader.gif" class="artify-img-ajax-loader"/>
         </div>
-        <?php require "layouts/footer.php"; ?>';
+         @include(\'layouts/footer\')';
 
         // Guarda el contenido en el archivo
         $resultModel = file_put_contents($viewPath, $viewContent);
