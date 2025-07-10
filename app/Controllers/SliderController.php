@@ -52,6 +52,13 @@ class SliderController
                             <p class="artify_help_block help-block form-text with-errors"></p>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label">Url</label>
+                            {imagen}
+                            <p class="artify_help_block help-block form-text with-errors"></p>
+                        </div>
+                    </div>
                 </div>
 
             </div>
