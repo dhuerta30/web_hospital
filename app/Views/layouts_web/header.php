@@ -20,7 +20,6 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/main.css'>
-    <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/style.main.css'>
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/font-awesome.min.css'>
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/bootstrap-front.css'>
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/animate.css'>
@@ -43,7 +42,7 @@
     <script src='{{ $_ENV["BASE_URL"] }}js/frontend.js'></script>
 
     <!-- Extra Scripts -->
-    <script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}js/jquery-3.6.0.js'></script>  
+	<script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}engine1/jquery.js'></script>
 	<script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}js/jquery-ui.js'></script>
 
     <!-- Inline Styles for Compatibility -->

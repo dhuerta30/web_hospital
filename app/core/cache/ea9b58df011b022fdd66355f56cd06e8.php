@@ -24,27 +24,30 @@
                         <!-- Acá las noticias del sitio -->
 
                         <!-- Start WOWSlider.com BODY section -->
-                        <!--<div id="wowslider-container1">
-                            <div class="ws_images"><ul>
-                                    <li><img src="data1/images/whatsappimage20250214at10.54.12645x254.jpg" alt="" title="" id="wows1_0"/></li>
-                                    <li><img src="data1/images/whatsappimage20250507at14.48.09645x254.jpg" alt="" title="" id="wows1_1"/></li>
-                                    <li><img src="data1/images/whatsappimage20250613at11.40.53645x254.jpg" alt="" title="" id="wows1_2"/></li>
-                                    <li><a href="http://wowslider.net"><img src="data1/images/whatsappimage20250613at11.59.21645x254.jpg" alt="bootstrap image slider" title="" id="wows1_3"/></a></li>
-                                    <li><img src="data1/images/whatsappimage20250616at08.26.25645x254.jpg" alt="" title="" id="wows1_4"/></li>
-                                </ul>
+                        <div id="wowslider-container1">
+                                <div class="ws_images">
+                                    <ul>
+                                        <li><img src="data1/images/whatsappimage20250214at10.54.12645x254.jpg" alt="" title="" id="wows1_0"/></li>
+                                        <li><img src="data1/images/whatsappimage20250507at14.48.09645x254.jpg" alt="" title="" id="wows1_1"/></li>
+                                        <li><img src="data1/images/whatsappimage20250613at11.40.53645x254.jpg" alt="" title="" id="wows1_2"/></li>
+                                        <li><img src="data1/images/whatsappimage20250613at11.59.21645x254.jpg" alt="" title="" id="wows1_3"/></li>
+                                        <li><img src="data1/images/whatsappimage20250616at08.26.25645x254.jpg" alt="" title="" id="wows1_4"/></li>
+                                    </ul>
+                                </div>
+                            <div class="ws_bullets">
+                                <div>
+                                    <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250214at10.54.12645x254.jpg" alt=""/>1</span></a>
+                                    <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250507at14.48.09645x254.jpg" alt=""/>2</span></a>
+                                    <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250613at11.40.53645x254.jpg" alt=""/>3</span></a>
+                                    <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250613at11.59.21645x254.jpg" alt=""/>4</span></a>
+                                    <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250616at08.26.25645x254.jpg" alt=""/>5</span></a>
+                                </div>
                             </div>
-                            <div class="ws_bullets"><div>
-                                <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250214at10.54.12645x254.jpg" alt=""/>1</span></a>
-                                <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250507at14.48.09645x254.jpg" alt=""/>2</span></a>
-                                <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250613at11.40.53645x254.jpg" alt=""/>3</span></a>
-                                <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250613at11.59.21645x254.jpg" alt=""/>4</span></a>
-                                <a href="#" title=""><span><img src="data1/tooltips/whatsappimage20250616at08.26.25645x254.jpg" alt=""/>5</span></a>
-                            </div>
+                            <div class="ws_shadow"></div>
                         </div>	
-                        <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/wowslider.js'></script>
-                        <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/script.js'></script>-->
+                        <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>engine1/wowslider.js'></script>
+                        <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>engine1/script.js'></script>
 
-                        <p>&nbsp;</p>
                     </div>
                 </div>
                 <div class="clearfix"></div>

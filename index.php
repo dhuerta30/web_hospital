@@ -42,6 +42,7 @@ $router->post('/cargar_imagenes_configuracion', 'HomeController@cargar_imagenes_
 $router->post('/cargar_vista_submenu', 'HomeController@cargar_vista_submenu');
 
 $router->get('/Configuracion', 'ConfiguracionController@index');
+$router->get('/Slider', 'SliderController@index');
 
 $router->get('/documentacion', 'DocumentacionController@documentacion');
 $router->get('/error', 'ErrorController@index');
