@@ -16,14 +16,6 @@
                     <h4></h4>
                     <h3></h3>
                 </div>
-                <div class="fontsize">
-                    <ul>
-                        <li class="small"><a data-size="10">a</a></li>
-                        <li class="medium current"><a data-size="15">a</a></li>
-                        <li class="large"><a data-size="20">a</a></li>
-
-                    </ul>
-                </div>
                 <div class="clearfix"></div>
                 <div class="texto">
                     <h3 class="title"></h3>

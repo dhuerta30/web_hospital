@@ -124,11 +124,11 @@
 <header style="background-image: url('<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>theme/img/banner.jpg');">
 <div class="wrap">
 	
-	<!--<h1 id="logo-main">
-		<a href="#" target=_blank>
-			<img src="https://saludresponde.minsal.cl/wp-content/uploads/2020/07/logo.png">
-		</a>
-	</h1>-->
+	
+		<center><a href="#" target=_blank>
+			<img src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>theme/img/hsjm.png'>
+		</a></center>
+
 		
 	<nav id="menu-principal">
 		<!-- Menu Principal -->

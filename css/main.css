@@ -236,6 +236,9 @@ img {
 }
 a img {
   display: block;
+  width: 400px;
+  position: relative;
+  top: 32px;
 }
 * {
   box-sizing: border-box;
@@ -894,7 +897,7 @@ header h1#logo-main {
 }
 header h1#logo-main a {
   display: block;
-  width: 180px;
+  width: 324px;
   height: auto;
 }
 header h1#logo-main a img {
