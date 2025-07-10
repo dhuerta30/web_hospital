@@ -44,8 +44,8 @@
     <script src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/frontend.js'></script>
 
     <!-- Extra Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+    <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/jquery-3.6.0.js'></script>  
+	<script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/jquery-ui.js'></script>
 
     <!-- Inline Styles for Compatibility -->
     <style>
@@ -78,8 +78,6 @@
     </style>
 </head>
 <body class="home page-template-default page page-id-49">
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.js"></script>  
-	<script type="text/javascript" src="https://code.jquery.com/ui/1.13.0/jquery-ui.js" ></script>
 
     <div id="menu-movil">
         <div class="wrap">

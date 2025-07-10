@@ -18,12 +18,6 @@
     <meta property="og:site_name" content="Salud Responde">
     <meta property="og:description" content="&nbsp;">
 
-    <!-- Robots & Prefetch -->
-    <meta name='robots' content='max-image-preview:large' />
-    <link rel='dns-prefetch' href='//ajax.googleapis.com' />
-    <link rel='dns-prefetch' href='//www.googletagmanager.com' />
-    <link rel='dns-prefetch' href='//s.w.org' />
-
     <!-- Styles -->
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/main.css'>
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/style.main.css'>
@@ -44,8 +38,8 @@
     <script src='{{ $_ENV["BASE_URL"] }}js/frontend.js'></script>
 
     <!-- Extra Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+    <script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}js/jquery-3.6.0.js'></script>  
+	<script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}js/jquery-ui.js'></script>
 
     <!-- Inline Styles for Compatibility -->
     <style>
@@ -78,8 +72,6 @@
     </style>
 </head>
 <body class="home page-template-default page page-id-49">
-	<script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}js/jquery-3.6.0.js'></script>  
-	<script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}js/jquery-ui.js'></script>
 
     <div id="menu-movil">
         <div class="wrap">
