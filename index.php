@@ -11,7 +11,8 @@ use App\core\Request;
 $router = new ArtifyRouter();
 
 // Definir rutas
-$router->get('/', 'LoginController@index');
+$router->get('/', 'WebController@index');
+$router->get('/admin', 'LoginController@index');
 $router->get('/login', 'LoginController@index');
 $router->get('/salir', 'LoginController@salir');
 $router->get('/recuperar', 'LoginController@reset');
