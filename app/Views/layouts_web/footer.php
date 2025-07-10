@@ -19,11 +19,9 @@
             <div class="left">
                 <span>Hospital San José de Melipilla O´higgins 551</span>
             </div>
-
             <nav>
                 <!-- Navegación del pie de página si es necesario -->
             </nav>
-
             <div class="clearfix"></div>
 
             <!-- Banda bicolor inferior -->
@@ -37,7 +35,6 @@
 
 <!-- Scripts agrupados y ordenados -->
 <script src='{{ $_ENV["BASE_URL"] }}js/bootstrap.js'></script>
-<script src='{{ $_ENV["BASE_URL"] }}js/app.min.js'></script>
 <script src='{{ $_ENV["BASE_URL"] }}js/main.js'></script>
 </body>
 </html>

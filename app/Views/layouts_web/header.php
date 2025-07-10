@@ -32,6 +32,11 @@
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/style.min.css'>
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/default.min.css'>
 
+	<!-- Start WOWSlider.com HEAD section -->
+	<link rel="stylesheet" type="text/css" href='{{ $_ENV["BASE_URL"] }}css/style.css' />
+	<!--<script type="text/javascript" src="engine1/jquery.js"></script>-->
+
+
     <!-- Scripts -->
     <script src='{{ $_ENV["BASE_URL"] }}js/jquery.min.js'></script>
     <script src='{{ $_ENV["BASE_URL"] }}js/jquery.mCustomScrollbar.concat.min.js'></script>
