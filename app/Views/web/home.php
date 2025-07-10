@@ -16,37 +16,12 @@
                     <h4></h4>
                     <h3></h3>
                 </div>
-                <div class="social">
-                    <ul>
-                        <li>
-                            <div class="fb-like fb_iframe_widget" data-href="https://saludresponde.minsal.cl/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="true" fb-xfbml-state="rendered" fb-iframe-plugin-query="action=like&amp;app_id=&amp;container_width=0&amp;href=https%3A%2F%2Fsaludresponde.minsal.cl%2F&amp;layout=button_count&amp;locale=es_LA&amp;sdk=joey&amp;share=true&amp;show_faces=false"><span style="vertical-align: bottom; width: 220px; height: 28px;"><iframe name="f23e27490a5513aef" width="1000px" height="1000px" data-testid="fb:like Facebook Social Plugin" title="fb:like Facebook Social Plugin" frameborder="0" allowtransparency="true" allowfullscreen="true" scrolling="no" allow="encrypted-media" src="https://web.facebook.com/v2.0/plugins/like.php?action=like&amp;app_id=&amp;channel=https%3A%2F%2Fstaticxx.facebook.com%2Fx%2Fconnect%2Fxd_arbiter%2F%3Fversion%3D46%23cb%3Df7832fc4959a3f828%26domain%3Dsaludresponde.minsal.cl%26is_canvas%3Dfalse%26origin%3Dhttps%253A%252F%252Fsaludresponde.minsal.cl%252Ff1e6b286aa039806d%26relation%3Dparent.parent&amp;container_width=0&amp;href=https%3A%2F%2Fsaludresponde.minsal.cl%2F&amp;layout=button_count&amp;locale=es_LA&amp;sdk=joey&amp;share=true&amp;show_faces=false" style="border: none; visibility: visible; width: 220px; height: 28px;" class=""></iframe></span></div>
-                        </li>
-                        <li>
-                            <iframe id="twitter-widget-0" scrolling="no" frameborder="0" allowtransparency="true" allowfullscreen="true" class="twitter-share-button twitter-share-button-rendered twitter-tweet-button" title="X Post Button" src="https://platform.twitter.com/widgets/tweet_button.2f70fb173b9000da126c79afe2098f02.es.html#dnt=false&amp;id=twitter-widget-0&amp;lang=es&amp;original_referer=https%3A%2F%2Fsaludresponde.minsal.cl%2F%23&amp;size=m&amp;text=-%20Salud%20Responde&amp;time=1752163205655&amp;type=share&amp;url=https%3A%2F%2Fsaludresponde.minsal.cl%2F%23" style="position: static; visibility: visible; width: 1px; height: 1px;"></iframe>
-                        </li>
-                    </ul>
-                </div>
-                <div class="fontsize">
-                    <ul>
-                        <li class="small"><a data-size="10">a</a></li>
-                        <li class="medium current"><a data-size="15">a</a></li>
-                        <li class="large"><a data-size="20">a</a></li>
-
-                    </ul>
-                </div>
                 <div class="clearfix"></div>
                 <div class="texto">
                     <h3 class="title"></h3>
                     <div class="contenido">
-                        <p><a href="https://saludresponde.minsal.cl/vacunacion-contra-la-influenza/"><img loading="lazy" class="alignnone wp-image-19546 " src="https://saludresponde.minsal.cl/wp-content/uploads/2025/03/campanas-de-vacunacion-2025_.png" alt="" width="601" height="254" srcset="https://saludresponde.minsal.cl/wp-content/uploads/2025/03/campanas-de-vacunacion-2025_.png 660w, https://saludresponde.minsal.cl/wp-content/uploads/2025/03/campanas-de-vacunacion-2025_-300x127.png 300w" sizes="(max-width: 601px) 100vw, 601px"></a></p>
-                        <p><a href="tel:6006003607777"><img loading="lazy" class="alignnone wp-image-14323 " src="https://saludresponde.minsal.cl/wp-content/uploads/2023/10/IVR-2023-oct-01.png" alt="" width="602" height="195" srcset="https://saludresponde.minsal.cl/wp-content/uploads/2023/10/IVR-2023-oct-01.png 602w, https://saludresponde.minsal.cl/wp-content/uploads/2023/10/IVR-2023-oct-01-300x97.png 300w" sizes="(max-width: 602px) 100vw, 602px"></a><br>
-                            <a href="https://saludresponde.minsal.cl/introduccion/"><img loading="lazy" class="alignnone wp-image-15061 size-full" src="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_01.png" alt="" width="600" height="71" srcset="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_01.png 600w, https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_01-300x36.png 300w" sizes="(max-width: 600px) 100vw, 600px"></a><a href="https://www.minsal.cl/eje-salud-mental/"><img loading="lazy" class="alignnone wp-image-15057 size-full" src="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_02.png" alt="" width="600" height="71" srcset="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_02.png 600w, https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_02-300x36.png 300w" sizes="(max-width: 600px) 100vw, 600px"></a><a href="https://milicenciamedica.cl/"><img loading="lazy" class="alignnone wp-image-15058 size-full" src="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_03.png" alt="" width="600" height="71" srcset="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_03.png 600w, https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_03-300x36.png 300w" sizes="(max-width: 600px) 100vw, 600px"></a><a href="https://saludresponde.minsal.cl/autorizaciones-sanitarias/"><img loading="lazy" class="alignnone wp-image-15059 size-full" src="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_04.png" alt="" width="600" height="71" srcset="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_04.png 600w, https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_04-300x36.png 300w" sizes="(max-width: 600px) 100vw, 600px"></a><a href="https://oirs.minsal.cl/"><img loading="lazy" class="alignnone wp-image-15060 size-full" src="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_05.png" alt="" width="600" height="71" srcset="https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_05.png 600w, https://saludresponde.minsal.cl/wp-content/uploads/2024/02/salud-responde-ivr_05-300x36.png 300w" sizes="(max-width: 600px) 100vw, 600px"></a>
-                        </p>
-                        <p><a href="https://saludresponde.minsal.cl/fonosida/"><img loading="lazy" class="alignnone wp-image-16012 " src="https://saludresponde.minsal.cl/wp-content/uploads/2024/08/Fonosida-2024-WEB-1.png" alt="" width="601" height="273" srcset="https://saludresponde.minsal.cl/wp-content/uploads/2024/08/Fonosida-2024-WEB-1.png 660w, https://saludresponde.minsal.cl/wp-content/uploads/2024/08/Fonosida-2024-WEB-1-300x136.png 300w" sizes="(max-width: 601px) 100vw, 601px"></a></p>
-                       
 
-                            <!-- Acá las noticias del sitio -->
-
+                        <!-- Acá las noticias del sitio -->
 
                         <p>&nbsp;</p>
                     </div>
