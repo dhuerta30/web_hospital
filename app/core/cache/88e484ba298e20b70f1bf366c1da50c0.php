@@ -18,12 +18,6 @@
     <meta property="og:site_name" content="Salud Responde">
     <meta property="og:description" content="&nbsp;">
 
-    <!-- Robots & Prefetch -->
-    <meta name='robots' content='max-image-preview:large' />
-    <link rel='dns-prefetch' href='//ajax.googleapis.com' />
-    <link rel='dns-prefetch' href='//www.googletagmanager.com' />
-    <link rel='dns-prefetch' href='//s.w.org' />
-
     <!-- Styles -->
     <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/main.css'>
     <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/style.main.css'>
@@ -127,7 +121,7 @@
         </div>
     </div>
 
-<header style="background-image:url('https://saludresponde.minsal.cl/wp-content/uploads/2025/02/header-web-cabecera_ges-20-an╠aos-1920x1440-1.png')">
+<header style="background-image: url('<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>theme/img/banner.jpg');">
 <div class="wrap">
 	
 	<!--<h1 id="logo-main">

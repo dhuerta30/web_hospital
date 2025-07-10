@@ -121,7 +121,7 @@
         </div>
     </div>
 
-<header style="background-image:url('https://saludresponde.minsal.cl/wp-content/uploads/2025/02/header-web-cabecera_ges-20-an╠aos-1920x1440-1.png')">
+<header style="background-image: url('{{ $_ENV["BASE_URL"] }}theme/img/banner.jpg');">
 <div class="wrap">
 	
 	<!--<h1 id="logo-main">
