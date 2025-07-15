@@ -58,6 +58,9 @@
             background: none !important;
             padding: 0 !important;
         }
+		body {
+			background-color: #e6e6e6!important;
+		}
     </style>
 
     <!-- Custom UI Styling -->

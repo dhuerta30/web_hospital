@@ -22,7 +22,6 @@
                     <div class="contenido">
 
                         <!-- Acá las noticias del sitio -->
-
                         <!-- Start WOWSlider.com BODY section -->
                         <div id="wowslider-container1">
                                 <div class="ws_images">
@@ -47,6 +46,9 @@
                         </div>	
                         <script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}engine1/wowslider.js'></script>
                         <script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}engine1/script.js'></script>
+
+
+                        {!! $render !!}
 
                     </div>
                 </div>

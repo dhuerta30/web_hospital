@@ -55,6 +55,7 @@ $router->post('/Restp/generarToken', 'RestpController@generarToken');
 
 $router->get('/Restp/listar/{tabla}/{token}', 'RestpController@listar');
 $router->get('/Restp/listar/{tabla}/{filtro_url}/{token}', 'RestpController@listar');
+$router->get('/noticias', 'NoticiasController@index');
 
 $router->post('/Restp/insertar', 'RestpController@insertar');
 $router->post('/Restp/actualizar', 'RestpController@actualizar');
