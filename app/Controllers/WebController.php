@@ -17,7 +17,7 @@ class WebController
         $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
         $artify->setSettings("addbtn", false);
         $artify->setPortfolioColumn(1);
-        $artify->recordsPerPage(12);
+        $artify->recordsPerPage(5);
         $artify->setSettings("searchbox", false);
         $artify->setSettings("function_filter_and_search", true);
         $artify->addCallback("format_table_data", [$this, "formatearDatosTablaNoticias"]);

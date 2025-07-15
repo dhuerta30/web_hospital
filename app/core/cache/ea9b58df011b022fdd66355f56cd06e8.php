@@ -194,4 +194,7 @@
         <div class="clearfix"></div>
     </div>
 </div>
+<div id="artify-ajax-loader">
+    <img width="300" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>app/libs/artify/images/ajax-loader.gif' class="artify-img-ajax-loader"/>
+</div>
 <?php include 'C:\xampp7429\htdocs\web_hospital\app\core/cache/de78bc3e16c2c005f0c6156bfeea3d04.php'; ?>
