@@ -17,11 +17,14 @@ class WebController
         $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
         $artify->setSettings("addbtn", false);
         $artify->setPortfolioColumn(1);
+        $artify->tableHeading("");
         $artify->recordsPerPage(5);
         $artify->setSettings("searchbox", false);
+        $artify->setSettings("refresh", false);
         $artify->setSettings("function_filter_and_search", true);
         $artify->addCallback("format_table_data", [$this, "formatearDatosTablaNoticias"]);
         $artify->crudTableCol(array("titulo","fecha","imagen"));
+        $artify->setSettings("template", "noticias");
         $render = $artify->dbTable("noticias")->render();
 
         $stencil = new ArtifyStencil();

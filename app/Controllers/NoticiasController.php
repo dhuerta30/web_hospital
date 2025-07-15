@@ -94,7 +94,7 @@ class NoticiasController
         $artify->setFilterSource("TituloFiltro", "noticias", "fecha", "fecha as pl", "db");
 
         $artify->formFieldValue("publicado_por", $usuario);
-        $artify->tableColFormatting("imagen", "html", array("type" =>"html", "str"=>"<img style='100%' src= \"{col-name}\">"));
+        $artify->tableColFormatting("imagen", "html", array("type" =>"html", "str"=>"<img style='100%' src= \"".$_ENV["BASE_URL"]."app/libs/uploads/{col-name}\">"));
         $artify->fieldDataAttr("publicado_por", array("readonly"=>"true"));
         $artify->colRename("id_noticias", "ID");
         $artify->setSettings("searchbox", true);
@@ -104,11 +104,23 @@ class NoticiasController
         $artify->fieldTypes("imagen", "FILE_NEW");
         $artify->buttonHide("submitBtnSaveBack");
         $artify->setSettings("function_filter_and_search", true);
+        $artify->addCallback("before_insert", [$this, "insertar_noticias"]);
+        $artify->addCallback("before_update", [$this, "actualizar_noticias"]);
         $render = $artify->dbTable("noticias")->render();
 
         $stencil = new ArtifyStencil();
         echo $stencil->render('noticias', [
             'render' => $render
         ]);
+    }
+
+    public function insertar_noticias($data, $obj){
+        $data["noticias"]["imagen"] = basename($data["noticias"]["imagen"]);
+        return $data;
+    }
+
+    public function actualizar_noticias($data, $obj){
+        $data["noticias"]["imagen"] = basename($data["noticias"]["imagen"]);
+        return $data;
     }
 }
