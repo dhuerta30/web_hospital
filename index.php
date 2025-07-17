@@ -57,6 +57,7 @@ $router->get('/Restp/listar/{tabla}/{token}', 'RestpController@listar');
 $router->get('/Restp/listar/{tabla}/{filtro_url}/{token}', 'RestpController@listar');
 $router->get('/noticias', 'NoticiasController@index');
 
+$router->post('/buscar_noticias', 'WebController@buscar_noticias');
 $router->post('/Restp/insertar', 'RestpController@insertar');
 $router->post('/Restp/actualizar', 'RestpController@actualizar');
 $router->post('/Restp/eliminar', 'RestpController@eliminar');

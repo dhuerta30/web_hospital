@@ -21,8 +21,6 @@
                     <h3 class="title"></h3>
                     <div class="contenido">
 
-                        <!-- Acá las noticias del sitio -->
-                        <!-- Start WOWSlider.com BODY section -->
                         <div id="wowslider-container1">
                                 <div class="ws_images">
                                     <ul>
@@ -47,7 +45,6 @@
                         <script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}engine1/wowslider.js'></script>
                         <script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}engine1/script.js'></script>
 
-
                         <div class="noticias_home">
                             {!! $render !!}
                         </div>
@@ -60,8 +57,8 @@
         <!-- Sidebar -->
         <div id="sidebar">
             <div class="buscar clearfix">
-                <label for="query">Busca en el sitio</label>
-                <input class="form-control" type="text" id="query" name="s" placeholder=" ">
+                <label for="query">Buscar en el sitio</label>
+                <input class="form-control buscar_noticias" id="query" type="text">
                 <button class="btn btn-primary" type="submit" id="boton"><i class="fa fa-search"></i></button>
             </div>
             <div class="redes-lista">
@@ -198,3 +195,23 @@
     <img width="300" src='{{ $_ENV["BASE_URL"] }}app/libs/artify/images/ajax-loader.gif' class="artify-img-ajax-loader"/>
 </div>
 @include('layouts_web/footer')
+<script>
+    $(document).on("click", "#boton", function(){
+        let buscar_noticias = $(".buscar_noticias").val();
+        $.ajax({
+            type: "POST",
+            url: "<?=$_ENV["BASE_URL"] ?>buscar_noticias",
+            data: {
+                buscar_noticias: buscar_noticias
+            },
+            dataType: "json",
+            beforeSend: function() {
+                $("#artify-ajax-loader").show();
+            },
+            success: function(data){
+                $("#artify-ajax-loader").hide();
+                $(".noticias_home").html(data["render"]);
+            }
+        });
+    });
+</script>
