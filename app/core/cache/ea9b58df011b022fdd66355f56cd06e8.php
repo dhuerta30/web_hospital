@@ -48,7 +48,9 @@
                         <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>engine1/script.js'></script>
 
 
-                        <?php echo $render; ?>
+                        <div class="noticias_home">
+                            <?php echo $render; ?>
+                        </div>
 
                     </div>
                 </div>
@@ -58,11 +60,9 @@
         <!-- Sidebar -->
         <div id="sidebar">
             <div class="buscar clearfix">
-                <form action="" method="get">
-                    <label for="query">Busca en el sitio</label>
-                    <input type="text" id="query" name="s" placeholder=" ">
-                    <input type="submit" id="boton" value="Enviar">
-                </form>
+                <label for="query">Busca en el sitio</label>
+                <input class="form-control" type="text" id="query" name="s" placeholder=" ">
+                <button class="btn btn-primary" type="submit" id="boton"><i class="fa fa-search"></i></button>
             </div>
             <div class="redes-lista">
 
