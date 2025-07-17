@@ -38,7 +38,7 @@ class WebController
             foreach($data as &$item){
                 $item["titulo"] = "<center><h3><strong>".$item["titulo"]."</strong></h3></center>";
                 $item["fecha"] = "<center><h5>".date("d/m/Y", strtotime($item["fecha"]))."</h5></center>";
-                 $item["imagen"] = "<img width='100%' src='".$item["imagen"]."'>";
+                 $item["imagen"] = "<img width='100%' src='".$_ENV["BASE_URL"]."app/libs/artify/uploads/".$item["imagen"]."'>";
             }
         }
         return $data;

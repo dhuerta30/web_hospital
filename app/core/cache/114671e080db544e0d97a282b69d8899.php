@@ -8,6 +8,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <?php echo $render; ?>
+                        <?php echo $select2; ?>
                     </div>
                 </div>
 

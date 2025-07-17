@@ -26,6 +26,7 @@ class NoticiasController
     public function index()
     {
         $artify = DB::ArtifyCrud();
+        $artify->addPlugin("summernote");
         $template = '
         <div class="card">
             <div class="card-header bg-dark">
@@ -94,33 +95,49 @@ class NoticiasController
         $artify->setFilterSource("TituloFiltro", "noticias", "fecha", "fecha as pl", "db");
 
         $artify->formFieldValue("publicado_por", $usuario);
-        $artify->tableColFormatting("imagen", "html", array("type" =>"html", "str"=>"<img style='100%' src= \"".$_ENV["BASE_URL"]."app/libs/uploads/{col-name}\">"));
+        $artify->tableColFormatting("imagen", "html", array("type" =>"html", "str"=>"<img width='100' src= \"".$_ENV["BASE_URL"]."app/libs/artify/uploads/{col-name}\">"));
         $artify->fieldDataAttr("publicado_por", array("readonly"=>"true"));
         $artify->colRename("id_noticias", "ID");
         $artify->setSettings("searchbox", true);
         $artify->setSettings("editbtn", true);
         $artify->setSettings("clonebtn", true);
         $artify->setSettings("delbtn", true);
+        $artify->setSettings("encryption", true);
         $artify->fieldTypes("imagen", "FILE_NEW");
         $artify->buttonHide("submitBtnSaveBack");
         $artify->setSettings("function_filter_and_search", true);
         $artify->addCallback("before_insert", [$this, "insertar_noticias"]);
         $artify->addCallback("before_update", [$this, "actualizar_noticias"]);
+        $artify->fieldCssClass("contenido", array("summernote"));
         $render = $artify->dbTable("noticias")->render();
+        $select2 = $artify->loadPluginJsCode("summernote", ".summernote");
 
         $stencil = new ArtifyStencil();
         echo $stencil->render('noticias', [
-            'render' => $render
+            'render' => $render,
+            'select2' => $select2
         ]);
     }
 
     public function insertar_noticias($data, $obj){
-        $data["noticias"]["imagen"] = basename($data["noticias"]["imagen"]);
-        return $data;
+        $newData = array();
+        $newData["noticias"]["titulo"] = $data["noticias"]["titulo"];
+        $newData["noticias"]["fecha"] = $data["noticias"]["fecha"];
+        $newData["noticias"]["imagen"] = basename($data["noticias"]["imagen"]);
+        $newData["noticias"]["contenido"] = $data["noticias"]["contenido"];
+        $newData["noticias"]["publicado_por"] = $data["noticias"]["publicado_por"];
+        $newData["noticias"]["categoria"] = $data["noticias"]["categoria"];
+        return $newData;
     }
 
     public function actualizar_noticias($data, $obj){
-        $data["noticias"]["imagen"] = basename($data["noticias"]["imagen"]);
-        return $data;
+        $newData = array();
+        $newData["noticias"]["titulo"] = $data["noticias"]["titulo"];
+        $newData["noticias"]["fecha"] = $data["noticias"]["fecha"];
+        $newData["noticias"]["imagen"] = basename($data["noticias"]["imagen"]);
+        $newData["noticias"]["contenido"] = $data["noticias"]["contenido"];
+        $newData["noticias"]["publicado_por"] = $data["noticias"]["publicado_por"];
+        $newData["noticias"]["categoria"] = $data["noticias"]["categoria"];
+        return $newData;
     }
 }
