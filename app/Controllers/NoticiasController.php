@@ -124,7 +124,7 @@ class NoticiasController
     public function formatTableDataCallBacknoticias($data, $obj){
         if($data){
             foreach($data as &$item){
-                $item["contenido"] = mb_strimwidth(strip_tags(html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8')), 0, 100, "...");
+                $item["contenido"] = mb_strimwidth(strip_tags(html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8')), 0, 50, "...");
             }
         }
         return $data;
