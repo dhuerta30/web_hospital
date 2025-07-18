@@ -95,7 +95,7 @@ class NoticiasController
         $artify->setFilterSource("TituloFiltro", "noticias", "fecha", "fecha as pl", "db");
 
         $artify->formFieldValue("publicado_por", $usuario);
-        $artify->tableColFormatting("imagen", "html", array("type" =>"html", "str"=>"<img width='100' src= \"".$_ENV["BASE_URL"]."app/libs/artify/uploads/{col-name}\">"));
+        $artify->tableColFormatting("imagen", "html", array("type" =>"html", "str"=> "<img width='100' src= \"".$_ENV["BASE_URL"]."app/libs/artify/uploads/{col-name}\">"));
         $artify->fieldDataAttr("publicado_por", array("readonly"=>"true"));
         $artify->colRename("id_noticias", "ID");
         $artify->setSettings("searchbox", true);
