@@ -105,10 +105,12 @@ class NoticiasController
         $artify->setSettings("encryption", true);
         $artify->fieldTypes("imagen", "FILE_NEW");
         $artify->buttonHide("submitBtnSaveBack");
+        $artify->tableColFormatting("fecha", "date", array("format" =>"d/m/Y"));
         $artify->setSettings("function_filter_and_search", true);
         $artify->addCallback("before_insert", [$this, "insertar_noticias"]);
         $artify->addCallback("before_update", [$this, "actualizar_noticias"]);
         $artify->fieldCssClass("contenido", array("summernote"));
+        $artify->addCallback("format_table_data", [$this, "formatTableDataCallBacknoticias"]);
         $render = $artify->dbTable("noticias")->render();
         $select2 = $artify->loadPluginJsCode("summernote", ".summernote");
 
@@ -117,6 +119,15 @@ class NoticiasController
             'render' => $render,
             'select2' => $select2
         ]);
+    }
+
+    public function formatTableDataCallBacknoticias($data, $obj){
+        if($data){
+            foreach($data as &$item){
+                $item["contenido"] = mb_strimwidth(strip_tags(html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8')), 0, 100, "...");
+            }
+        }
+        return $data;
     }
 
     public function insertar_noticias($data, $obj){
