@@ -1410,6 +1410,12 @@ footer .bottom .bicolor {
 .error404 #content #main .post .texto .contenido {
   color: #475156;
 }
+
+a.btn.btn-info {
+  color: #fff!important;
+  text-decoration: none!important;
+}
+
 .single #content #main .post .texto .contenido a,
 .page #content #main .post .texto .contenido a,
 .error404 #content #main .post .texto .contenido a {
