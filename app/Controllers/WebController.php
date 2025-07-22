@@ -60,4 +60,15 @@ class WebController
         }
         return $data;
     }
+
+    public function page(Request $request){
+        
+        $id = $request->get("param1");
+
+        $queryfy = DB::Queryfy();
+        $queryfy->where("id_noticias", $id);
+        $data = $queryfy->select("noticias");
+        print_r($data);
+        die();
+    }
 }

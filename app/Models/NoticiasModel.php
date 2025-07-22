@@ -35,11 +35,11 @@ class NoticiasModel
     public function formatearDatosTablaNoticias($data, $obj){
         if($data){
             foreach($data as &$item){
-                $item["titulo"] = "<center><a href='".$item["id_noticias"]."'><h3><strong>".$item["titulo"]."</strong></h3></a></center>";
+                $item["titulo"] = "<center><a href='noticia/".$item["id_noticias"]."'><h3><strong>".$item["titulo"]."</strong></h3></a></center>";
                 $item["fecha"] = "<center><h5>".date("d/m/Y", strtotime($item["fecha"]))."</h5></center>";
                 $item["imagen"] = "<img width='100%' src='".$_ENV["BASE_URL"]."app/libs/artify/uploads/".$item["imagen"]."'>";
                 $item["contenido"] = mb_strimwidth(strip_tags(html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8')), 0, 250, "...");
-                $item["boton"] = "<div class='row' style='margin-top:20px;'><div class='col-md-12 text-center'><a href='".$item["id_noticias"]."' class='btn btn-info btn-block'>Ver más</a></div></div>";
+                $item["boton"] = "<div class='row' style='margin-top:20px;'><div class='col-md-12 text-center'><a href='noticia/".$item["id_noticias"]."' class='btn btn-info btn-block'>Ver más</a></div></div>";
             }
         }
         return $data;
