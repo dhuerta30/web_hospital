@@ -151,4 +151,72 @@ class NoticiasController
         $newData["noticias"]["categoria"] = $data["noticias"]["categoria"];
         return $newData;
     }
+
+    public function carga_masiva_noticias(){
+        $artify = DB::ArtifyCrud();
+        $artify->addPlugin("select2");
+        $artify->fieldRenameLable("archivo", "Archivo Excel");
+        $artify->setLangData("save", "Subir");
+        $artify->fieldDesc("archivo", "<strong>Suba un Archivo en Formato Excel xlsx</strong>");
+        $artify->fieldTypes("modulo", "select");
+        $artify->fieldDataBinding("modulo", array("noticias" => "noticias"), "", "", "array");
+        $artify->setSettings("required", false);
+        $artify->fieldTypes("archivo", "FILE_NEW");
+        $artify->addCallback("before_insert", [$this, "carga_masiva"]); // devolución de llamada para antes de insertar los datos
+        $artify->fieldGroups("group1", array("archivo", "modulo"));
+        $render = $artify->dbTable("carga_masiva")->render("insertform");
+        $select2 = $artify->loadPluginJsCode("select2",".modulo");
+
+        $stencil = new ArtifyStencil();
+        echo $stencil->render('carga_masiva', [
+            'render' => $render,
+            'select2' => $select2
+        ]);
+    }
+
+    public function carga_masiva($data, $obj){
+        $archivo = basename($data["carga_masiva"]["archivo"]);
+        $modulo = $data["carga_masiva"]["modulo"];
+        $extension = pathinfo($archivo, PATHINFO_EXTENSION);
+
+        $queryfy = $obj->getQueryfyObj();
+        $columnNames = $queryfy->columnNames($modulo);
+
+        if (empty($archivo)) {
+            $error_msg = array("message" => "", "error" => "No se ha subido ningún Archivo", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        } 
+
+        if (empty($modulo)) {
+            $error_msg = array("message" => "", "error" => "No se ha seleccionado ningún Módulo", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        } 
+
+        if ($extension != "xlsx") {
+            $error_msg = array("message" => "", "error" => "El Archivo Subido no es un Archivo Excel Válido", "redirectionurl" => "");
+            die(json_encode($error_msg));
+        }
+
+        $records = $queryfy->excelToArray("uploads/".$archivo);
+
+        $datosInsertar = [];
+        foreach ($records as $Excelval) {
+            $fila = [];
+            foreach ($columnNames as $columna) {
+                if (isset($Excelval[$columna])) {
+                    $fila[$columna] = $Excelval[$columna];
+                }
+            }
+            if (!empty($fila)) {
+                $datosInsertar[] = $fila;
+            }
+        }
+
+        if (!empty($datosInsertar)) {
+            $queryfy->insertBatch($modulo, $datosInsertar);
+        }
+
+        $data["carga_masiva"]["archivo"] = $archivo;
+        return $data;
+    }
 }
