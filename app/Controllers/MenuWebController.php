@@ -29,13 +29,6 @@ class MenuWebController
 
 		$artify = DB::ArtifyCrud();
 
-		$queryfy = $artify->getQueryfyObj();
-		$datamenu = $queryfy->DBQuery("SELECT MAX(orden_menu) as orden FROM menu");
-		$newOrdenMenu = $datamenu[0]["orden"] + 1;
-
-		/*$artify->addWhereConditionActionButtons("delete", "id_menu_web", "!=", array(4,5,6,7,10,12,19, 141));
-		$artify->addWhereConditionActionButtons("edit", "id_menu_web", "!=", array(4,5,6,7,10,12,19, 141));*/
-
 		$action = "javascript:;";
 		$text = '<i class="fas fa-arrows-alt-v"></i>';
 		$attr = array("title"=>"Arrastra para Reordenar Fila");
@@ -43,19 +36,25 @@ class MenuWebController
 		$artify->multiTableRelationDisplay("tab", "Menu");
 		$artify->bulkCrudUpdate("nombre", "text", array("data-some-attr" =>"some-dummy-val"));
 		$artify->bulkCrudUpdate("url", "text", array("data-some-attr" =>"some-dummy-val"));
+
+		$artify->bulkCrudUpdate("visibilidad", "select", array("data-cust-attr" =>"some-cust-val"), array(
+			array(
+				"Visible",
+				"Visible"
+			),
+			array(
+				"Oculto",
+				"Oculto"
+			)
+		));
+
+		$artify->colRename("id_menu_web", "ID");
+
 		$artify->setSearchCols(array("nombre","url", "icono", "visibilidad"));
 		$artify->fieldHideLable("submenu");
 		$artify->fieldDataAttr("submenu", array("style"=>"display:none"));
-		$artify->formFieldValue("orden_menu", $newOrdenMenu);
 		$artify->formFieldValue("submenu", "No");
 		$artify->addPlugin("select2");
-		$artify->dbOrderBy("orden_menu asc");
-		$artify->addCallback("format_table_data", [$this, "formatTableMenu"]);
-		$artify->addCallback("after_insert", [$this, "agregar_menu"]);
-		$artify->addCallback("before_delete", [$this, "eliminar_menu"]);
-		$artify->fieldTypes("icono_menu", "select");
-		$artify->fieldCssClass("icono_menu", array("icono_menu"));
-		$artify->fieldCssClass("submenu", array("submenu"));
 		$artify->fieldGroups("group1", array("nombre", "url"));
 		$artify->crudRemoveCol(array("id_menu"));
 		$artify->setSettings("searchbox", true);
@@ -69,6 +68,10 @@ class MenuWebController
 		$artify->setSettings('delbtn', true);
 		$artify->setSettings("function_filter_and_search", true);
 		$artify->buttonHide("submitBtnSaveBack");
+
+		$artify->fieldTypes("visibilidad", "select");
+		$artify->fieldDataBinding("visibilidad", array("Visible" => "Visible", "Oculto" => "Oculto"), "", "","array");
+
 		$select2 = $artify->loadPluginJsCode("select2",".icono_menu, .icono_submenu");
 		$render = $artify->dbTable("menu_web")->render();
 
