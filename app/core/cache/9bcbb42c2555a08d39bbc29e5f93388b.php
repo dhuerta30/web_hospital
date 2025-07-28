@@ -22,6 +22,10 @@
                     <div class="contenido">
 
                         <!-- contenido Noticias -->
+                         <center><h3><?php echo htmlspecialchars($data[0]["titulo"], ENT_QUOTES, 'UTF-8'); ?></h3></center>
+                         <img class="w-100" src="<?php echo htmlspecialchars($_ENV['BASE_URL'], ENT_QUOTES, 'UTF-8'); ?>app/libs/artify/uploads/<?php echo htmlspecialchars($data[0]['imagen'], ENT_QUOTES, 'UTF-8'); ?>" alt="">
+
+                         <?=html_entity_decode($data[0]["contenido"], ENT_QUOTES, 'UTF-8');?>
 
                     </div>
                 </div>

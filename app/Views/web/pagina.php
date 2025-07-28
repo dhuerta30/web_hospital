@@ -22,7 +22,11 @@
                     <div class="contenido">
 
                         <!-- contenido Noticias -->
+                         <center><h3>{{ $data[0]["titulo"] }}</h3></center>
+                         <img class="w-100" src="{{ $_ENV['BASE_URL'] }}app/libs/artify/uploads/{{ $data[0]['imagen'] }}" alt="">
 
+                         <?=html_entity_decode($data[0]["contenido"], ENT_QUOTES, 'UTF-8');?>
+                         
                     </div>
                 </div>
                 <div class="clearfix"></div>

@@ -8,6 +8,10 @@ html {
       display: none;
 }
 
+img.w-100 {
+    width: 100%;
+}
+
 body {
   margin: 0;
 }
