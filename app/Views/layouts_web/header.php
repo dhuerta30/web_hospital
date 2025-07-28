@@ -132,7 +132,7 @@
 <div class="wrap">
 	
 	
-		<center><a href="#" target=_blank>
+		<center><a href="{{ $_ENV['BASE_URL'] }}" target=_blank>
 			<img src='{{ $_ENV["BASE_URL"] }}theme/img/hsjm.png'>
 		</a></center>
 

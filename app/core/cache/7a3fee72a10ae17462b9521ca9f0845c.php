@@ -132,7 +132,7 @@
 <div class="wrap">
 	
 	
-		<center><a href="#" target=_blank>
+		<center><a href="<?php echo htmlspecialchars($_ENV['BASE_URL'], ENT_QUOTES, 'UTF-8'); ?>" target=_blank>
 			<img src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>theme/img/hsjm.png'>
 		</a></center>
 

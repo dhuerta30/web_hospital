@@ -68,7 +68,10 @@ class WebController
         $queryfy = DB::Queryfy();
         $queryfy->where("id_noticias", $id);
         $data = $queryfy->select("noticias");
-        print_r($data);
-        die();
+        
+        $stencil = new ArtifyStencil();
+        echo $stencil->render('web/pagina', [
+            'data' => $data
+        ]);
     }
 }
