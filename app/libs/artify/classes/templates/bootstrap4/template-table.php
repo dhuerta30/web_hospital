@@ -164,7 +164,7 @@
                             }
                             ?>
                             <a class="<?php echo $btnClass; ?> btn-sm artify-button <?php echo $action_name;?>"
-                                href="<?php echo $url;?>"
+                                href="<?php echo str_replace(' ', '-', $url);?>"
                                 <?php
                                 echo implode(' ', array_map(
                                                 function ($v, $k) {

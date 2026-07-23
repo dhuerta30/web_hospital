@@ -1,5 +1,6 @@
 <?php
 
+#[\AllowDynamicProperties]
 class ArtifyView {
 
     private $template_path;

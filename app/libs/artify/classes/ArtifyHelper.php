@@ -1,5 +1,6 @@
 <?php
 
+#[\AllowDynamicProperties]
 Class ArtifyHelper {
 
     private $logFile = "log.txt";

@@ -104,7 +104,7 @@
                         <?php } ?>
                     </ul>
                 </div>
-                <div class="col-sm-6 col-md-6 col-xs-12">
+                <div class="col-sm-6 col-md-12">
                     <div class="float-right">
                         <?php if ($settings["pagination"]) { ?>
                             <div class="btn-group artify-pagination">

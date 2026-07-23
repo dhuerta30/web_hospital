@@ -62,7 +62,7 @@ class DotenvVault extends Dotenv {
      *
      * @return \Dotenv\Dotenv
      */
-    public static function create(RepositoryInterface $repository, $paths, $names = null, bool $shortCircuit = true, string $fileEncoding = null)
+    public static function create(RepositoryInterface $repository, $paths, $names = null, bool $shortCircuit = true, ?string $fileEncoding = null)
     {
         $builder = $names === null ? StoreBuilder::createWithDefaultName() : StoreBuilder::createWithNoNames();
 
@@ -91,7 +91,7 @@ class DotenvVault extends Dotenv {
      *
      * @return \DotenvVault\DotenvVault
      */
-    public static function createMutable($paths, $names = null, bool $shortCircuit = true, string $fileEncoding = null)
+    public static function createMutable($paths, $names = null, bool $shortCircuit = true, ?string $fileEncoding = null)
     {
         $repository = RepositoryBuilder::createWithDefaultAdapters()->make();
 
@@ -108,7 +108,7 @@ class DotenvVault extends Dotenv {
      *
      * @return \DotenvVault\DotenvVault
      */
-    public static function createUnsafeMutable($paths, $names = null, bool $shortCircuit = true, string $fileEncoding = null)
+    public static function createUnsafeMutable($paths, $names = null, bool $shortCircuit = true, ?string $fileEncoding = null)
     {
         $repository = RepositoryBuilder::createWithDefaultAdapters()
             ->addAdapter(PutenvAdapter::class)
@@ -127,7 +127,7 @@ class DotenvVault extends Dotenv {
      *
      * @return \DotenvVault\DotenvVault
      */
-    public static function createImmutable($paths, $names = null, bool $shortCircuit = true, string $fileEncoding = null)
+    public static function createImmutable($paths, $names = null, bool $shortCircuit = true, ?string $fileEncoding = null)
     {
         $repository = RepositoryBuilder::createWithDefaultAdapters()->immutable()->make();
 
@@ -144,7 +144,7 @@ class DotenvVault extends Dotenv {
      *
      * @return \DotenvVault\DotenvVault
      */
-    public static function createUnsafeImmutable($paths, $names = null, bool $shortCircuit = true, string $fileEncoding = null)
+    public static function createUnsafeImmutable($paths, $names = null, bool $shortCircuit = true, ?string $fileEncoding = null)
     {
         $repository = RepositoryBuilder::createWithDefaultAdapters()
             ->addAdapter(PutenvAdapter::class)

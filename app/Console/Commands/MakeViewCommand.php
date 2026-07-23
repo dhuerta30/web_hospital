@@ -44,7 +44,8 @@ class MakeViewCommand extends Command
         <div id="artify-ajax-loader">
             <img width="300" src="{{ $_ENV["BASE_URL"] }}app/libs/artify/images/ajax-loader.gif" class="artify-img-ajax-loader"/>
         </div>
-         @include(\'layouts/footer\')';
+         @include(\'layouts/footer\')
+         ';
 
         // Guarda el contenido en el archivo
         $resultModel = file_put_contents($viewPath, $viewContent);

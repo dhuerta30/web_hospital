@@ -30,20 +30,21 @@
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/swpm.common.css'>
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/style.min.css'>
     <link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/default.min.css'>
+	<link rel="stylesheet" href='{{ $_ENV["BASE_URL"] }}css/fancybox.css' />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 	<!-- Start WOWSlider.com HEAD section -->
 	<link rel="stylesheet" type="text/css" href='{{ $_ENV["BASE_URL"] }}css/style.css' />
 	<!--<script type="text/javascript" src="engine1/jquery.js"></script>-->
-
 
     <!-- Scripts -->
     <script src='{{ $_ENV["BASE_URL"] }}js/jquery.min.js'></script>
     <script src='{{ $_ENV["BASE_URL"] }}js/jquery.mCustomScrollbar.concat.min.js'></script>
     <script src='{{ $_ENV["BASE_URL"] }}js/frontend.js'></script>
 
-    <!-- Extra Scripts -->
-	<script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}engine1/jquery.js'></script>
+    <!-- Extra Scripts -->	
 	<script type="text/javascript" src='{{ $_ENV["BASE_URL"] }}js/jquery-ui.js'></script>
+	
 
     <!-- Inline Styles for Compatibility -->
     <style>
@@ -58,8 +59,17 @@
             background: none !important;
             padding: 0 !important;
         }
+		h3.card-title {
+    		display: none;
+		}
 		body {
 			background-color: #e6e6e6!important;
+		}
+
+		i.fa-brands.fa-youtube, i.fa-brands.fa-x-twitter, i.fa.fa-instagram, i.fa.fa-facebook {
+    		font-size: 30px;
+			position: relative;
+			top: 5px;
 		}
     </style>
 
@@ -74,125 +84,195 @@
             outline: 1px solid #FF0000 !important;
         }
         @media (max-width: 767px) {
-            #pojo-a11y-toolbar { top: 50px !important; }
+            #pojo-a11y-toolbar { 
+				top: 50px !important; 
+			}
         }
     </style>
+
+	<style>
+	/* Estilo básico de menú */
+	#menu-principal ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	#menu-principal li {
+		position: relative;
+	}
+
+	#menu-principal > ul > li {
+		display: inline-block;
+		margin-right: 20px;
+	}
+
+	/* Submenús ocultos por defecto */
+	.sub-menu {
+		display: none;
+		position: absolute;
+		top: 100%;
+		left: 0;
+		background-color: white;
+		border: 1px solid #ccc;
+		min-width: 200px;
+		z-index: 1000;
+	}
+
+	/* Mostrar submenú al hacer hover */
+	.menu-item-has-children:hover > .sub-menu {
+		display: block;
+	}
+
+	/* Sub-submenús posicionados a la derecha */
+	.sub-menu .menu-item-has-children:hover > .sub-menu {
+		left: 100%;
+		top: 0;
+	}
+
+	.sub-menu .menu-item-has-children > .sub-menu {
+		display: none;
+	}
+</style>
+
 </head>
 <body class="home page-template-default page page-id-49">
+<?php
+$env = $_ENV["BASE_URL"];
+$configs = App\Controllers\WebController::configs();
+$menuweb = App\Controllers\WebController::menuWeb();
+$submenuweb = App\Controllers\WebController::SubmenuWeb();
+$submenudos = App\Controllers\WebController::SubmenuDos();
 
-    <div id="menu-movil">
-        <div class="wrap">
-            <nav id="menu-principal">
-                <!-- Menu Principal - Móvil -->
-                <ul id="menu-main-menu" class="menu-main">
-					<li id="menu-item-48" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48"><a href="#">Inicio</a></li>
-				<li id="menu-item-31" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-31"><a>Salud Responde</a>
-				<ul class="sub-menu">
-					<li id="menu-item-6068" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6068"><a href="#">Qué es Salud Responde</a></li>
-				</ul>
-				</li>
-				<li id="menu-item-32" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-32"><a href="#">Información Administrativa</a>
-				<ul class="sub-menu">
-					<li id="menu-item-20032" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20032"><a href="#">Ley N°21.746 modifica normativa sobre licencias médicas</a></li>
-				</ul>
-				</li>
-				<li id="menu-item-38" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-38"><a>Preguntas Frecuentes</a>
-				<ul class="sub-menu">
-					<li id="menu-item-20002" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20002"><a href="#">Puesta al día Vacunación VPH y Sarampión</a></li>
-					<ul class="sub-menu">
-						<li id="menu-item-3464" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3464"><a href="#">Formularios PNAC</a></li>
-						<li id="menu-item-10203" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10203"><a href="#">Fortalecimiento lactancia materna y PNAC</a></li>
-						<li id="menu-item-3955" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3955"><a href="#">Entrega Alimentos por Alergia a la Proteína de la Leche de Vaca</a></li>
-					</ul>
-				</li>
-					<li id="menu-item-3949" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3949"><a href="#">Profilaxis Pre Exposición VIH</a></li>
-				</ul>
-				</li>
-				<li id="menu-item-33" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-33"><a>Difusión</a>
-				<ul class="sub-menu">
-					<li id="menu-item-13844" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13844"><a href="#">Universalización de la Atención Primaria de Salud</a></li>
-					<li id="menu-item-13264" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-13264"><a href="#">Calendario Epidemiológico 2025</a></li>
-					<li id="menu-item-670" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-670"><a href="#">Noticias</a></li>
-					<li id="menu-item-669" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-669"><a href="#">Boletines</a></li>
-				</ul>
-				</li>
-				<li id="menu-item-10108" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-10108"><a>Intranet</a>
-				<ul class="sub-menu">
-					<li id="menu-item-5735" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5735"><a href="#">Capacitación (acceso solo funcionarios)</a></li>
-					<li id="menu-item-10109" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10109"><a href="#">Monitoreo Calidad (acceso solo funcionarios)</a></li>
-					<li id="menu-item-18937" class="menu-item menu-item-type-custom menu-item-object-custom menu-item-18937"><a href="#">Sistema de aseguramiento de la calidad</a></li>
-				</ul>
-				</li>
-				</ul>
-			</nav>
-        </div>
+// Agrupar submenús por id_menu_web
+$submenusAgrupados = [];
+foreach ($submenuweb as $submenu) {
+    $submenusAgrupados[$submenu["id_menu_web"]][] = $submenu;
+}
+
+// ✅ Agrupar sub-submenús por id_submenu_web (no por su propio ID)
+$subsubmenusAgrupados = [];
+foreach ($submenudos as $subsubmenu) {
+    if (isset($subsubmenu["id_submenu_web"])) {
+        $subsubmenusAgrupados[$subsubmenu["id_submenu_web"]][] = $subsubmenu;
+    }
+}
+?>
+<div id="menu-movil">
+    <div class="wrap">
+        <nav id="menu-principal">
+            <ul id="menu-main-menu" class="menu-main">
+				<?php foreach ($menuweb as $menu): ?>
+					<?php
+						$menuId = $menu["id_menu_web"];
+						// Omitir si no es visible
+						if (strtolower($menu["visibilidad"] ?? '') === 'oculto') continue;
+
+						$submenus = $submenusAgrupados[$menuId] ?? [];
+						$hasChildren = !empty($submenus);
+					?>
+					<li class="menu-item <?= $hasChildren ? 'menu-item-has-children' : '' ?> menu-item-<?= $menuId ?>">
+						<a href="<?= htmlspecialchars($menu["url"] ?? '#') ?>">
+							<?= htmlspecialchars($menu["nombre"] ?? 'Sin nombre') ?>
+						</a>
+
+						<?php if ($hasChildren): ?>
+							<ul class="sub-menu">
+								<?php foreach ($submenus as $submenu): ?>
+									<?php
+										if (strtolower($submenu["visibilidad_submenu"] ?? '') === 'oculto') continue;
+
+										$submenuId = $submenu["id_submenu_web"] ?? null;
+										$subsubmenus = $submenuId && isset($subsubmenusAgrupados[$submenuId])
+											? $subsubmenusAgrupados[$submenuId]
+											: [];
+
+										$hasSubsub = !empty($subsubmenus);
+									?>
+									<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= $submenuId ?>">
+										<a href="<?= htmlspecialchars($submenu["url_submenu"] ?? '#') ?>">
+											<?= htmlspecialchars($submenu["nombre_submenu"] ?? 'Sin nombre') ?>
+										</a>
+
+										<?php if ($hasSubsub): ?>
+											<ul class="sub-menu">
+												<?php foreach ($subsubmenus as $subsubmenu): ?>
+													<?php if (strtolower($subsubmenu["visibilidad_submenudos"] ?? '') === 'oculto') continue; ?>
+													<li class="menu-item menu-item-<?= $subsubmenu["id_submenudos_web"] ?? 'no-id' ?>">
+														<a href="<?= htmlspecialchars($subsubmenu["url_submenudos"] ?? '#') ?>">
+															<?= htmlspecialchars($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
+														</a>
+													</li>
+												<?php endforeach; ?>
+											</ul>
+										<?php endif; ?>
+									</li>
+								<?php endforeach; ?>
+							</ul>
+						<?php endif; ?>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+        </nav>
     </div>
+</div>
 
-<header style="background-image: url('{{ $_ENV["BASE_URL"] }}theme/img/banner.jpg');">
+<header style="background-image: url('<?= $env ?>app/libs/artify/uploads/<?=$configs[0]["banner_superior"]?>');">
 <div class="wrap">
-	
-	
-		<center><a href="{{ $_ENV['BASE_URL'] }}" target=_blank>
-			<img src='{{ $_ENV["BASE_URL"] }}theme/img/hsjm.png'>
-		</a></center>
-
-		
 	<nav id="menu-principal">
-		<!-- Menu Principal -->
 		<ul id="menu-main-menu" class="menu-main">
-			<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-48">
-				<a href="#">Inicio</a>
-			</li>
-			<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-31">
-				<a>Salud Responde</a>
-				<ul class="sub-menu">
-					<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-6068">
-						<a href="#">Qué es Salud Responde</a>
-					</li>
-				</ul>
-			</li>
-			<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-32">
-				<a href="#">Información Administrativa</a>
-				<ul class="sub-menu">
-					<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20032">
-						<a href="#">Ley N°21.746 modifica normativa sobre licencias médicas</a>
-					</li>
-				</ul>
-			</li>
-			<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-38">
-				<a>Preguntas Frecuentes</a>
-				<ul class="sub-menu">
-					<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-20002">
-						<a href="#">Puesta al día Vacunación VPH y Sarampión</a>
-					</li>
-					<ul class="sub-menu">
-						<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-3464">
-							<a href="#">Formularios PNAC</a>
-						</li>
-					</ul>
-					<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-19963">
-						<a href="#">Mycoplasma pneumoniae</a>
-					</li>
-				</ul>
-			</li>
-			<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-33">
-				<a>Difusión</a>
-				<ul class="sub-menu">
-					<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-669">
-						<a href="#">Boletines</a>
-					</li>
-				</ul>
-			</li>
-			<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-10108">
-				<a>Intranet</a>
-				<ul class="sub-menu">
-					<li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-5735">
-						<a href="#">Capacitación (acceso solo funcionarios)</a>
-					</li>
-				</ul>
-			</li>
-		</ul>         
+			<?php foreach ($menuweb as $menu): ?>
+				<?php
+					$menuId = $menu["id_menu_web"];
+					// Omitir si no es visible
+					if (strtolower($menu["visibilidad"] ?? '') === 'oculto') continue;
+
+					$submenus = $submenusAgrupados[$menuId] ?? [];
+					$hasChildren = !empty($submenus);
+				?>
+				<li class="menu-item <?= $hasChildren ? 'menu-item-has-children' : '' ?> menu-item-<?= $menuId ?>">
+					<a href="<?= htmlspecialchars($menu["url"] ?? '#') ?>">
+						<?= htmlspecialchars($menu["nombre"] ?? 'Sin nombre') ?>
+					</a>
+
+					<?php if ($hasChildren): ?>
+						<ul class="sub-menu">
+							<?php foreach ($submenus as $submenu): ?>
+								<?php
+									if (strtolower($submenu["visibilidad_submenu"] ?? '') === 'oculto') continue;
+
+									$submenuId = $submenu["id_submenu_web"] ?? null;
+									$subsubmenus = $submenuId && isset($subsubmenusAgrupados[$submenuId])
+										? $subsubmenusAgrupados[$submenuId]
+										: [];
+
+									$hasSubsub = !empty($subsubmenus);
+								?>
+								<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= $submenuId ?>">
+									<a href="<?= htmlspecialchars($submenu["url_submenu"] ?? '#') ?>">
+										<?= htmlspecialchars($submenu["nombre_submenu"] ?? 'Sin nombre') ?>
+									</a>
+
+									<?php if ($hasSubsub): ?>
+										<ul class="sub-menu">
+											<?php foreach ($subsubmenus as $subsubmenu): ?>
+												<?php if (strtolower($subsubmenu["visibilidad_submenudos"] ?? '') === 'oculto') continue; ?>
+												<li class="menu-item menu-item-<?= $subsubmenu["id_submenudos_web"] ?? 'no-id' ?>">
+													<a href="<?= htmlspecialchars($subsubmenu["url_submenudos"] ?? '#') ?>">
+														<?= htmlspecialchars($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
+													</a>
+												</li>
+											<?php endforeach; ?>
+										</ul>
+									<?php endif; ?>
+								</li>
+							<?php endforeach; ?>
+						</ul>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
 	</nav>
-		<a href="#" id="menu-movil-trigger">Menú Principal</a>
-	</div>
+	<a href="#" id="menu-movil-trigger">Menú Principal</a>
+</div>
 </header>

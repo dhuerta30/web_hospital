@@ -1,5 +1,6 @@
 <?php
 
+#[\AllowDynamicProperties]
 Class DocufyErrorCtrl {
 
     private $errors = array();

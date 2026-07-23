@@ -40,18 +40,18 @@
                                         @endphp
                                         <li>
                                             @if ($tieneSubmenus)
-                                                <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox" data-type="menu">
+                                                <input type="checkbox" id="menu-<?= $item['id_menu'] ?>" class="menu-checkbox" data-type="menu">
                                                 <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
                                                 <ul class="list-none">
                                                     @foreach ($submenus as $submenu)
                                                         <li>
-                                                            <input type="checkbox" id="<?= $submenu['id_submenu'] ?>" class="submenu-checkbox" data-type="submenu" data-parent="<?= $item['id_menu'] ?>">
+                                                            <input type="checkbox" id="submenu-<?= $submenu['id_submenu'] ?>" class="submenu-checkbox" data-type="submenu" data-parent="menu-<?= $item['id_menu'] ?>">
                                                             <span><i class="<?= $submenu['icono_submenu'] ?>"></i> <?= $submenu['nombre_submenu'] ?></span>
                                                         </li>                                                                  
                                                     @endforeach
                                                 </ul>
                                             @else
-                                                <input type="checkbox" id="<?= $item['id_menu'] ?>" class="menu-checkbox" data-type="menu">
+                                                <input type="checkbox" id="menu-<?= $item['id_menu'] ?>" class="menu-checkbox" data-type="menu">
                                                 <span><i class="<?= $item['icono_menu'] ?>"></i> <?= $item['nombre_menu'] ?></span>
                                             @endif
                                         </li>
@@ -107,10 +107,12 @@
 
             // Iterar sobre las casillas marcadas y recopilar datos
             $('.menu-checkbox, .submenu-checkbox, .menu-checkbox-pr, .submenu-checkbox-pr').each(function () {
-                var checkboxId = $(this).attr('id');
+                // Limpia el prefijo "menu-" o "submenu-" del ID antes de usarlo,
+                // para que el backend siga recibiendo solo el ID numérico como antes
+                var checkboxId = $(this).attr('id').replace(/^(menu-|submenu-)/, '');
                 var isChecked = $(this).prop('checked');
                 var isSubMenu = $(this).hasClass('submenu-checkbox') || $(this).hasClass('submenu-checkbox-pr');
-                var parentMenuId = isSubMenu ? $(this).data('parent') : null;
+                var parentMenuId = isSubMenu ? $(this).data('parent').toString().replace(/^(menu-|submenu-)/, '') : null;
 
                 
                     if (isSubMenu && parentMenuId) {

@@ -30,8 +30,8 @@ class HomeController
 		SessionManager::startSession();
 		$Sesusuario = SessionManager::get('usuario');
 		if (isset($Sesusuario)) {
-			if ($_SERVER['REQUEST_URI'] === "/home/modulos") {
-				Redirect::to("modulos");
+			if ($_SERVER['REQUEST_URI'] === "/home/noticias") {
+				Redirect::to("noticias");
 			}
 		} else {
 			Redirect::to("login");
@@ -344,10 +344,15 @@ class HomeController
 		$artify->setSettings("deleteMultipleBtn", false);
 		$artify->setSettings("checkboxCol", false);
 		$render = $artify->dbTable("usuario")->render();
+		
+		$menu = HomeController::menuDB();
+        $current_url = $_SERVER['REQUEST_URI'];
 
 		$stencil = new ArtifyStencil();
         echo $stencil->render('acceso_menus', [
-			'render' => $render
+			'render' => $render,
+			'menu'   => $menu,
+            'current_url' => $current_url
 		]);
 	}
 
@@ -632,11 +637,10 @@ class HomeController
 	{
 		$id = $data['id'];
 		$queryfy = $obj->getQueryfyObj();
-		$queryfy->fetchType = "OBJ";
 		$queryfy->where("id", $id);
 		$result = $queryfy->select("backup");
 
-		$file_sql = $result[0]->archivo;
+		$file_sql = $result[0]["archivo"];
 
 		$file_crop = "uploads/".$file_sql;
 
@@ -678,7 +682,7 @@ class HomeController
 				$_ENV['DB_USER'],
 				$_ENV['DB_PASS'],
 				$_ENV['DB_HOST']
-			])->storeAfterExportTo($exportDirectory, "procedimiento" . time() . ".sql");
+			])->storeAfterExportTo($exportDirectory, "web_hospital" . time() . ".sql");
 
 			$file = $_ENV["BASE_URL"] . $_ENV['UPLOAD_URL'] . $simpleBackup->getExportedName();
 
@@ -3021,7 +3025,7 @@ class HomeController
 		$action = "javascript:;";
 		$text = '<i class="fas fa-arrows-alt-v"></i>';
 		$attr = array("title"=>"Arrastra para Reordenar Fila");
-		$artify->enqueueBtnActions("url btn btn-primary btn-sm reordenar_fila", $action, "url",$text,"orden_menu", $attr);
+		$artify->enqueueBtnActions("url btn btn-primary btn-sm reordenar_fila", $action, "url", $text, "orden_menu", $attr);
 		$artify->multiTableRelationDisplay("tab", "Menu");
 		$artify->bulkCrudUpdate("nombre_menu", "text",array("data-some-attr" =>"some-dummy-val"));
 		$artify->bulkCrudUpdate("url_menu", "text",array("data-some-attr" =>"some-dummy-val"));

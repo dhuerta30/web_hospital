@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+#[\AllowDynamicProperties]
 class Queryfy
 {
 
@@ -694,12 +695,13 @@ class Queryfy
         }
 
         if (strtoupper($operator) == "NOT IN" || strtoupper($operator) == "IN") {
+            $parameters = array();
             if (is_array($value)) {
                 $parameters = array_map(function ($val) {
                     return "?";
                 }, $value);
             }
-            $this->whereCondition .= implode(" ", $this->parseColumns((array) $column)) . strtoupper($operator) . " (" . implode($parameters, ",") . ") ";
+            $this->whereCondition .= implode(" ", $this->parseColumns((array) $column)) . strtoupper($operator) . " (" . implode(",", $parameters) . ") ";
         } else if (strtoupper($operator) == "BETWEEN") {
             $this->whereCondition .= implode(" ", $this->parseColumns((array) $column)) . " BETWEEN ? AND ? ";
         } else {

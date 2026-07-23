@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+#[\AllowDynamicProperties]
 Class Artify {
 
     private $tableName;
@@ -436,7 +437,7 @@ Class Artify {
      */
     public function dbOrderBy($orderbyCols) {
         if (is_array($orderbyCols))
-            $this->orderByCols = implode($orderbyCols, ",");
+            $this->orderByCols = implode(",", $orderbyCols);
         else
             $this->orderByCols = $orderbyCols;
         return $this;
@@ -2784,17 +2785,30 @@ Class Artify {
         }
     }
 
-    private function dbSwitch($data) {
+   private function dbSwitch($data) {
         $queryfy = $this->getQueryfyObj();
         $uniqueId = $data["uniqueId"];
         $colName = $this->actions[$uniqueId][0];
         $actions = $this->actions[$uniqueId][1];
         $colVal = $actions[$data["columnVal"]];
-        $updateData = array($colName => $colVal);
+        
+        $updateData = array(
+            $colName => $colVal,
+            $this->pk => $data["id"] // <-- añadimos el ID
+        );
+
+        // callback con el id incluido
         $updateData = $this->handleCallback('before_switch_update', $updateData);
+
+        // quitamos el id antes de actualizar la tabla
+        unset($updateData[$this->pk]);
+
         $queryfy->where($this->pk, $data["id"]);
         $queryfy->update($this->tableName, $updateData);
-        $updateData = $this->handleCallback('after_switch_update', $updateData);
+
+        // también pasamos el id al callback final
+        $updateData[$this->pk] = $data["id"];
+        $this->handleCallback('after_switch_update', $updateData);
     }
 
     private function dbSaveJoinData(Queryfy $queryfy, $data, $lastInsertId, $operation = "insert") {
@@ -3286,12 +3300,11 @@ Class Artify {
             $offset = ($this->currentpage - 1) * $recordPerPage;
 
             $queryfy->limit = $this->getSelectPageLimit($recordPerPage);
-            $orderby = "";
+            $orderby = $this->sql;
 
             if (isset($data["sortkey"])) {
                 $fieldName = $this->decrypt($data["sortkey"]);
-                $this->sortOrder[$fieldName] = $data["action"];
-                $orderby = " ORDER BY ". $fieldName . " " . $data["action"];
+                $orderby = " ORDER BY {$fieldName} {$data["action"]}";
             }
 
             $limitSql = "SELECT {$this->col} FROM {$this->tableName} {$this->sql} {$orderby} LIMIT {$offset}, {$recordPerPage}";
@@ -3626,9 +3639,9 @@ Class Artify {
                 $data = array();
                 
                 $param["attr"] = array_merge(
-                    $param["attr"], 
+                    $param["attr"],
                     array(
-                        "data-id" => "{pk-val}", 
+                        "data-id" => "{pk-val}",
                         "data-col" => $col, 
                         "data-orignal-val" => "{val}"
                     )

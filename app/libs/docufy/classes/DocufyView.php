@@ -1,5 +1,6 @@
 <?php
 
+#[\AllowDynamicProperties]
 Class DocufyView {
 
     private $template_path;

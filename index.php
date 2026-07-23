@@ -1,4 +1,13 @@
 <?php
+/*
+ * Compatibilidad PHP 8.0 - 8.4
+ * Se silencian deprecaciones y avisos (E_DEPRECATED / E_NOTICE) generados por
+ * librerías de terceros (propiedades dinámicas en 8.2+, paso de null a funciones
+ * internas en 8.1+, etc.) para que NO se impriman antes de las respuestas JSON/AJAX
+ * y rompan el frontend. No se ocultan errores ni excepciones reales.
+ */
+//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
+
 require('vendor/autoload.php');
 $dotenv = DotenvVault\DotenvVault::createImmutable(__DIR__);
 $dotenv->safeLoad();
@@ -16,6 +25,8 @@ $router->get('/admin', 'LoginController@index');
 $router->get('/login', 'LoginController@index');
 $router->get('/salir', 'LoginController@salir');
 $router->get('/recuperar', 'LoginController@reset');
+
+$router->get('/slider', 'sliderController@index');
 
 $router->get('/modulos', 'HomeController@modulos');
 $router->get('/usuarios', 'HomeController@usuarios');
@@ -48,10 +59,12 @@ $router->get('/documentacion', 'DocumentacionController@documentacion');
 $router->get('/error', 'ErrorController@index');
 
 $router->get('/hola', 'UserController@index');
-$router->get('usuario/{id}/{val}/{val}', 'UserController@show');
+$router->get('/usuario/{id}/{val}/{val}', 'UserController@show');
 
 $router->post('/buscar_noticias', 'WebController@buscar_noticias');
-$router->get('/noticia/{id}', 'WebController@page');
+$router->get('/noticia/{titulo}', 'WebController@noticia');
+
+$router->get('/pagina/{titulo}', 'WebController@page');
 
 /* Api Controllers */
 $router->post('/Restp/generarToken', 'RestpController@generarToken');
@@ -59,6 +72,7 @@ $router->post('/Restp/generarToken', 'RestpController@generarToken');
 $router->get('/Restp/listar/{tabla}/{token}', 'RestpController@listar');
 $router->get('/Restp/listar/{tabla}/{filtro_url}/{token}', 'RestpController@listar');
 $router->get('/noticias', 'NoticiasController@index');
+$router->get('/paginas', 'PaginaController@index');
 $router->get('/carga_masiva_noticias', 'NoticiasController@carga_masiva_noticias');
 
 $router->get('/web_menu', 'MenuWebController@index');

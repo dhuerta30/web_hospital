@@ -5,79 +5,102 @@ namespace App\Controllers;
 use App\core\SessionManager;
 use App\core\Token;
 use App\core\Request;
-use App\core\ArtifyStencil;
-use App\core\Redirect;
 use App\core\DB;
+use App\core\Redirect;
+use App\core\ArtifyStencil;
 
 class SliderController
 {
     public $token;
 
-	public function __construct()
-	{
-		SessionManager::startSession();
-		$Sesusuario = SessionManager::get('usuario');
-		if (isset($Sesusuario)) {
-			if ($_SERVER['REQUEST_URI'] === "/home/modulos") {
-				Redirect::to("modulos");
-			}
-		} else {
-			Redirect::to("login");
-		}
+    public function __construct()
+    {
+        SessionManager::startSession();
+        $Sesusuario = SessionManager::get('usuario');
+        if (!isset($Sesusuario)) {
+            Redirect::to("login");
+        }
         $this->token = Token::generateFormToken('send_message');
-	}
+    }
 
     public function index()
     {
         $artify = DB::ArtifyCrud();
-        $template = '
-        <div class="card">
-            <div class="card-header bg-dark">
-                Crear Slider Web
-            </div>
-            <div class="card-body">
-            
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">Titulo</label>
-                            {titulo}
-                            <p class="artify_help_block help-block form-text with-errors"></p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="form-label">Url</label>
-                            {url}
-                            <p class="artify_help_block help-block form-text with-errors"></p>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label class="form-label">Url</label>
-                            {imagen}
-                            <p class="artify_help_block help-block form-text with-errors"></p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>';
-        $artify->set_template($template);
-        $artify->addFilter("FiltroTitulo", "Filtrar por Titulo", "titulo", "dropdown");
-        $artify->setFilterSource("FiltroTitulo", "tabla_bd", "titulo", "titulo as pl", "db");
-        $artify->setSettings("actionFilterPosition", "top");
         $artify->formDisplayInPopup();
-        $artify->setSettings("function_filter_and_search", true);
-        $artify->fieldTypes("imagen", "FILE_NEW");
-        $artify->setSettings("searchbox", true);
-        $artify->buttonHide("submitBtnSaveBack");
         $artify->colRename("id_slider", "ID");
-        $render = $artify->dbTable("slider")->render();
+        $artify->buttonHide("submitBtnSaveBack");
+        $artify->fieldTypes("imagen", "FILE_NEW");
+        $artify->setSettings("pagination", false);
+        $artify->setSettings("function_filter_and_search", true);
+        $artify->setSettings("searchbox", true);
+        $artify->setSettings("deleteMultipleBtn", false);
+        $artify->setSettings("recordsPerPageDropdown", false);
+        $artify->setSettings("totalRecordsInfo", true);
+        $artify->setSettings("addbtn", true);
+        $artify->setSettings("editbtn", true);
+        $artify->setSettings("viewbtn", false);
+        $artify->setSettings("delbtn", true);
+        $artify->setSettings("actionbtn", true);
+        $artify->setSettings("checkboxCol", false);
+        $artify->setSettings("numberCol", false);
+        $artify->setSettings("printBtn", false);
+        $artify->setSettings("pdfBtn", false);
+        $artify->setSettings("csvBtn", false);
+        $artify->setSettings("excelBtn", false);
+        $artify->fieldNotMandatory("titulo");
+        $artify->fieldNotMandatory("contenido");
+        $artify->addCallback("before_insert", [$this, "before_insert_slider"]);
+        $artify->addCallback("before_update", [$this, "before_update_slider"]);
+        $artify->addCallback("format_table_data", [$this, "formatTableDataCallBackslider"]);
+        $artify->addCallback("before_delete", [$this, "eliminar_slider"]);
+        $render = $artify->dbTable('slider')->render();
 
         $stencil = new ArtifyStencil();
         echo $stencil->render('slider', [
             'render' => $render
         ]);
     }
+
+    public function eliminar_slider($data, $obj){
+        $id = $data["id"];
+        $queryfy = $obj->getQueryfyObj();
+
+        // Obtener imagen asociada al slider
+        $queryfy->where("id_slider", $id);
+        $result = $queryfy->select("slider");
+
+        if ($result && isset($result[0]["imagen"])) {
+            $imagen = $result[0]["imagen"];
+
+            // Actualizar tabla noticias
+            $queryfy2 = $obj->getQueryfyObj(); // nuevo objeto para evitar where acumulados
+            $queryfy2->where("imagen", $imagen);
+            $queryfy2->update("noticias", array("enviar_imagen_a_slider" => "2"));
+        }
+
+        return $data;
+    }
+
+
+    public function formatTableDataCallBackslider($data, $obj){
+        if($data){
+            foreach($data as &$item){
+                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'" data-fancybox="gallery" data-caption="'.$item["titulo"].'">
+                                    <img width="100" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'">
+                                   </a>';
+            }
+        }
+        return $data;
+    }
+
+    public function before_insert_slider($data, $obj){
+        $data["slider"]["imagen"] = basename($data["slider"]["imagen"]);
+        return $data;
+    }
+
+    public function before_update_slider($data, $obj){
+        $data["slider"]["imagen"] = basename($data["slider"]["imagen"]);
+        return $data;
+    }
+
 }

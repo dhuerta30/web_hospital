@@ -27,6 +27,9 @@
 
 .artify-portfolio-row {
     margin-bottom: 30px;
+    border: 1px solid #e9e8e3;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
+    background: #f3f2ed;
 }
 
 .artify-hide{
@@ -220,6 +223,7 @@ ul.artify-export-options li a {
 }
 .artify-portfolio-col-data{
     width: 100%;
+    padding: 8px;
 }
 .artify-portfolio-col-data-horizontle{
     width: 50%;

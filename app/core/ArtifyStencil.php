@@ -1,96 +1,146 @@
 <?php
-// ArtifyStencil - Motor de Plantillas estilo Blade
 namespace App\core;
 
-class ArtifyStencil {
+class ArtifyStencil
+{
+    protected string $cachePath;
+    protected string $viewPath;
 
-    protected $cachePath = __DIR__ . '/cache/';
-    protected $viewPath = __DIR__ . '/../Views/';
-    protected $sections = [];
-    protected $sectionStack = [];
+    protected array $sections = [];
+    protected array $sectionStack = [];
 
-    public function render($templateFile, $data = []) {
-        $templateFile = $this->viewPath . $templateFile . '.php';
-        $compiledFile = $this->getCompiledPath($templateFile);
+    public function __construct()
+    {
+        $this->cachePath = __DIR__ . '/cache/';
+        $this->viewPath  = __DIR__ . '/../Views/';
+    }
 
-        if (!file_exists($compiledFile) || filemtime($templateFile) > filemtime($compiledFile)) {
-            $this->compile($templateFile, $compiledFile);
+    /* =========================
+       RENDER
+    ========================= */
+    public function render(string $view, array $data = []): string
+    {
+        $viewFile = $this->viewPath . $view . '.php';
+        $compiled = $this->getCompiledPath($viewFile);
+
+        if (!file_exists($compiled) || filemtime($viewFile) > filemtime($compiled)) {
+            $this->compile($viewFile, $compiled);
         }
 
-        extract($data);
+        extract($data, EXTR_SKIP);
+        $__env = $this;
+
         ob_start();
-        include $compiledFile;
+        include $compiled;
         return ob_get_clean();
     }
 
-    protected function getCompiledPath($templateFile) {
-        return $this->cachePath . md5($templateFile) . '.php';
+    protected function getCompiledPath(string $viewFile): string
+    {
+        return $this->cachePath . md5($viewFile) . '.php';
     }
 
-   protected function compile($templateFile, $compiledFile) {
+    /* =========================
+       SECTIONS (Blade-style)
+    ========================= */
+    public function startSection(string $name): void
+    {
+        $this->sectionStack[] = $name;
+        ob_start();
+    }
+
+    public function endSection(): void
+    {
+        $name = array_pop($this->sectionStack);
+        $this->sections[$name] = ob_get_clean();
+    }
+
+    public function yieldSection(string $name): void
+    {
+        echo $this->sections[$name] ?? '';
+    }
+
+    /* =========================
+       COMPILER
+    ========================= */
+    protected function compile(string $viewFile, string $compiledFile): void
+    {
         if (!is_dir($this->cachePath)) {
             mkdir($this->cachePath, 0777, true);
         }
 
-        $content = file_get_contents($templateFile);
+        $content = file_get_contents($viewFile);
 
-        // Sin escape: {!! $var !!}
-        $content = preg_replace('/\{!!\s*(.*?)\s*!!\}/s', '<?php echo $1; ?>', $content);
-        
-        // Con escape: {{ $var }}
-        // Aquí usaremos preg_replace_callback para que el código PHP quede bien
-        $content = preg_replace_callback('/\{\{\s*(.*?)\s*\}\}/s', function ($matches) {
-            return '<?php echo htmlspecialchars(' . $matches[1] . ', ENT_QUOTES, \'UTF-8\'); ?>';
-        }, $content);
+        /* ---------- ECHO ---------- */
 
-        $content = preg_replace_callback('/@if\s*\(([^)]+)\)/s', function ($matches) {
-            return '<?php if (' . $matches[1] . '): ?>';
-        }, $content);
+        // {!! $var !!}
+        $content = preg_replace(
+            '/\{!!\s*(.*?)\s*!!\}/s',
+            '<?php echo $1; ?>',
+            $content
+        );
 
-        $content = preg_replace_callback('/@elseif\s*\((.+?)\)/s', function ($matches) {
-            return '<?php elseif (' . $matches[1] . '): ?>';
-        }, $content);
+        // {{ $var }}
+        $content = preg_replace_callback(
+            '/\{\{\s*(.*?)\s*\}\}/s',
+            fn($m) => "<?php echo htmlspecialchars({$m[1]}, ENT_QUOTES, 'UTF-8'); ?>",
+            $content
+        );
 
+        /* ---------- CONTROL ---------- */
+
+        $content = preg_replace('/@if\s*\((.*?)\)/', '<?php if ($1): ?>', $content);
+        $content = preg_replace('/@elseif\s*\((.*?)\)/', '<?php elseif ($1): ?>', $content);
         $content = preg_replace('/@else/', '<?php else: ?>', $content);
         $content = preg_replace('/@endif/', '<?php endif; ?>', $content);
 
-        // @foreach, @endforeach
-        $content = preg_replace_callback('/@foreach\s*\((.*?)\)/s', function ($matches) {
-            return '<?php foreach (' . $matches[1] . '): ?>';
-        }, $content);
-
+        $content = preg_replace('/@foreach\s*\((.*?)\)/', '<?php foreach ($1): ?>', $content);
         $content = preg_replace('/@endforeach/', '<?php endforeach; ?>', $content);
 
-        // @include
-        $content = preg_replace_callback('/@include\s*\(\s*[\'"](.+?)[\'"]\s*\)/', function ($matches) {
-            $template = $matches[1];
-            $templateFile = $this->viewPath . $template . '.php';
-            $compiledFile = $this->getCompiledPath($templateFile);
-            if (!file_exists($compiledFile) || filemtime($templateFile) > filemtime($compiledFile)) {
-                $this->compile($templateFile, $compiledFile);
-            }
-            return "<?php include '$compiledFile'; ?>";
-        }, $content);
+        /* ---------- PHP ---------- */
 
-        // @section and @endsection
-        $content = preg_replace_callback('/@section\s*\(\s*[\'"](.*?)[\'"]\s*\)(.*?)@endsection/s', function ($matches) {
-            $sectionName = $matches[1];
-            $sectionContent = $matches[2];
-            return "<?php \$this->sections['$sectionName'] = function() { ?>$sectionContent<?php }; ?>";
-        }, $content);
+        $content = preg_replace('/@php\s*(.*?)\s*@endphp/s', '<?php $1 ?>', $content);
 
-        // @yield
-        // Usamos preg_replace_callback para que la variable $1 se reemplace correctamente en PHP
-        $content = preg_replace_callback('/@yield\s*\(\s*[\'"](.*?)[\'"]\s*\)/', function ($matches) {
-            $sectionName = $matches[1];
-            return "<?php if(isset(\$this->sections['$sectionName'])) { \$this->sections['$sectionName'](); } ?>";
-        }, $content);
+        /* ---------- SECTIONS ---------- */
 
-        // @extends
-        if (preg_match('/@extends\s*\(\s*[\'"](.*?)[\'"]\s*\)/', $content, $matches)) {
-            $layout = $matches[1];
+        $content = preg_replace(
+            '/@section\s*\(\s*[\'"](.*?)[\'"]\s*\)/',
+            '<?php $__env->startSection(\'$1\'); ?>',
+            $content
+        );
+
+        $content = preg_replace(
+            '/@endsection/',
+            '<?php $__env->endSection(); ?>',
+            $content
+        );
+
+        $content = preg_replace(
+            '/@yield\s*\(\s*[\'"](.*?)[\'"]\s*\)/',
+            '<?php $__env->yieldSection(\'$1\'); ?>',
+            $content
+        );
+
+        /* ---------- INCLUDE ---------- */
+
+        $content = preg_replace_callback(
+            '/@include\s*\(\s*[\'"](.+?)[\'"]\s*(?:,\s*(\[[^\)]*\]))?\)/',
+            function ($m) {
+                $view = $m[1];
+                $data = $m[2] ?? '[]';
+                return "<?php echo (new \\App\\core\\ArtifyStencil())->render('$view', $data); ?>";
+            },
+            $content
+        );
+
+        /* ---------- EXTENDS ---------- */
+
+        if (preg_match('/@extends\s*\(\s*[\'"](.*?)[\'"]\s*\)/', $content, $m)) {
+
+            $layout = $m[1];
             $layoutFile = $this->viewPath . $layout . '.php';
             $compiledLayout = $this->getCompiledPath($layoutFile);
+
             if (!file_exists($compiledLayout) || filemtime($layoutFile) > filemtime($compiledLayout)) {
                 $this->compile($layoutFile, $compiledLayout);
             }
@@ -98,9 +148,6 @@ class ArtifyStencil {
             $content = preg_replace('/@extends\s*\(\s*[\'"](.*?)[\'"]\s*\)/', '', $content);
             $content .= "\n<?php include '$compiledLayout'; ?>";
         }
-
-        // Soporte a @php ... @endphp (multilínea)
-        $content = preg_replace('/@php\s*(.*?)\s*@endphp/s', '<?php $1 ?>', $content);
 
         file_put_contents($compiledFile, $content);
     }

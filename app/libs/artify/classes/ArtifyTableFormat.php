@@ -1,5 +1,6 @@
 <?php
 
+#[\AllowDynamicProperties]
 Class ArtifyTableFormat extends ArtifyHelper {
 
     public function __construct() {

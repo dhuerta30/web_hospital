@@ -1,9 +1,34 @@
 <?php
 
+#[\AllowDynamicProperties]
 Class ArtifyAjaxCtrl {
 
+    /**
+     * Reemplazo de FILTER_SANITIZE_STRING (obsoleto desde PHP 8.1).
+     * Mantiene el mismo comportamiento: elimina etiquetas HTML y codifica
+     * las comillas simples y dobles. Compatible con PHP 8.0 - 8.4.
+     */
+    private function sanitizeString($value) {
+        if ($value === null) {
+            return null;
+        }
+        $value = strip_tags((string) $value);
+        return str_replace(array("'", '"'), array('&#39;', '&#34;'), $value);
+    }
+
+    private function sanitizeArray($data) {
+        if (!is_array($data)) {
+            return $this->sanitizeString($data);
+        }
+        $clean = array();
+        foreach ($data as $key => $val) {
+            $clean[$key] = is_array($val) ? $this->sanitizeArray($val) : $this->sanitizeString($val);
+        }
+        return $clean;
+    }
+
     public function handleRequest() {
-        $instanceKey = isset($_REQUEST["artify_instance"]) ? filter_var($_REQUEST["artify_instance"], FILTER_SANITIZE_STRING) : null;
+        $instanceKey = isset($_REQUEST["artify_instance"]) ? $this->sanitizeString($_REQUEST["artify_instance"]) : null;
         
         if(!isset($_SESSION["artify_sess"][$instanceKey])){
             die("La sesión ha caducado. Actualice su página para continuar.");
@@ -14,8 +39,8 @@ Class ArtifyAjaxCtrl {
             die("Ocurrió un error. Por favor, inténtelo de nuevo más tarde.");
         }
 
-        $action = isset($_POST["artify_data"]["action"]) ? filter_var($_POST["artify_data"]["action"], FILTER_SANITIZE_STRING) : null;
-        $data = isset($_POST["artify_data"]) ? filter_var_array($_POST["artify_data"], FILTER_SANITIZE_STRING) : [];
+        $action = isset($_POST["artify_data"]["action"]) ? $this->sanitizeString($_POST["artify_data"]["action"]) : null;
+        $data = isset($_POST["artify_data"]) ? $this->sanitizeArray($_POST["artify_data"]) : [];
         $post = $_POST;
         if (isset($_FILES)) {
             $post = array_merge($_FILES, $post);
@@ -141,7 +166,7 @@ Class ArtifyAjaxCtrl {
                 break;
             case "AUTOSUGGEST":
                 if (isset($_GET["callback"])) {
-                    $data["callback"] = filter_var($_GET["callback"], FILTER_SANITIZE_STRING);
+                    $data["callback"] = $this->sanitizeString($_GET["callback"]);
                 }
                 echo $artify->render("AUTOSUGGEST", $data);
                 break;

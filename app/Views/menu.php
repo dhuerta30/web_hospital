@@ -19,12 +19,12 @@
 			<div class="card-body">
 
 				<ul class="nav nav-pills" id="myTab" role="tablist">
-					<li class="nav-item" role="presentation">
+					<!--<li class="nav-item" role="presentation">
 						<a class="nav-link active" id="Menu-tab" data-toggle="tab" href="#Menu" role="tab" aria-controls="Menu" aria-selected="true">Todos los Menu</a>
-					</li>
-					<li class="nav-item" role="presentation">
+					</li>-->
+					<!--<li class="nav-item" role="presentation">
 						<a class="nav-link" id="Submenu-tab" data-toggle="tab" href="#Submenu" role="tab" aria-controls="Submenu" aria-selected="false">Todos los Submenu</a>
-					</li>
+					</li>-->
 				</ul>
 				<div class="tab-content" id="myTabContent">
 					<div class="tab-pane fade show active pt-3" id="Menu" role="tabpanel" aria-labelledby="Menu-tab">
