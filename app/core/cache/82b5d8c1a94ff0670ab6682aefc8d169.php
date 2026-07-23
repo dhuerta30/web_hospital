@@ -10,8 +10,6 @@ h3 {
     color: #337ab7!important;
 }
 
-/* Quita el espacio sobrante al final del contenido (footer de exportación/
-   paginación de artify, relleno y márgenes de la tarjeta que no se usan en el front). */
 .noticias_home .artify-options-files,
 .noticias_home .artify-export-options,
 .noticias_home .artify-table-heading { display: none !important; }

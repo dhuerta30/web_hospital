@@ -6,8 +6,6 @@
     background: none;
 }
 
-/* Quita el espacio sobrante al final del contenido (footer de exportación/
-   paginación de artify, relleno y márgenes de la tarjeta que no se usan en el front). */
 .pagina .artify-options-files,
 .pagina .artify-export-options,
 .pagina .artify-table-heading { display: none !important; }
@@ -36,7 +34,7 @@
                     <?php foreach($izquierda as $iz): ?>
                         <div class="banner banner-corto">
                             <?php if($iz["tipo_contenido"] == "Imagen"): ?>
-                            <a href="<?=$iz["url"]?>">
+                            <a href="<?= \App\core\Security::href($iz["url"]) ?>">
                                 <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($iz["imagen"] ?? ''))) ?>"> 
                             </a>
                             <?php else: ?>
@@ -109,7 +107,7 @@
                         <?php foreach($derecha as $der): ?>
                             <div class="banner banner-corto">
                                 <?php if($der["tipo_contenido"] == "Imagen"): ?>
-                                <a href="<?=$der["url"]?>">
+                                <a href="<?= \App\core\Security::href($der["url"]) ?>">
                                     <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($der["imagen"] ?? ''))) ?>">
                                 </a>
                                 <?php else: ?>
