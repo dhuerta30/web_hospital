@@ -15,7 +15,7 @@
                                 <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($iz["imagen"] ?? ''))) ?>">
                             </a>
                             <?php else: ?>
-                                <?php echo html_entity_decode($iz["video"]); ?>
+                                <?php echo App\core\Security::html($iz["video"]); ?>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
@@ -65,7 +65,7 @@
                         <ul>
                              <?php foreach($redes as $sociales): ?>
                                 <li class="<?=lcfirst($sociales["titulo"])?>">
-                                    <a href="<?=$sociales["url"]?>" target="_blank">
+                                    <a href="<?= \App\core\Security::href($sociales["url"]) ?>" target="_blank">
                                         <span><i class="<?=$sociales["icono"]?>"></i>  <?=$sociales["subtitulo"]?></span>
                                          
                                     </a>
@@ -86,7 +86,7 @@
                                     <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($der["imagen"] ?? ''))) ?>">
                                 </a>
                                 <?php else: ?>
-                                    <?php echo html_entity_decode($der["video"]); ?>
+                                    <?php echo App\core\Security::html($der["video"]); ?>
                                 <?php endif; ?>
                             </div> 
                         <?php endforeach; ?>

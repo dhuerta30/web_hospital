@@ -18,8 +18,8 @@
 
                     <?php foreach($inferior as $infer): ?>
                     <div class="sidebar-wrap widget_media_image">
-                        <a href="<?=$infer["url"]?>" target="_blank">
-                            <img src="<?= $env ?>app/libs/artify/uploads/<?=$infer["imagen"]?>" alt="" style="width: 100%; height: auto;">
+                        <a href="<?=\App\core\Security::e($infer["url"])?>" target="_blank">
+                            <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($infer["imagen"] ?? ''))) ?>" style="width: 100%; height: auto;">
                         </a>
                     </div>
                     <?php endforeach; ?>

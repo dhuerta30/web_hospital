@@ -356,6 +356,23 @@ class Security
         return $esPublica === false;
     }
 
+    public static function html($html): string
+    {
+        $html = html_entity_decode((string)$html, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // Bloquear scripts
+        if (preg_match('/<script/i', $html)) {
+            return '';
+        }
+
+        // Bloquear eventos JS
+        if (preg_match('/on[a-z]+\s*=/i', $html)) {
+            return '';
+        }
+
+        return $html;
+    }
+
     /**
      * Devuelve una URL apta para publicarse en el sitio de cara a Internet.
      *
