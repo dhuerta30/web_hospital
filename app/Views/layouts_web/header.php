@@ -181,7 +181,6 @@ foreach ($submenudos as $subsubmenu) {
 				<?php foreach ($menuweb as $menu): ?>
 					<?php
 						$menuId = $menu["id_menu_web"];
-						// Omitir si no es visible
 						if (strtolower($menu["visibilidad"] ?? '') === 'oculto') continue;
 
 						$submenus = $submenusAgrupados[$menuId] ?? [];
@@ -202,7 +201,6 @@ foreach ($submenudos as $subsubmenu) {
 										$subsubmenus = $submenuId && isset($subsubmenusAgrupados[$submenuId])
 											? $subsubmenusAgrupados[$submenuId]
 											: [];
-
 										$hasSubsub = !empty($subsubmenus);
 									?>
 									<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= \App\core\Security::e($submenuId) ?>">
