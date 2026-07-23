@@ -19,31 +19,31 @@
     <meta property="og:description" content="&nbsp;">
 
     <!-- Styles -->
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/main.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/font-awesome.min.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/bootstrap-front.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/animate.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/icon-picker.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/glyphicon.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/dashicons.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/jquery.mCustomScrollbar.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/swpm.common.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/style.min.css'>
-    <link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/default.min.css'>
-	<link rel="stylesheet" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/fancybox.css' />
+    <link rel="stylesheet" href="<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/main.css">
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/font-awesome.min.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/bootstrap-front.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/animate.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/icon-picker.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/glyphicon.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/dashicons.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/jquery.mCustomScrollbar.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/swpm.common.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/style.min.css'>
+    <link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/default.min.css'>
+	<link rel="stylesheet" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/fancybox.css' />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 	<!-- Start WOWSlider.com HEAD section -->
-	<link rel="stylesheet" type="text/css" href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/style.css' />
+	<link rel="stylesheet" type="text/css" href='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/style.css' />
 	<!--<script type="text/javascript" src="engine1/jquery.js"></script>-->
 
     <!-- Scripts -->
-    <script src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/jquery.min.js'></script>
-    <script src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/jquery.mCustomScrollbar.concat.min.js'></script>
-    <script src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/frontend.js'></script>
+    <script src='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>js/jquery.min.js'></script>
+    <script src='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>js/jquery.mCustomScrollbar.concat.min.js'></script>
+    <script src='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>js/frontend.js'></script>
 
     <!-- Extra Scripts -->	
-	<script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/jquery-ui.js'></script>
+	<script type="text/javascript" src='<?= \App\core\Security::e($_ENV['BASE_URL']) ?>js/jquery-ui.js'></script>
 	
 
     <!-- Inline Styles for Compatibility -->
@@ -187,9 +187,9 @@ foreach ($submenudos as $subsubmenu) {
 						$submenus = $submenusAgrupados[$menuId] ?? [];
 						$hasChildren = !empty($submenus);
 					?>
-					<li class="menu-item <?= $hasChildren ? 'menu-item-has-children' : '' ?> menu-item-<?= $menuId ?>">
+					<li class="menu-item <?= $hasChildren ? 'menu-item-has-children' : '' ?> menu-item-<?= \App\core\Security::e($menuId) ?>">
 						<a href="<?= \App\core\Security::href($menu["url"] ?? '#') ?>">
-							<?= htmlspecialchars($menu["nombre"] ?? 'Sin nombre') ?>
+							<?= \App\core\Security::e($menu["nombre"] ?? 'Sin nombre') ?>
 						</a>
 
 						<?php if ($hasChildren): ?>
@@ -205,9 +205,9 @@ foreach ($submenudos as $subsubmenu) {
 
 										$hasSubsub = !empty($subsubmenus);
 									?>
-									<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= $submenuId ?>">
+									<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= \App\core\Security::e($submenuId) ?>">
 										<a href="<?= \App\core\Security::href($submenu["url_submenu"] ?? '#') ?>">
-											<?= htmlspecialchars($submenu["nombre_submenu"] ?? 'Sin nombre') ?>
+											<?= \App\core\Security::e($submenu["nombre_submenu"] ?? 'Sin nombre') ?>
 										</a>
 
 										<?php if ($hasSubsub): ?>
@@ -216,7 +216,7 @@ foreach ($submenudos as $subsubmenu) {
 													<?php if (strtolower($subsubmenu["visibilidad_submenudos"] ?? '') === 'oculto') continue; ?>
 													<li class="menu-item menu-item-<?= $subsubmenu["id_submenudos_web"] ?? 'no-id' ?>">
 														<a href="<?= \App\core\Security::href($subsubmenu["url_submenudos"] ?? '#') ?>">
-															<?= htmlspecialchars($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
+															<?= \App\core\Security::e($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
 														</a>
 													</li>
 												<?php endforeach; ?>
@@ -245,9 +245,9 @@ foreach ($submenudos as $subsubmenu) {
 					$submenus = $submenusAgrupados[$menuId] ?? [];
 					$hasChildren = !empty($submenus);
 				?>
-				<li class="menu-item <?= $hasChildren ? 'menu-item-has-children' : '' ?> menu-item-<?= $menuId ?>">
+				<li class="menu-item <?= $hasChildren ? 'menu-item-has-children' : '' ?> menu-item-<?= \App\core\Security::e($menuId) ?>">
 					<a href="<?= \App\core\Security::href($menu["url"] ?? '#') ?>">
-						<?= htmlspecialchars($menu["nombre"] ?? 'Sin nombre') ?>
+						<?= \App\core\Security::e($menu["nombre"] ?? 'Sin nombre') ?>
 					</a>
 
 					<?php if ($hasChildren): ?>
@@ -263,9 +263,9 @@ foreach ($submenudos as $subsubmenu) {
 
 									$hasSubsub = !empty($subsubmenus);
 								?>
-								<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= $submenuId ?>">
+								<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= \App\core\Security::e($submenuId) ?>">
 									<a href="<?= \App\core\Security::href($submenu["url_submenu"] ?? '#') ?>">
-										<?= htmlspecialchars($submenu["nombre_submenu"] ?? 'Sin nombre') ?>
+										<?= \App\core\Security::e($submenu["nombre_submenu"] ?? 'Sin nombre') ?>
 									</a>
 
 									<?php if ($hasSubsub): ?>
@@ -274,7 +274,7 @@ foreach ($submenudos as $subsubmenu) {
 												<?php if (strtolower($subsubmenu["visibilidad_submenudos"] ?? '') === 'oculto') continue; ?>
 												<li class="menu-item menu-item-<?= $subsubmenu["id_submenudos_web"] ?? 'no-id' ?>">
 													<a href="<?= \App\core\Security::href($subsubmenu["url_submenudos"] ?? '#') ?>">
-														<?= htmlspecialchars($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
+														<?= \App\core\Security::e($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
 													</a>
 												</li>
 											<?php endforeach; ?>
