@@ -214,7 +214,7 @@ foreach ($submenudos as $subsubmenu) {
 											<ul class="sub-menu">
 												<?php foreach ($subsubmenus as $subsubmenu): ?>
 													<?php if (strtolower($subsubmenu["visibilidad_submenudos"] ?? '') === 'oculto') continue; ?>
-													<li class="menu-item menu-item-<?= $subsubmenu["id_submenudos_web"] ?? 'no-id' ?>">
+													<li class="menu-item menu-item-<?= \App\core\Security::e($subsubmenu["id_submenudos_web"] ?? 'no-id') ?>">
 														<a href="<?= \App\core\Security::href($subsubmenu["url_submenudos"] ?? '#') ?>">
 															<?= \App\core\Security::e($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
 														</a>
@@ -272,7 +272,7 @@ foreach ($submenudos as $subsubmenu) {
 										<ul class="sub-menu">
 											<?php foreach ($subsubmenus as $subsubmenu): ?>
 												<?php if (strtolower($subsubmenu["visibilidad_submenudos"] ?? '') === 'oculto') continue; ?>
-												<li class="menu-item menu-item-<?= $subsubmenu["id_submenudos_web"] ?? 'no-id' ?>">
+												<li class="menu-item menu-item-<?= \App\core\Security::e($subsubmenu["id_submenudos_web"] ?? 'no-id') ?>">
 													<a href="<?= \App\core\Security::href($subsubmenu["url_submenudos"] ?? '#') ?>">
 														<?= \App\core\Security::e($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
 													</a>
