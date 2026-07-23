@@ -7,6 +7,7 @@ use App\core\Request;
 use App\core\ArtifyStencil;
 use App\core\Redirect;
 use App\core\DB;
+use App\core\Security;
 use App\Models\NoticiasModel;
 
 class WebController
@@ -30,8 +31,18 @@ class WebController
         $request = new Request();
 
         if ($request->getMethod() === 'POST') {
-            $param = $request->post('buscar_noticias');
-            
+            // Validación de entrada del buscador (hallazgo 4.6).
+            // El filtro se envía a Queryfy con marcadores "?" (consulta preparada),
+            // por lo que no hay concatenación SQL; aquí sólo se acota el tamaño y
+            // se normaliza el tipo para evitar cargas anómalas.
+            $param = (string) $request->post('buscar_noticias');
+            $param = trim(mb_substr($param, 0, 100, 'UTF-8'));
+
+            if ($param === '') {
+                echo json_encode(['render' => '']);
+                return;
+            }
+
             $settings["includeTemplateCSS"] = false;
             $settings["includeTemplateJS"] = false;
             $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
@@ -66,13 +77,13 @@ class WebController
     public static function barra_lateral_izquierda(){
         $queryfy = DB::Queryfy();
         $data = $queryfy->executeQuery("SELECT * FROM barra_lateral_izquierda order by ordenar asc");
-        return $data;
+        return $data ?: [];
     }
 
     public static function barra_lateral_derecha(){
         $queryfy = DB::Queryfy();
         $data = $queryfy->executeQuery("SELECT * FROM barra_lateral_derecha order by ordenar asc");
-        return $data;
+        return $data ?: [];
     }
 
     public static function barra_inferior(){
@@ -118,14 +129,19 @@ class WebController
                 $mes = $meses[(int)$fechaObj->format("n")];
                 $anio = $fechaObj->format("Y");
                 $fechaFormateada = "$dia de $mes de $anio";
-                $boton = $_ENV["BASE_URL"]."noticia/".$item["slug"];
-                $item["titulo"] = "<center><a href='".$_ENV["BASE_URL"]."noticia/".$item["slug"]."'><h3><strong>".$item["titulo"]."</strong></h3></a></center>";
-                $item["fecha"] = "<center><h5><i class='fa fa-calendar'></i> ".$fechaFormateada."</h5></center>";
-                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'" data-fancybox="gallery" data-caption="Foto">
-                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'">
+                $boton = $_ENV["BASE_URL"]."noticia/".rawurlencode((string) $item["slug"]);
+                // Escape de salida (hallazgo 4.6 / remediación 6.4): el título y el
+                // nombre de imagen provienen de la base de datos y se insertan en HTML.
+                $slug   = rawurlencode((string) $item["slug"]);
+                $imagen = Security::e(basename((string) $item["imagen"]));
+
+                $item["titulo"] = "<center><a href='".$_ENV["BASE_URL"]."noticia/".$slug."'><h3><strong>".Security::e($item["titulo"])."</strong></h3></a></center>";
+                $item["fecha"] = "<center><h5><i class='fa fa-calendar'></i> ".Security::e($fechaFormateada)."</h5></center>";
+                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'" data-fancybox="gallery" data-caption="Foto">
+                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'">
                                    </a>';
                 $item["contenido"] = mb_strimwidth(strip_tags(html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8')), 0, 250, "...");
-                $item["boton"] = "<a href='".$boton."' class=\"btn btn-info btn-block\">Ver más</a>";
+                $item["boton"] = "<a href='".Security::eUrl($boton)."' class=\"btn btn-info btn-block\">Ver más</a>";
             }
         }
         return $data;
@@ -165,13 +181,14 @@ class WebController
         }
         $queryfy = DB::Queryfy();
         $filas = $queryfy->select($tabla);
-    
-        // DEBUG temporal
-        error_log("BUSCANDO slug: [$slugBuscado] en tabla [$tabla], filas=" . (is_array($filas) ? count($filas) : 'NO ARRAY'));
-    
+
+        // Se eliminó el volcado de depuración a error_log(): escribía en el log
+        // el contenido de la tabla en cada visita a una noticia o página.
+        // Un log de errores accesible por la web (ver .htaccess) convertía eso
+        // en una fuga de información.
+
         if (is_array($filas)) {
             foreach ($filas as $fila) {
-                error_log("  fila titulo: [" . ($fila["titulo"] ?? 'SIN TITULO') . "] -> slug: [" . $this->slugify($fila["titulo"] ?? '') . "]");
                 if (isset($fila["titulo"]) && $this->slugify($fila["titulo"]) === $slugBuscado) {
                     return $fila["titulo"];
                 }
@@ -227,11 +244,12 @@ class WebController
 
                 $fechaFormateada = "$dia de $mes de $anio";
 
-                //$item["titulo"] = "<center><h3><strong>".str_replace('-', ' ', $item["titulo"])."</strong></h3></center>";
-                $item["titulo"] = "<center><h3><strong>".str_replace('-', ' ', $item["titulo"])."</strong></a></center>";
-                $item["fecha"] = "<center><h5><i class='fa fa-calendar'></i> ".$fechaFormateada."</h5></center>";
-                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'" data-fancybox="gallery" data-caption="Foto">
-                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'">
+                $imagen = Security::e(basename((string) $item["imagen"]));
+
+                $item["titulo"] = "<center><h3><strong>".Security::e(str_replace('-', ' ', $item["titulo"]))."</strong></h3></center>";
+                $item["fecha"] = "<center><h5><i class='fa fa-calendar'></i> ".Security::e($fechaFormateada)."</h5></center>";
+                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'" data-fancybox="gallery" data-caption="Foto">
+                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'">
                                    </a>';
                 $item["contenido"] = html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8');
             }
@@ -271,9 +289,11 @@ class WebController
     public function formatearDatosTablaPage($data, $obj){
         if($data){
             foreach($data as &$item){
-                $item["titulo"] = "<center><h3><strong>".str_replace('-', ' ', $item["titulo"])."</strong></h3></center>";
-                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'" data-fancybox="gallery" data-caption="Foto">
-                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'">
+                $imagen = Security::e(basename((string) $item["imagen"]));
+
+                $item["titulo"] = "<center><h3><strong>".Security::e(str_replace('-', ' ', $item["titulo"]))."</strong></h3></center>";
+                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'" data-fancybox="gallery" data-caption="Foto">
+                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'">
                                    </a>';
                 $item["contenido"] = html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8');
             }

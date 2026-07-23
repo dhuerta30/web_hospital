@@ -6594,7 +6594,28 @@ Class Artify {
             if (!is_dir($fileUploadPath) && $fileUploadPath) {
                 mkdir($fileUploadPath);
             }
-            $destinationFileName = time() . "_" . $fileName["name"];
+            /*
+             * Nombre de archivo no predecible y saneado.
+             * INF-CIBER-2026-10, hallazgo 4.2 / remediación 6.6.
+             *
+             * ANTES: time() . "_" . $fileName["name"]
+             *   - el prefijo de tiempo hace el directorio enumerable por fuerza bruta
+             *   - el nombre original lo controla quien sube el archivo
+             *
+             * AHORA: se conserva el prefijo de tiempo (orden cronológico) pero se
+             * añaden 64 bits aleatorios y se limpia el nombre original.
+             * Los archivos ya existentes NO se ven afectados.
+             */
+            $destinationFileName = \App\core\Security::nombreArchivoSeguro($fileName["name"]);
+
+            // Defensa adicional: nunca aceptar una extensión ejecutable en el
+            // directorio de cargas, aunque el filtro de tipos lo permitiera.
+            if (\App\core\Security::extensionEjecutable($fileName["name"])) {
+                \App\core\Security::registrar(
+                    "Carga rechazada por extensión ejecutable: " . basename($fileName["name"])
+                );
+                return false;
+            }
             $destinationPath = $fileUploadPath . $destinationFileName;
             if (move_uploaded_file($fileName["tmp_name"], $destinationPath)) {
                 $destinationPath = $fileUploadPath . $destinationFileName;

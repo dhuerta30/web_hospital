@@ -419,7 +419,7 @@ class HomeController
 	}
 
 	public function insertar_usuario($data, $obj){
-		$token = $_POST['auth_token'];
+		$token = isset($_POST['auth_token']) ? (string) $_POST['auth_token'] : '';
 		$valid = Token::verifyFormToken('send_message', $token);
 		if (!$valid) {
 			echo "El token recibido no es válido";
@@ -451,7 +451,13 @@ class HomeController
 		}
 
 		$queryfy = $obj->getQueryfyObj();
-		$result = $queryfy->DBQuery("SELECT * FROM usuario WHERE usuario = '$user' OR email = '$email'");
+		// SEGURO — sentencia preparada con parámetros vinculados (hallazgo 4.5 / remediación 6.3)
+		// ANTES (vulnerable a SQLi):
+		// $result = $queryfy->DBQuery("SELECT * FROM usuario WHERE usuario = '$user' OR email = '$email'");
+		$result = $queryfy->DBQuery(
+			"SELECT * FROM usuario WHERE usuario = :user OR email = :email",
+			[':user' => $user, ':email' => $email]
+		);
 
 		if($result){
 			$error_msg = array("message" => "", "error" => "El correo o el usuario ya existe.", "redirectionurl" => "");
@@ -478,7 +484,7 @@ class HomeController
 	}
 
 	public function editar_usuario($data, $obj){
-		$token = $_POST['auth_token'];
+		$token = isset($_POST['auth_token']) ? (string) $_POST['auth_token'] : '';
 		$valid = Token::verifyFormToken('send_message', $token);
 		if (!$valid) {
 			echo "El token recibido no es válido";
@@ -3372,7 +3378,7 @@ class HomeController
 	}
 
 	public function editar_perfil($data, $obj){
-		$token = $_POST['auth_token'];
+		$token = isset($_POST['auth_token']) ? (string) $_POST['auth_token'] : '';
 		$valid = Token::verifyFormToken('send_message', $token);
 		if (!$valid) {
 			echo "El token recibido no es válido";

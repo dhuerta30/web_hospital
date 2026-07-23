@@ -138,11 +138,27 @@
 </head>
 <body class="home page-template-default page page-id-49">
 <?php
-$env = $_ENV["BASE_URL"];
-$configs = App\Controllers\WebController::configs();
-$menuweb = App\Controllers\WebController::menuWeb();
-$submenuweb = App\Controllers\WebController::SubmenuWeb();
-$submenudos = App\Controllers\WebController::SubmenuDos();
+/*
+ * Menú público — INF-CIBER-2026-10, hallazgo 4.1
+ *
+ * Los enlaces del menú provienen de las tablas menu_web / submenu_web /
+ * submenudos_web. Uno de ellos apuntaba a http://10.63.247.125/intranet/,
+ * publicando una IP de la red interna en el HTML de cara a Internet.
+ *
+ * Security::href() escapa el valor Y bloquea cualquier URL que apunte a un
+ * rango privado (RFC 1918), a loopback o a un dominio interno (.local, .lan,
+ * .intranet). Así el sitio deja de filtrar topología aunque el registro siga
+ * mal en la base de datos; el intento queda anotado en el log de seguridad.
+ *
+ * IMPORTANTE: esto es una contención. La corrección de fondo es actualizar el
+ * registro en la base de datos (ver sql/correccion_intranet.sql) y publicar la
+ * intranet tras un nombre DNS con HTTPS, o sólo por VPN.
+ */
+$env         = $_ENV["BASE_URL"];
+$configs     = App\Controllers\WebController::configs() ?: [];
+$menuweb     = App\Controllers\WebController::menuWeb() ?: [];
+$submenuweb  = App\Controllers\WebController::SubmenuWeb() ?: [];
+$submenudos  = App\Controllers\WebController::SubmenuDos() ?: [];
 
 // Agrupar submenús por id_menu_web
 $submenusAgrupados = [];
@@ -172,7 +188,7 @@ foreach ($submenudos as $subsubmenu) {
 						$hasChildren = !empty($submenus);
 					?>
 					<li class="menu-item <?= $hasChildren ? 'menu-item-has-children' : '' ?> menu-item-<?= $menuId ?>">
-						<a href="<?= htmlspecialchars($menu["url"] ?? '#') ?>">
+						<a href="<?= \App\core\Security::href($menu["url"] ?? '#') ?>">
 							<?= htmlspecialchars($menu["nombre"] ?? 'Sin nombre') ?>
 						</a>
 
@@ -190,7 +206,7 @@ foreach ($submenudos as $subsubmenu) {
 										$hasSubsub = !empty($subsubmenus);
 									?>
 									<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= $submenuId ?>">
-										<a href="<?= htmlspecialchars($submenu["url_submenu"] ?? '#') ?>">
+										<a href="<?= \App\core\Security::href($submenu["url_submenu"] ?? '#') ?>">
 											<?= htmlspecialchars($submenu["nombre_submenu"] ?? 'Sin nombre') ?>
 										</a>
 
@@ -199,7 +215,7 @@ foreach ($submenudos as $subsubmenu) {
 												<?php foreach ($subsubmenus as $subsubmenu): ?>
 													<?php if (strtolower($subsubmenu["visibilidad_submenudos"] ?? '') === 'oculto') continue; ?>
 													<li class="menu-item menu-item-<?= $subsubmenu["id_submenudos_web"] ?? 'no-id' ?>">
-														<a href="<?= htmlspecialchars($subsubmenu["url_submenudos"] ?? '#') ?>">
+														<a href="<?= \App\core\Security::href($subsubmenu["url_submenudos"] ?? '#') ?>">
 															<?= htmlspecialchars($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
 														</a>
 													</li>
@@ -217,21 +233,20 @@ foreach ($submenudos as $subsubmenu) {
     </div>
 </div>
 
-<header style="background-image: url('<?= $env ?>app/libs/artify/uploads/<?=$configs[0]["banner_superior"]?>');">
+<header style="background-image: url('<?= \App\core\Security::e($env) ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($configs[0]["banner_superior"] ?? ''))) ?>');">
 <div class="wrap">
 	<nav id="menu-principal">
 		<ul id="menu-main-menu" class="menu-main">
 			<?php foreach ($menuweb as $menu): ?>
 				<?php
 					$menuId = $menu["id_menu_web"];
-					// Omitir si no es visible
 					if (strtolower($menu["visibilidad"] ?? '') === 'oculto') continue;
 
 					$submenus = $submenusAgrupados[$menuId] ?? [];
 					$hasChildren = !empty($submenus);
 				?>
 				<li class="menu-item <?= $hasChildren ? 'menu-item-has-children' : '' ?> menu-item-<?= $menuId ?>">
-					<a href="<?= htmlspecialchars($menu["url"] ?? '#') ?>">
+					<a href="<?= \App\core\Security::href($menu["url"] ?? '#') ?>">
 						<?= htmlspecialchars($menu["nombre"] ?? 'Sin nombre') ?>
 					</a>
 
@@ -249,7 +264,7 @@ foreach ($submenudos as $subsubmenu) {
 									$hasSubsub = !empty($subsubmenus);
 								?>
 								<li class="menu-item <?= $hasSubsub ? 'menu-item-has-children' : '' ?> menu-item-<?= $submenuId ?>">
-									<a href="<?= htmlspecialchars($submenu["url_submenu"] ?? '#') ?>">
+									<a href="<?= \App\core\Security::href($submenu["url_submenu"] ?? '#') ?>">
 										<?= htmlspecialchars($submenu["nombre_submenu"] ?? 'Sin nombre') ?>
 									</a>
 
@@ -258,7 +273,7 @@ foreach ($submenudos as $subsubmenu) {
 											<?php foreach ($subsubmenus as $subsubmenu): ?>
 												<?php if (strtolower($subsubmenu["visibilidad_submenudos"] ?? '') === 'oculto') continue; ?>
 												<li class="menu-item menu-item-<?= $subsubmenu["id_submenudos_web"] ?? 'no-id' ?>">
-													<a href="<?= htmlspecialchars($subsubmenu["url_submenudos"] ?? '#') ?>">
+													<a href="<?= \App\core\Security::href($subsubmenu["url_submenudos"] ?? '#') ?>">
 														<?= htmlspecialchars($subsubmenu["nombre_submenudos"] ?? 'Sin nombre') ?>
 													</a>
 												</li>

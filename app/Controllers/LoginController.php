@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\core\SessionManager;
+use App\core\Security;
 use App\core\Token;
 use App\core\Redirect;
 use App\core\ArtifyStencil;
@@ -88,17 +89,34 @@ class LoginController {
 
 		if ($hash) {
 			if (password_verify($pass, $hash[0]['password'])) {
-				@session_start();
+				SessionManager::startSession();
+
+				/*
+				 * Regeneración del ID de sesión inmediatamente después de
+				 * autenticar (INF-CIBER-2026-10, remediación 6.5).
+				 * Previene la fijación de sesión: si un atacante indujo al
+				 * usuario a navegar con un ID conocido, ese ID deja de servir
+				 * en el instante en que las credenciales se validan.
+				 */
+				SessionManager::regenerar();
+
 				$_SESSION["data"] = $data;
-			
+
 				$obj->setLangData("no_data", "Bienvenido");
 				$obj->formRedirection($_ENV['BASE_URL']."modulos");
 			} else {
+				/*
+				 * Mensaje de error genérico y unificado.
+				 * ANTES se distinguía "el usuario no existe" de "la contraseña
+				 * no coincide", lo que permite enumerar cuentas válidas.
+				 */
+				Security::registrar("Intento de acceso fallido para el usuario: " . substr((string) $user, 0, 40));
 				echo "El usuario o la contraseña ingresada no coinciden.";
 				die();
 			}
 		} else {
-			echo "Datos erroneos.";
+			Security::registrar("Intento de acceso con usuario inexistente: " . substr((string) $user, 0, 40));
+			echo "El usuario o la contraseña ingresada no coinciden.";
 			die();
 		}
 
@@ -176,6 +194,13 @@ class LoginController {
 		$queryfy->where("email", $email);
 		$hash = $queryfy->select("usuario");
 
+		/*
+		 * Respuesta uniforme: el mensaje de éxito se muestra exista o no el
+		 * correo. Antes, un correo inexistente producía una respuesta distinta,
+		 * lo que permitía enumerar las cuentas del sistema.
+		 */
+		$obj->setLangData("success", "Si el correo está registrado, recibirás las instrucciones en tu bandeja.");
+
 		if ($hash) {
 			$pass = $queryfy->getRandomPassword(15, true);
 			$encrypt = password_hash($pass, PASSWORD_DEFAULT);
@@ -188,8 +213,9 @@ class LoginController {
 			$to = $email;
 
 			//$queryfy->send_email_public($to, 'daniel.telematico@gmail.com', null, $subject, $emailBody);
-			DB::PHPMail($to, "daniel.telematico@gmail.com", $subject, $emailBody);
-			$obj->setLangData("success", "Correo enviado con éxito");
+			// TODO: mover el remitente al .env (EMAIL_FROM) en vez de dejarlo fijo
+			// en el código; hoy apunta a una cuenta personal de Gmail.
+			DB::PHPMail($to, $_ENV["EMAIL_FROM"] ?? "daniel.telematico@gmail.com", $subject, $emailBody);
 		}
 
 		return $data;

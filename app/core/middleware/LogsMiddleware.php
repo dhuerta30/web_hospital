@@ -10,7 +10,7 @@ class LogsMiddleware {
 
         $data = $request->all();
     
-        if ($data[0] == "panel") {
+        if (isset($data[0]) && $data[0] === "panel") {
             Redirect::to("error");
             exit;
         }

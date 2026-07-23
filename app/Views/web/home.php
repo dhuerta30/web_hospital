@@ -6,7 +6,7 @@
                 <div class="banners">
                     <?php 
                         $env = $_ENV["BASE_URL"];
-                        $izquierda = App\Controllers\WebController::barra_lateral_izquierda();
+                        $izquierda = App\Controllers\WebController::barra_lateral_izquierda() ?: [];
                     ?>
                     <?php foreach($izquierda as $iz): ?>
                         <div class="banner banner-corto">
@@ -75,7 +75,7 @@
 
                      <?php 
                         $env = $_ENV["BASE_URL"];
-                        $redes = App\Controllers\WebController::redes_sociales();
+                        $redes = App\Controllers\WebController::redes_sociales() ?: [];
                     ?>
                     <div class="redes-lista">
                         <h5 class="titulo-seccion">Síguenos</h5>
@@ -92,7 +92,7 @@
                     </div>
 
                     <?php 
-                        $derecha = App\Controllers\WebController::barra_lateral_derecha();
+                        $derecha = App\Controllers\WebController::barra_lateral_derecha() ?: [];
                     ?>
                     <!-- Banners secundarios -->
                    <div class="banners">

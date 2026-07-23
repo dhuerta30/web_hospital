@@ -1,0 +1,49 @@
+# =============================================================================
+#  Directorio de cargas — /app/libs/artify/uploads/
+#  INF-CIBER-2026-10, hallazgo 4.2 / remediación 6.6
+#
+#  Este directorio recibe archivos subidos desde el panel. Si un atacante
+#  consigue depositar un .php aquí y el servidor lo ejecuta, obtiene ejecución
+#  remota de código. Estas reglas lo impiden aunque falle la validación de la
+#  aplicación.
+# =============================================================================
+
+# 1. Nada de listados de directorio.
+Options -Indexes -ExecCGI
+
+# 2. Ningún archivo de este directorio se interpreta como script.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+RemoveHandler .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .pht .cgi .pl .py
+RemoveType .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .pht
+
+AddType text/plain .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .pht .cgi .pl .py .sh
+
+# 3. Bloqueo explícito de extensiones ejecutables.
+<FilesMatch "\.(php|php3|php4|php5|php7|php8|phtml|phar|pht|shtml|cgi|pl|py|sh|bash|exe|htaccess)$">
+    Require all denied
+</FilesMatch>
+
+# 4. Sólo se sirven los tipos que el sitio realmente publica.
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico|pdf|docx|xlsx|pptx|odt|ods|txt|csv|mp4|webm)$">
+    Require all granted
+</FilesMatch>
+
+# 5. Los SVG pueden contener JavaScript: se fuerza su descarga en vez de su
+#    renderizado en el contexto del dominio.
+<IfModule mod_headers.c>
+    <FilesMatch "\.svg$">
+        Header set Content-Disposition "attachment"
+        Header set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+    </FilesMatch>
+
+    Header always set X-Content-Type-Options "nosniff"
+</IfModule>

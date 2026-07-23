@@ -8,16 +8,56 @@ use App\core\Request;
 
 class RestpController
 {
+    /**
+     * Orígenes autorizados a consumir la API.
+     *
+     * ANTES: "Access-Control-Allow-Origin: *" junto a
+     * "Access-Control-Allow-Credentials: true". Esa combinación es inválida
+     * según la especificación CORS y, donde el navegador la tolera, permite a
+     * cualquier sitio de Internet invocar la API con las credenciales de la
+     * víctima. Ahora se responde el origen sólo si está en esta lista blanca.
+     *
+     * Agregar aquí los dominios propios que realmente consumen la API.
+     */
+    private function origenesPermitidos(): array
+    {
+        $permitidos = [];
+
+        if (!empty($_ENV["DOMINIO"])) {
+            $permitidos[] = rtrim($_ENV["DOMINIO"], "/");
+        }
+
+        // Orígenes adicionales separados por coma en el .env:
+        // CORS_ORIGENES=https://otro.hospitaldemelipilla.cl,https://app.minsal.cl
+        if (!empty($_ENV["CORS_ORIGENES"])) {
+            foreach (explode(",", $_ENV["CORS_ORIGENES"]) as $origen) {
+                $origen = trim($origen);
+                if ($origen !== "") {
+                    $permitidos[] = rtrim($origen, "/");
+                }
+            }
+        }
+
+        return $permitidos;
+    }
+
     public function __construct()
     {
-        header("Access-Control-Allow-Origin: *"); // Permite cualquier dominio (cambiar * por un dominio específico si es necesario)
-        header("Access-Control-Allow-Methods: *"); // Métodos permitidos
-        header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Encabezados permitidos
-        header("Access-Control-Allow-Credentials: true"); // Permitir credenciales si es necesario
-        header('Content-Type: application/json');
+        $origen = isset($_SERVER["HTTP_ORIGIN"]) ? rtrim($_SERVER["HTTP_ORIGIN"], "/") : "";
 
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            http_response_code(200);
+        if ($origen !== "" && in_array($origen, $this->origenesPermitidos(), true)) {
+            header("Access-Control-Allow-Origin: " . $origen);
+            header("Access-Control-Allow-Credentials: true");
+            header("Vary: Origin"); // evita que una caché sirva la respuesta al origen equivocado
+        }
+
+        header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type, Authorization");
+        header("Access-Control-Max-Age: 600");
+        header("Content-Type: application/json");
+
+        if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+            http_response_code(204);
             exit;
         }
     }

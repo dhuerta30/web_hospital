@@ -1,29 +1,4 @@
 <?php echo (new \App\core\ArtifyStencil())->render('layouts_web/header', []); ?>
-<style>
-    div#artify_portfolio_0 {
-    border: none;
-    box-shadow: none;
-    background: none;
-}
-
-/* Quita el espacio sobrante al final del contenido (footer de exportación/
-   paginación de artify, relleno y márgenes de la tarjeta que no se usan en el front). */
-.pagina .artify-options-files,
-.pagina .artify-export-options,
-.pagina .artify-table-heading { display: none !important; }
-
-.pagina .card,
-.pagina .artifybox,
-.pagina .card-body { border: none !important; box-shadow: none !important; background: none !important; }
-
-.pagina .card-body { padding-bottom: 0 !important; }
-.pagina .artify-portfolio-row,
-.pagina .artify-portfolio-col,
-.pagina .artify-portfolio-col-data { margin-bottom: 0 !important; }
-.pagina .artify-portfolio-col-data:last-child { padding-bottom: 0 !important; margin-bottom: 0 !important; }
-.pagina .row:last-child { margin-bottom: 0 !important; }
-#main .post { margin-bottom: 0 !important; padding-bottom: 0 !important; }
-</style>
 <div id="content">
     <div class="container">
         <div class="row">
@@ -31,7 +6,7 @@
                 <div class="banners">
                     <?php 
                         $env = $_ENV["BASE_URL"];
-                        $izquierda = App\Controllers\WebController::barra_lateral_izquierda();
+                        $izquierda = App\Controllers\WebController::barra_lateral_izquierda() ?: [];
                     ?>
                     <?php foreach($izquierda as $iz): ?>
                         <div class="banner banner-corto">
@@ -62,10 +37,25 @@
                             <h3></h3>
                         </div>
                         <div class="texto">
+                            <!--<h3 class="title"></h3>-->
                             <div class="contenido">
 
-                                <div class="pagina">
-                                    <?php echo $data['data']; ?>
+                                <!--<div id="wowslider-container1">
+                                    <div class="ws_images">
+                                        <ul>
+                                            <?php //foreach($slider as $item){ ?>
+                                                <li><a href="<?//$_ENV["BASE_URL"]?>noticia/<?//str_replace(' ', '-', $item["url"])?>"><img src="<?//$_ENV["BASE_URL"]. "app/libs/artify/uploads/" .$item["imagen"]?>" alt="" title="<?//$item["titulo"]?>" id="wows1_<?//$item["id_slider"]?>"/></a></li>
+                                            <?php //} ?>
+                                        </ul>
+                                    </div>
+                                    <div class="ws_shadow"></div>
+                                </div>
+
+                                <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>engine1/wowslider.js'></script>
+                                <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>engine1/script.js'></script>-->
+
+                                <div class="noticias_home">
+                                    <?php echo $render; ?>
                                 </div>
 
                             </div>
@@ -83,9 +73,9 @@
                         <button class="btn btn-primary btn-block" type="submit" id="boton"><i class="fa fa-search"></i> Buscar</button>
                     </div>
 
-                    <?php 
+                     <?php 
                         $env = $_ENV["BASE_URL"];
-                        $redes = App\Controllers\WebController::redes_sociales();
+                        $redes = App\Controllers\WebController::redes_sociales() ?: [];
                     ?>
                     <div class="redes-lista">
                         <h5 class="titulo-seccion">Síguenos</h5>
@@ -102,10 +92,10 @@
                     </div>
 
                     <?php 
-                        $derecha = App\Controllers\WebController::barra_lateral_derecha();
+                        $derecha = App\Controllers\WebController::barra_lateral_derecha() ?: [];
                     ?>
                     <!-- Banners secundarios -->
-                   <div class="banners"> 
+                   <div class="banners">
                         <?php foreach($derecha as $der): ?>
                             <div class="banner banner-corto">
                                 <?php if($der["tipo_contenido"] == "Imagen"): ?>
@@ -128,3 +118,21 @@
     <img width="300" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>app/libs/artify/images/ajax-loader.gif' class="artify-img-ajax-loader"/>
 </div>
 <?php echo (new \App\core\ArtifyStencil())->render('layouts_web/footer', []); ?>
+<script>
+$(document).on("click", "#boton", function(){
+    let buscar_noticias = $(".buscar_noticias").val();
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV["BASE_URL"] ?>buscar_noticias",
+        data: { buscar_noticias: buscar_noticias },
+        dataType: "json",
+        beforeSend: function() {
+            $("#artify-ajax-loader").show();
+        },
+        success: function(data){
+            $("#artify-ajax-loader").hide();
+            $(".noticias_home").html(data["render"]);
+        }
+    });
+});
+</script>

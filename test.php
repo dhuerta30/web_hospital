@@ -1,0 +1,1 @@
+<?php echo "PHP llega aquí. REQUEST_URI = " . $_SERVER['REQUEST_URI'];
