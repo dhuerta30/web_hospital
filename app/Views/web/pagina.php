@@ -88,11 +88,13 @@
                     <div class="redes-lista">
                         <h5 class="titulo-seccion">Síguenos</h5>
                         <ul>
-                             <?php foreach($redes as $sociales): ?>
-                                <li class="<?=lcfirst($sociales["titulo"])?>">
-                                    <a href="<?=$sociales["url"]?>" target="_blank">
-                                        <span><i class="<?=$sociales["icono"]?>"></i>  <?=$sociales["subtitulo"]?></span>
-                                         
+                            <?php foreach ($redes as $sociales): ?>
+                                <li class="<?= \App\core\Security::e(lcfirst($sociales['titulo'])) ?>">
+                                    <a href="<?= \App\core\Security::href($sociales['url']) ?>" target="_blank" rel="noopener noreferrer">
+                                        <span>
+                                            <i class="<?= \App\core\Security::e($sociales['icono']) ?>"></i>
+                                            <?= \App\core\Security::e($sociales['subtitulo']) ?>
+                                        </span>
                                     </a>
                                 </li>
                             <?php endforeach; ?>
