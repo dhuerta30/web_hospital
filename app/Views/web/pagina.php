@@ -31,13 +31,13 @@
                 <div class="banners">
                     <?php 
                         $env = $_ENV["BASE_URL"];
-                        $izquierda = App\Controllers\WebController::barra_lateral_izquierda();
+                        $izquierda = App\Controllers\WebController::barra_lateral_izquierda() ?: [];
                     ?>
                     <?php foreach($izquierda as $iz): ?>
                         <div class="banner banner-corto">
                             <?php if($iz["tipo_contenido"] == "Imagen"): ?>
                             <a href="<?=$iz["url"]?>">
-                                <img src="<?= $env ?>app/libs/artify/uploads/<?=$iz["imagen"]?>"> 
+                                <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($iz["imagen"] ?? ''))) ?>"> 
                             </a>
                             <?php else: ?>
                                 <?php echo html_entity_decode($iz["video"]); ?>
@@ -85,7 +85,7 @@
 
                     <?php 
                         $env = $_ENV["BASE_URL"];
-                        $redes = App\Controllers\WebController::redes_sociales();
+                        $redes = App\Controllers\WebController::redes_sociales() ?: [];
                     ?>
                     <div class="redes-lista">
                         <h5 class="titulo-seccion">Síguenos</h5>
@@ -102,7 +102,7 @@
                     </div>
 
                     <?php 
-                        $derecha = App\Controllers\WebController::barra_lateral_derecha();
+                        $derecha = App\Controllers\WebController::barra_lateral_derecha() ?: [];
                     ?>
                     <!-- Banners secundarios -->
                    <div class="banners"> 
@@ -110,7 +110,7 @@
                             <div class="banner banner-corto">
                                 <?php if($der["tipo_contenido"] == "Imagen"): ?>
                                 <a href="<?=$der["url"]?>">
-                                    <img src="<?= $env ?>app/libs/artify/uploads/<?=$der["imagen"]?>">
+                                    <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($der["imagen"] ?? ''))) ?>">
                                 </a>
                                 <?php else: ?>
                                     <?php echo html_entity_decode($der["video"]); ?>

@@ -12,7 +12,7 @@
                         <div class="banner banner-corto">
                             <?php if($iz["tipo_contenido"] == "Imagen"): ?>
                             <a href="<?=$iz["url"]?>">
-                                <img src="<?= $env ?>app/libs/artify/uploads/<?=$iz["imagen"]?>"> 
+                                <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($iz["imagen"] ?? ''))) ?>">
                             </a>
                             <?php else: ?>
                                 <?php echo html_entity_decode($iz["video"]); ?>
@@ -37,27 +37,10 @@
                             <h3></h3>
                         </div>
                         <div class="texto">
-                            <!--<h3 class="title"></h3>-->
                             <div class="contenido">
-
-                                <!--<div id="wowslider-container1">
-                                    <div class="ws_images">
-                                        <ul>
-                                            <?php //foreach($slider as $item){ ?>
-                                                <li><a href="<?//$_ENV["BASE_URL"]?>noticia/<?//str_replace(' ', '-', $item["url"])?>"><img src="<?//$_ENV["BASE_URL"]. "app/libs/artify/uploads/" .$item["imagen"]?>" alt="" title="<?//$item["titulo"]?>" id="wows1_<?//$item["id_slider"]?>"/></a></li>
-                                            <?php //} ?>
-                                        </ul>
-                                    </div>
-                                    <div class="ws_shadow"></div>
-                                </div>
-
-                                <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>engine1/wowslider.js'></script>
-                                <script type="text/javascript" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>engine1/script.js'></script>-->
-
                                 <div class="noticias_home">
                                     <?php echo $render; ?>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -100,7 +83,7 @@
                             <div class="banner banner-corto">
                                 <?php if($der["tipo_contenido"] == "Imagen"): ?>
                                 <a href="<?=$der["url"]?>">
-                                    <img src="<?= $env ?>app/libs/artify/uploads/<?=$der["imagen"]?>">
+                                    <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($der["imagen"] ?? ''))) ?>">
                                 </a>
                                 <?php else: ?>
                                     <?php echo html_entity_decode($der["video"]); ?>
