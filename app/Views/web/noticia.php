@@ -42,7 +42,7 @@ h3 {
                                 <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($iz["imagen"] ?? ''))) ?>">
                             </a>
                             <?php else: ?>
-                                <?php echo html_entity_decode($iz["video"]); ?>
+                                 <?php echo App\core\Security::html($iz["video"]); ?>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
@@ -117,7 +117,7 @@ h3 {
                                     <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($der["imagen"] ?? ''))) ?>">
                                 </a>
                                 <?php else: ?>
-                                    <?php echo html_entity_decode($der["video"]); ?>
+                                    <?php echo App\core\Security::html($der["video"]); ?>
                                 <?php endif; ?>
                             </div> 
                         <?php endforeach; ?>
