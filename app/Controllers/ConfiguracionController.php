@@ -166,6 +166,7 @@ class ConfiguracionController
         $barra_lateral_izquierda->fieldDataBinding("tipo_contenido", array("Imagen" => "Imagen", "Video" => "Video"), "", "", "array");
         $barra_lateral_izquierda->dbOrderBy("ordenar asc");
 
+        $barra_lateral_izquierda->bulkCrudUpdate("ordenar", "text",array("data-some-attr" =>"some-dummy-val"));
         $barra_lateral_izquierda->fieldTypes("video", "TEXTAREA");
         $barra_lateral_izquierda->colRename("id_barra_lateral_izquierda", "ID");
         $barra_lateral_izquierda->buttonHide("submitBtnSaveBack");
@@ -242,6 +243,7 @@ class ConfiguracionController
         $barra_lateral_derecha->fieldTypes("tipo_contenido", "select");
         $barra_lateral_derecha->fieldDataBinding("tipo_contenido", array("Imagen" => "Imagen", "Video" => "Video"), "", "", "array");
 
+        $barra_lateral_derecha->bulkCrudUpdate("ordenar", "text",array("data-some-attr" =>"some-dummy-val"));
         $barra_lateral_derecha->fieldTypes("video", "TEXTAREA");
         $barra_lateral_derecha->colRename("id_barra_lateral_derecha", "ID");
         $barra_lateral_derecha->buttonHide("submitBtnSaveBack");

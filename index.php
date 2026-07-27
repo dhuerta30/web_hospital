@@ -18,12 +18,6 @@ use App\core\ArtifyRouter;
 use App\core\Request;
 use App\core\Security;
 
-/*
- * Endurecimiento de seguridad — INF-CIBER-2026-10
- * Debe ejecutarse ANTES de cualquier salida y de cualquier session_start():
- *   - envía las cabeceras de seguridad (hallazgo 4.4)
- *   - fija los atributos seguros de la cookie de sesión (hallazgo 4.7)
- */
 Security::boot();
 
 $router = new ArtifyRouter();

@@ -1,27 +1,30 @@
 <?php echo (new \App\core\ArtifyStencil())->render('layouts_web/header', []); ?>
 <style>
-    div#artify_portfolio_0 {
+div#artify_portfolio_0 {
     border: none;
     box-shadow: none;
     background: none;
 }
 
-.pagina .artify-options-files,
-.pagina .artify-export-options,
-.pagina .artify-table-heading { display: none !important; }
+h3 {
+    color: #337ab7!important;
+}
 
-.pagina .card,
-.pagina .artifybox,
-.pagina .card-body { border: none !important; box-shadow: none !important; background: none !important; }
+.noticias_home .artify-options-files,
+.noticias_home .artify-export-options,
+.noticias_home .artify-table-heading { display: none !important; }
 
-.pagina .card-body { padding-bottom: 0 !important; }
-.pagina .artify-portfolio-row,
-.pagina .artify-portfolio-col,
-.pagina .artify-portfolio-col-data { margin-bottom: 0 !important; }
-.pagina .artify-portfolio-col-data:last-child { padding-bottom: 0 !important; margin-bottom: 0 !important; }
-.pagina .row:last-child { margin-bottom: 0 !important; }
+.noticias_home .card,
+.noticias_home .artifybox,
+.noticias_home .card-body { border: none !important; box-shadow: none !important; background: none !important; }
+
+.noticias_home .card-body { padding-bottom: 0 !important; }
+.noticias_home .artify-portfolio-row,
+.noticias_home .artify-portfolio-col,
+.noticias_home .artify-portfolio-col-data { margin-bottom: 0 !important; }
+.noticias_home .artify-portfolio-col-data:last-child { padding-bottom: 0 !important; margin-bottom: 0 !important; }
+.noticias_home .row:last-child { margin-bottom: 0 !important; }
 #main .post { margin-bottom: 0 !important; padding-bottom: 0 !important; }
-
 </style>
 <div id="content">
     <div class="container">
@@ -36,7 +39,7 @@
                         <div class="banner banner-corto">
                             <?php if($iz["tipo_contenido"] == "Imagen"): ?>
                             <a href="<?= \App\core\Security::href($iz["url"]) ?>">
-                                <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($iz["imagen"] ?? ''))) ?>"> 
+                                <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($iz["imagen"] ?? ''))) ?>">
                             </a>
                             <?php else: ?>
                                  <?php echo App\core\Security::html($iz["video"]); ?>
@@ -49,7 +52,7 @@
                 <div id="main">
                     <div id="breadcrumbs">
                         <ul>
-                            <li><a href="<?=$_ENV["BASE_URL"]?>">Inicio</a></li>
+                            <li><a href="https://saludresponde.minsal.cl">Inicio</a></li>
                             <li class="sep">/</li>
                             <li> »</li>
                         </ul>
@@ -63,7 +66,7 @@
                         <div class="texto">
                             <div class="contenido">
 
-                                <div class="pagina">
+                                <div class="noticias_home">
                                     <?php echo $data['data']; ?>
                                 </div>
 
@@ -114,13 +117,14 @@
                                     <img src="<?= $env ?>app/libs/artify/uploads/<?= \App\core\Security::e(basename((string) ($der["imagen"] ?? ''))) ?>">
                                 </a>
                                 <?php else: ?>
-                                     <?php echo App\core\Security::html($der["video"]); ?>
+                                    <?php echo App\core\Security::html($der["video"]); ?>
                                 <?php endif; ?>
                             </div> 
                         <?php endforeach; ?>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -128,3 +132,21 @@
     <img width="300" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>app/libs/artify/images/ajax-loader.gif' class="artify-img-ajax-loader"/>
 </div>
 <?php echo (new \App\core\ArtifyStencil())->render('layouts_web/footer', []); ?>
+<script>
+$(document).on("click", "#boton", function(){
+    let buscar_noticias = $(".buscar_noticias").val();
+    $.ajax({
+        type: "POST",
+        url: "<?=$_ENV["BASE_URL"] ?>buscar_noticias",
+        data: { buscar_noticias: buscar_noticias },
+        dataType: "json",
+        beforeSend: function() {
+            $("#artify-ajax-loader").show();
+        },
+        success: function(data){
+            $("#artify-ajax-loader").hide();
+            $(".noticias_home").html(data["render"]);
+        }
+    });
+});
+</script>

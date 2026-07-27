@@ -21,6 +21,7 @@
 .pagina .artify-portfolio-col-data:last-child { padding-bottom: 0 !important; margin-bottom: 0 !important; }
 .pagina .row:last-child { margin-bottom: 0 !important; }
 #main .post { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+
 </style>
 <div id="content">
     <div class="container">

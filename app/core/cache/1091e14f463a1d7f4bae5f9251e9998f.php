@@ -9,12 +9,12 @@
 	<!-- Google Font: Source Sans Pro -->
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 	<!-- Font Awesome -->
-	<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>theme/plugins/fontawesome-free/css/all.min.css">
+	<link rel="stylesheet" href="<?= \App\core\Security::e($_ENV['BASE_URL']) ?>theme/plugins/fontawesome-free/css/all.min.css">
 	<!-- Theme style -->
-	<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>theme/dist/css/adminlte.min.css">
-	<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/style.css">
-	<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/shCore.css">
-	<link rel="stylesheet" href="<?=$_ENV["BASE_URL"]?>css/shThemeDjango.css">
+	<link rel="stylesheet" href="<?= \App\core\Security::e($_ENV['BASE_URL']) ?>theme/dist/css/adminlte.min.css">
+	<link rel="stylesheet" href="<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/style.css">
+	<link rel="stylesheet" href="<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/shCore.css">
+	<link rel="stylesheet" href="<?= \App\core\Security::e($_ENV['BASE_URL']) ?>css/shThemeDjango.css">
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -78,5 +78,5 @@
 		</nav>
 
 		<div id="loader">
-			<img  width="100" src="<?=$_ENV["BASE_URL"]?>app/libs/artify/images/ajax-loader.gif" class="ajax-loader"/>
+			<img  width="100" src="<?= \App\core\Security::e($_ENV['BASE_URL']) ?>app/libs/artify/images/ajax-loader.gif" class="ajax-loader"/>
 		</div>

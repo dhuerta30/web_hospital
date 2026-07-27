@@ -15,9 +15,6 @@ class ArtifyStencil
         $this->viewPath  = __DIR__ . '/../Views/';
     }
 
-    /* =========================
-       RENDER
-    ========================= */
     public function render(string $view, array $data = []): string
     {
         $viewFile = $this->viewPath . $view . '.php';
@@ -40,9 +37,6 @@ class ArtifyStencil
         return $this->cachePath . md5($viewFile) . '.php';
     }
 
-    /* =========================
-       SECTIONS (Blade-style)
-    ========================= */
     public function startSection(string $name): void
     {
         $this->sectionStack[] = $name;
@@ -60,9 +54,6 @@ class ArtifyStencil
         echo $this->sections[$name] ?? '';
     }
 
-    /* =========================
-       COMPILER
-    ========================= */
     protected function compile(string $viewFile, string $compiledFile): void
     {
         if (!is_dir($this->cachePath)) {
@@ -71,9 +62,6 @@ class ArtifyStencil
 
         $content = file_get_contents($viewFile);
 
-        /* ---------- ECHO ---------- */
-
-        // {!! $var !!}
         $content = preg_replace(
             '/\{!!\s*(.*?)\s*!!\}/s',
             '<?php echo $1; ?>',
@@ -87,8 +75,6 @@ class ArtifyStencil
             $content
         );
 
-        /* ---------- CONTROL ---------- */
-
         $content = preg_replace('/@if\s*\((.*?)\)/', '<?php if ($1): ?>', $content);
         $content = preg_replace('/@elseif\s*\((.*?)\)/', '<?php elseif ($1): ?>', $content);
         $content = preg_replace('/@else/', '<?php else: ?>', $content);
@@ -97,11 +83,7 @@ class ArtifyStencil
         $content = preg_replace('/@foreach\s*\((.*?)\)/', '<?php foreach ($1): ?>', $content);
         $content = preg_replace('/@endforeach/', '<?php endforeach; ?>', $content);
 
-        /* ---------- PHP ---------- */
-
         $content = preg_replace('/@php\s*(.*?)\s*@endphp/s', '<?php $1 ?>', $content);
-
-        /* ---------- SECTIONS ---------- */
 
         $content = preg_replace(
             '/@section\s*\(\s*[\'"](.*?)[\'"]\s*\)/',
@@ -121,8 +103,6 @@ class ArtifyStencil
             $content
         );
 
-        /* ---------- INCLUDE ---------- */
-
         $content = preg_replace_callback(
             '/@include\s*\(\s*[\'"](.+?)[\'"]\s*(?:,\s*(\[[^\)]*\]))?\)/',
             function ($m) {
@@ -132,8 +112,6 @@ class ArtifyStencil
             },
             $content
         );
-
-        /* ---------- EXTENDS ---------- */
 
         if (preg_match('/@extends\s*\(\s*[\'"](.*?)[\'"]\s*\)/', $content, $m)) {
 
