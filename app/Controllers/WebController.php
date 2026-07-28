@@ -16,10 +16,8 @@ class WebController
     {
         $noticias = new NoticiasModel();
         $render = $noticias->post(1, 2);
-
         $queryfy = DB::Queryfy();
         $slider = $queryfy->select("slider");
-
         $stencil = new ArtifyStencil();
         echo $stencil->render('web/home', [
             'render' => $render,
@@ -27,52 +25,15 @@ class WebController
         ]);
     }
 
-    /*public function full_page(Request $request){
-
-        $titulo = $request->get("titulo");
-
-        $tituloExacto = $this->resolverTituloExacto("pagina", $titulo);
-        $filtroTitulo = ($tituloExacto !== null) ? $tituloExacto : $this->slugify($titulo);
-
-        $settings["includeTemplateCSS"] = false;
-        $settings["includeTemplateJS"] = false;
-        $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
-        $artify->where("titulo", $filtroTitulo);
-        $artify->setPortfolioColumn(1);
-        $artify->tableHeading("");
-        $artify->setSettings("searchbox", false);
-        $artify->setSettings("refresh", false);
-        $artify->setSettings("recordsPerPageDropdown", false);
-        $artify->setSettings("totalRecordsInfo", false);
-        $artify->setSettings("function_filter_and_search", true);
-        $artify->crudTableCol(array( "titulo", "imagen", "contenido"));
-        $artify->addCallback("format_table_data", [$this, "formatearDatosTablaPage"]);
-        $artify->setSettings("addbtn", false);
-        $artify->setSettings("template", "pagina");
-        $data = $artify->dbTable("pagina")->render();
-
-        $stencil = new ArtifyStencil();
-        echo $stencil->render('web/full_page', [
-            'data' => $data,
-        ]);
-    }*/
-
     public function buscar_noticias(){
         $request = new Request();
-
         if ($request->getMethod() === 'POST') {
-            // Validación de entrada del buscador (hallazgo 4.6).
-            // El filtro se envía a Queryfy con marcadores "?" (consulta preparada),
-            // por lo que no hay concatenación SQL; aquí sólo se acota el tamaño y
-            // se normaliza el tipo para evitar cargas anómalas.
             $param = (string) $request->post('buscar_noticias');
             $param = trim(mb_substr($param, 0, 100, 'UTF-8'));
-
             if ($param === '') {
                 echo json_encode(['render' => '']);
                 return;
             }
-
             $settings["includeTemplateCSS"] = false;
             $settings["includeTemplateJS"] = false;
             $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
@@ -83,7 +44,6 @@ class WebController
             $artify->tableHeading("");
             $artify->recordsPerPage(2);
             $artify->dbOrderBy("fecha desc");
-            
             $artify->setSettings("totalRecordsInfo", false);
             $artify->setSettings("searchbox", false);
             $artify->setSettings("refresh", false);
@@ -92,7 +52,6 @@ class WebController
             $artify->crudTableCol(array("titulo", "fecha","imagen", "contenido"));
             $artify->setSettings("template", "noticias");
             $render = $artify->dbTable("noticias")->render();
-
             echo json_encode(['render' => $render]);
         }
     }
@@ -160,8 +119,6 @@ class WebController
                 $anio = $fechaObj->format("Y");
                 $fechaFormateada = "$dia de $mes de $anio";
                 $boton = $_ENV["BASE_URL"]."noticia/".rawurlencode((string) $item["slug"]);
-                // Escape de salida (hallazgo 4.6 / remediación 6.4): el título y el
-                // nombre de imagen provienen de la base de datos y se insertan en HTML.
                 $slug   = rawurlencode((string) $item["slug"]);
                 $imagen = Security::e(basename((string) $item["imagen"]));
 
@@ -178,29 +135,15 @@ class WebController
     }
 
     private function slugify($string) {
-        // Compatibilidad PHP 8.1+: evita pasar null a funciones de cadena.
         $string = (string) $string;
-
-        // Convertir a minúsculas
         $string = mb_strtolower($string, 'UTF-8');
-
-        // Reemplazar acentos más comunes manualmente
         $buscar  = ['á','é','í','ó','ú','ñ','ü'];
         $reemplazar = ['a','e','i','o','u','n','u'];
         $string = str_replace($buscar, $reemplazar, $string);
-
-        // Reemplazar espacios por guiones
         $string = str_replace(' ', '-', $string);
-
-        // Eliminar caracteres que no sean letras, números o guiones
         $string = preg_replace('/[^a-z0-9\-]/', '', $string);
-
-        // Eliminar guiones duplicados
         $string = preg_replace('/-+/', '-', $string);
-
-        // Eliminar guiones al inicio o al final
         $string = trim($string, '-');
-
         return $string;
     }
 
@@ -298,15 +241,12 @@ class WebController
             trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'),
             'pagina/full/'
         );
-
         $tituloExacto = $this->resolverTituloExacto("pagina", $titulo);
         $filtroTitulo = ($tituloExacto !== null)
             ? $tituloExacto
             : $this->slugify($titulo);
-
         $settings["includeTemplateCSS"] = false;
         $settings["includeTemplateJS"] = false;
-
         $artify = DB::ArtifyCrud(false, "pure", "pure", $settings);
         $artify->where("titulo", $filtroTitulo);
         $artify->setPortfolioColumn(1);
@@ -320,9 +260,7 @@ class WebController
         $artify->addCallback("format_table_data", [$this, "formatearDatosTablaPage"]);
         $artify->setSettings("addbtn", false);
         $artify->setSettings("template", "pagina");
-
         $data = $artify->dbTable("pagina")->render();
-
         $stencil = new ArtifyStencil();
         echo $stencil->render('web/pagina', [
             'data' => $data,
