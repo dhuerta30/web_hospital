@@ -27,7 +27,7 @@ class WebController
         ]);
     }
 
-    public function full_page(Request $request){
+    /*public function full_page(Request $request){
 
         $titulo = $request->get("titulo");
 
@@ -55,7 +55,7 @@ class WebController
         echo $stencil->render('web/full_page', [
             'data' => $data,
         ]);
-    }
+    }*/
 
     public function buscar_noticias(){
         $request = new Request();
@@ -287,15 +287,24 @@ class WebController
         return $data;
     }
 
-    public function page(Request $request){
+    public function page(Request $request)
+    {
         $titulo = $request->get("titulo");
 
+        $fullWidth = str_contains(
+            trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'),
+            'pagina/full/'
+        );
+
         $tituloExacto = $this->resolverTituloExacto("pagina", $titulo);
-        $filtroTitulo = ($tituloExacto !== null) ? $tituloExacto : $this->slugify($titulo);
+        $filtroTitulo = ($tituloExacto !== null)
+            ? $tituloExacto
+            : $this->slugify($titulo);
 
         $settings["includeTemplateCSS"] = false;
         $settings["includeTemplateJS"] = false;
-        $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
+
+        $artify = DB::ArtifyCrud(false, "pure", "pure", $settings);
         $artify->where("titulo", $filtroTitulo);
         $artify->setPortfolioColumn(1);
         $artify->tableHeading("");
@@ -304,15 +313,17 @@ class WebController
         $artify->setSettings("recordsPerPageDropdown", false);
         $artify->setSettings("totalRecordsInfo", false);
         $artify->setSettings("function_filter_and_search", true);
-        $artify->crudTableCol(array( "titulo", "imagen", "contenido"));
+        $artify->crudTableCol(["titulo", "imagen", "contenido"]);
         $artify->addCallback("format_table_data", [$this, "formatearDatosTablaPage"]);
         $artify->setSettings("addbtn", false);
         $artify->setSettings("template", "pagina");
+
         $data = $artify->dbTable("pagina")->render();
-        
+
         $stencil = new ArtifyStencil();
         echo $stencil->render('web/pagina', [
-            'data' => $data
+            'data' => $data,
+            'fullWidth' => $fullWidth
         ]);
     }
 
