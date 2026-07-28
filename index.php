@@ -69,6 +69,8 @@ $router->get('/noticia/{titulo}', 'WebController@noticia');
 
 $router->get('/pagina/{titulo}', 'WebController@page');
 
+$router->get('/full_page/{titulo}', 'WebController@full_page');
+
 /* Api Controllers */
 $router->post('/Restp/generarToken', 'RestpController@generarToken');
 

@@ -54,8 +54,8 @@
 			position: absolute;
 			left: 50%;
 			top: 50%;
-			margin-left: -32px; /* -1 * image width / 2 */
-			margin-top: -32px;  /* -1 * image height / 2 */
+			margin-left: -32px;
+			margin-top: -32px;
 			display: block;     
 		}
 
@@ -67,16 +67,13 @@
 	</style>
 	<!-- Site wrapper -->
 	<div class="wrapper">
-		<!-- Navbar -->
 		<nav class="main-header navbar navbar-expand navbar-white navbar-light">
-			<!-- Left navbar links -->
 			<ul class="navbar-nav">
 				<li class="nav-item">
 					<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
 				</li>
 			</ul>
 		</nav>
-
 		<div id="loader">
 			<img  width="100" src="<?= \App\core\Security::e($_ENV['BASE_URL']) ?>app/libs/artify/images/ajax-loader.gif" class="ajax-loader"/>
 		</div>

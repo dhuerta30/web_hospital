@@ -27,6 +27,36 @@ class WebController
         ]);
     }
 
+    public function full_page(Request $request){
+
+        $titulo = $request->get("titulo");
+
+        $tituloExacto = $this->resolverTituloExacto("pagina", $titulo);
+        $filtroTitulo = ($tituloExacto !== null) ? $tituloExacto : $this->slugify($titulo);
+
+        $settings["includeTemplateCSS"] = false;
+        $settings["includeTemplateJS"] = false;
+        $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
+        $artify->where("titulo", $filtroTitulo);
+        $artify->setPortfolioColumn(1);
+        $artify->tableHeading("");
+        $artify->setSettings("searchbox", false);
+        $artify->setSettings("refresh", false);
+        $artify->setSettings("recordsPerPageDropdown", false);
+        $artify->setSettings("totalRecordsInfo", false);
+        $artify->setSettings("function_filter_and_search", true);
+        $artify->crudTableCol(array( "titulo", "imagen", "contenido"));
+        $artify->addCallback("format_table_data", [$this, "formatearDatosTablaPage"]);
+        $artify->setSettings("addbtn", false);
+        $artify->setSettings("template", "pagina");
+        $data = $artify->dbTable("pagina")->render();
+
+        $stencil = new ArtifyStencil();
+        echo $stencil->render('web/full_page', [
+            'data' => $data,
+        ]);
+    }
+
     public function buscar_noticias(){
         $request = new Request();
 
@@ -286,15 +316,22 @@ class WebController
         ]);
     }
 
-    public function formatearDatosTablaPage($data, $obj){
-        if($data){
-            foreach($data as &$item){
-                $imagen = Security::e(basename((string) $item["imagen"]));
-
-                $item["titulo"] = "<center><h3><strong>".Security::e(str_replace('-', ' ', $item["titulo"]))."</strong></h3></center>";
-                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'" data-fancybox="gallery" data-caption="Foto">
-                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'">
-                                   </a>';
+    public function formatearDatosTablaPage($data, $obj)
+    {
+        if ($data) {
+            foreach ($data as &$item) {
+                $item["titulo"] = "<center><h3><strong>"
+                    . Security::e(str_replace('-', ' ', $item["titulo"]))
+                    . "</strong></h3></center>";
+                if (!empty($item["imagen"])) {
+                    $imagen = Security::e(basename((string) $item["imagen"]));
+                    $item["imagen"] = '
+                        <a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'" data-fancybox="gallery" data-caption="Foto">
+                            <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'">
+                        </a>';
+                } else {
+                    $item["imagen"] = "";
+                }
                 $item["contenido"] = html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8');
             }
         }
