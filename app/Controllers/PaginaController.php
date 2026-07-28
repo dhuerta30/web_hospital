@@ -33,7 +33,6 @@ class PaginaController
                 Registro Médico
             </div>
             <div class="card-body">
-            
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
@@ -66,7 +65,6 @@ class PaginaController
                         </div>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -83,17 +81,13 @@ class PaginaController
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>';
         $usuario = $_SESSION["usuario"][0]["nombre"];
         $artify->set_template($template);
-
         $artify->setSettings("actionFilterPosition", "top");
-
         $artify->addFilter("TituloFiltro", "Filtrar por Fecha", "fecha", "date");
         $artify->setFilterSource("TituloFiltro", "noticias", "fecha", "fecha as pl", "db");
-
         $artify->formFieldValue("publicado_por", $usuario);
         $artify->fieldDataAttr("publicado_por", array("readonly"=>"true"));
         $artify->colRename("id_pagina", "ID");
@@ -105,15 +99,12 @@ class PaginaController
         $artify->setSettings("encryption", true);
         $artify->fieldTypes("imagen", "FILE_NEW");
         $artify->crudRemoveCol(array("slug"));
-
         $artify->fieldTypes("categoria", "select");
         $artify->fieldDataBinding("categoria", array("Pagina" => "Pagina"), "", "", "array");
-
         $action = $_ENV["BASE_URL"]."pagina/{slug}";
         $text = 'Ver';
         $attr = array("title"=>"Ver", "target" => "_blank");
         $artify->enqueueBtnActions("url btn-light", $action, "url", $text, "", $attr); 
-
         $artify->buttonHide("submitBtnSaveBack");
         $artify->tableColFormatting("fecha", "date", array("format" =>"d/m/Y"));
         $artify->setSettings("function_filter_and_search", true);
@@ -122,10 +113,8 @@ class PaginaController
         $artify->fieldCssClass("contenido", array("summernote"));
         $artify->addCallback("format_table_data", [$this, "formatTableDataCallBackpagina"]);
         $artify->fieldNotMandatory("imagen");
-
         $render = $artify->dbTable("pagina")->render();
         $select2 = $artify->loadPluginJsCode("summernote", ".summernote");
-
         $stencil = new ArtifyStencil();
         echo $stencil->render('Pagina', [
             'render' => $render,
@@ -138,7 +127,6 @@ class PaginaController
             foreach($data as &$item){
                 $titulo = str_replace('-', ' ', $item["titulo"]);
                 $titulo = str_replace(['ñ','Ñ'], ['n','N'], $titulo); // reemplazo de ñ por n
-
                 $item["titulo"] = $titulo;
                 $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'" data-fancybox="gallery" data-caption="Foto">
                                     <img width="150" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'">
@@ -152,33 +140,26 @@ class PaginaController
     private function slugify($string)
     {
         $string = mb_strtolower($string, 'UTF-8');
-        // translitera acentos: ó -> o, ñ -> n, etc.
         $string = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
-        // permite letras, números, espacios Y guiones
         $string = preg_replace('/[^a-z0-9\s-]/', '', $string);
-        // espacios -> guion
-        $string = preg_replace('/[\s-]+/', '-', $string); // colapsa espacios y guiones juntos
+        $string = preg_replace('/[\s-]+/', '-', $string);
         $string = trim($string, '-');
         return $string;
     }
 
     public function insertar_pagina($data, $obj){
         $titulo = $data["pagina"]["titulo"];
-    
         if(empty($titulo)){
             $error_msg = array("message" => "", "error" => "El campo Título es obligatorio", "redirectionurl" => "");
             die(json_encode($error_msg));
         }
-    
         $queryfy = $obj->getQueryfyObj();
         $queryfy->where("titulo", $titulo);
         $result = $queryfy->select("pagina");
-    
         if($result){
             $error_msg = array("message" => "", "error" => "Ya existe una página con ese título. Ingrese uno diferente.", "redirectionurl" => "");
             die(json_encode($error_msg));
         }
-    
         $newData = array();
         $newData["pagina"]["titulo"] = $titulo;
         $newData["pagina"]["slug"] = $this->slugify($titulo);
