@@ -212,11 +212,6 @@ class WebController
         $queryfy = DB::Queryfy();
         $filas = $queryfy->select($tabla);
 
-        // Se eliminó el volcado de depuración a error_log(): escribía en el log
-        // el contenido de la tabla en cada visita a una noticia o página.
-        // Un log de errores accesible por la web (ver .htaccess) convertía eso
-        // en una fuga de información.
-
         if (is_array($filas)) {
             foreach ($filas as $fila) {
                 if (isset($fila["titulo"]) && $this->slugify($fila["titulo"]) === $slugBuscado) {
@@ -231,12 +226,19 @@ class WebController
         
         $titulo = $request->get('titulo');
 
-        // Resolución robusta del título almacenado (tolerante a mayúsculas/acentos)
+        $fullWidth = str_contains(
+            trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'),
+            'noticia/full/'
+        );
+
         $tituloExacto = $this->resolverTituloExacto("noticias", $titulo);
-        $filtroTitulo = ($tituloExacto !== null) ? $tituloExacto : $titulo;
+        $filtroTitulo = ($tituloExacto !== null) 
+            ? $tituloExacto 
+            : $this->slugify($titulo);
 
         $settings["includeTemplateCSS"] = false;
         $settings["includeTemplateJS"] = false;
+
         $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
         $artify->where("titulo", $filtroTitulo);
         $artify->setPortfolioColumn(1);
@@ -254,7 +256,8 @@ class WebController
 
         $stencil = new ArtifyStencil();
         echo $stencil->render('web/noticia', [
-            'data' => $data
+            'data' => $data,
+            'fullWidth' => $fullWidth
         ]);
     }
 

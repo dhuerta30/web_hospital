@@ -45,13 +45,10 @@ div#artify_portfolio_0{
     padding-bottom:0 !important;
 }
 </style>
-
 <div id="content">
     <div class="container">
         <div class="row">
-
             <?php if (!$fullWidth): ?>
-
                 <!-- Sidebar Izquierdo -->
                 <div class="col-md-3">
                     <div class="banners">
