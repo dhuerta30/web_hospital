@@ -1,12 +1,4 @@
 <?php
-/*
- * Compatibilidad PHP 8.0 - 8.4
- * Se silencian deprecaciones y avisos (E_DEPRECATED / E_NOTICE) generados por
- * librerías de terceros (propiedades dinámicas en 8.2+, paso de null a funciones
- * internas en 8.1+, etc.) para que NO se impriman antes de las respuestas JSON/AJAX
- * y rompan el frontend. No se ocultan errores ni excepciones reales.
- */
-//error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT);
 
 require('vendor/autoload.php');
 $dotenv = DotenvVault\DotenvVault::createImmutable(__DIR__);
