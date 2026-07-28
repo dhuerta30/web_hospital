@@ -166,14 +166,11 @@ class WebController
     }
 
     public function noticia(Request $request){
-        
         $titulo = $request->get('titulo');
-
         $fullWidth = str_contains(
             trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'),
             'noticia/full/'
         );
-
         $tituloExacto = $this->resolverTituloExacto("noticias", $titulo);
         $filtroTitulo = ($tituloExacto !== null) 
             ? $tituloExacto 
@@ -181,7 +178,6 @@ class WebController
 
         $settings["includeTemplateCSS"] = false;
         $settings["includeTemplateJS"] = false;
-
         $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
         $artify->where("titulo", $filtroTitulo);
         $artify->setPortfolioColumn(1);
@@ -196,7 +192,6 @@ class WebController
         $artify->setSettings("addbtn", false);
         $artify->setSettings("template", "noticias");
         $data = $artify->dbTable("noticias")->render();
-
         $stencil = new ArtifyStencil();
         echo $stencil->render('web/noticia', [
             'data' => $data,
@@ -211,17 +206,13 @@ class WebController
                 5 => "mayo", 6 => "junio", 7 => "julio", 8 => "agosto",
                 9 => "septiembre", 10 => "octubre", 11 => "noviembre", 12 => "diciembre"
             ];
-
             foreach($data as &$item){
                 $fechaObj = new \DateTime($item["fecha"]);
                 $dia = $fechaObj->format("j");
                 $mes = $meses[(int)$fechaObj->format("n")];
                 $anio = $fechaObj->format("Y");
-
                 $fechaFormateada = "$dia de $mes de $anio";
-
                 $imagen = Security::e(basename((string) $item["imagen"]));
-
                 $item["titulo"] = "<center><h3><strong>".Security::e(str_replace('-', ' ', $item["titulo"]))."</strong></h3></center>";
                 $item["fecha"] = "<center><h5><i class='fa fa-calendar'></i> ".Security::e($fechaFormateada)."</h5></center>";
                 $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.Security::e(basename((string)($imagen ?? ""))).'" data-fancybox="gallery" data-caption="Foto">
@@ -236,7 +227,6 @@ class WebController
     public function page(Request $request)
     {
         $titulo = $request->get("titulo");
-
         $fullWidth = str_contains(
             trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'),
             'pagina/full/'
