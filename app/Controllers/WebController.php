@@ -224,10 +224,10 @@ class WebController
 
                 $item["titulo"] = "<center><h3><strong>".Security::e(str_replace('-', ' ', $item["titulo"]))."</strong></h3></center>";
                 $item["fecha"] = "<center><h5><i class='fa fa-calendar'></i> ".Security::e($fechaFormateada)."</h5></center>";
-                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'" data-fancybox="gallery" data-caption="Foto">
-                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'">
+                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.Security::e(basename((string)($imagen ?? ""))).'" data-fancybox="gallery" data-caption="Foto">
+                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.Security::e(basename((string)($imagen ?? ""))).'">
                                    </a>';
-                $item["contenido"] = html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8');
+                $item["contenido"] = Security::html($item["contenido"]);
             }
         }
         return $data;
@@ -278,13 +278,13 @@ class WebController
                 if (!empty($item["imagen"])) {
                     $imagen = Security::e(basename((string) $item["imagen"]));
                     $item["imagen"] = '
-                        <a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'" data-fancybox="gallery" data-caption="Foto">
-                            <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'">
+                        <a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.Security::e(basename((string)($imagen ?? ""))).'" data-fancybox="gallery" data-caption="Foto">
+                            <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.Security::e(basename((string)($imagen ?? ""))).'">
                         </a>';
                 } else {
                     $item["imagen"] = "";
                 }
-                $item["contenido"] = html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8');
+                $item["contenido"] = Security::html($item["contenido"]);
             }
         }
         return $data;
