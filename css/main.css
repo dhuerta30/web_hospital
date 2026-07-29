@@ -1139,7 +1139,6 @@ header nav#menu-principal ul li:hover > ul.sub-menu {
 #content #sidebar {
   width: 100%;
   margin: 0 0 0 20px;
-  float: left;
 }
 #content #sidebar .lista-sidebar {
   background: #fff;
