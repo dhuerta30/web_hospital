@@ -117,7 +117,6 @@ class WebController
                 $slug = isset($item["slug"]) ? rawurlencode((string)$item["slug"]) : "";
                 $boton = $_ENV["BASE_URL"]."noticia/".$slug;
                 $imagen = Security::e(basename((string) $item["imagen"]));
-
                 $item["titulo"] = "<center><a href='".$_ENV["BASE_URL"]."noticia/".$slug."'><h3><strong>".Security::e($item["titulo"])."</strong></h3></a></center>";
                 $item["fecha"] = "<center><h5><i class='fa fa-calendar'></i> ".Security::e($fechaFormateada)."</h5></center>";
                 $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.Security::e(basename((string)($imagen ?? ""))).'" data-fancybox="gallery" data-caption="Foto">
