@@ -7,9 +7,9 @@
                 <div id="main">
                     <div id="breadcrumbs">
                         <ul>
-                            <li><a href="<?=$_ENV["BASE_URL"]?>">Inicio</a></li>
+                            <li><a href="/">Inicio</a></li>
                             <li class="sep">/</li>
-                            <li> »</li>
+                            <li>»</li>
                         </ul>
                         <div class="clearfix"></div>
                     </div>
