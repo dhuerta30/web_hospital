@@ -75,9 +75,7 @@ div#artify_portfolio_0{
 
             <!-- Contenido -->
             <div class="<?= $fullWidth ? 'col-md-12' : 'col-md-6' ?>">
-
                 <div id="main">
-
                     <div id="breadcrumbs">
                         <ul>
                             <li><a href="<?= $_ENV["BASE_URL"] ?>">Inicio</a></li>
