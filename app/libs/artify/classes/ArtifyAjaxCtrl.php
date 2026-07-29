@@ -2,12 +2,6 @@
 
 #[\AllowDynamicProperties]
 Class ArtifyAjaxCtrl {
-
-    /**
-     * Reemplazo de FILTER_SANITIZE_STRING (obsoleto desde PHP 8.1).
-     * Mantiene el mismo comportamiento: elimina etiquetas HTML y codifica
-     * las comillas simples y dobles. Compatible con PHP 8.0 - 8.4.
-     */
     private function sanitizeString($value) {
         if ($value === null) {
             return null;
@@ -28,7 +22,13 @@ Class ArtifyAjaxCtrl {
     }
 
     public function handleRequest() {
-        $instanceKey = isset($_REQUEST["artify_instance"]) ? $this->sanitizeString($_REQUEST["artify_instance"]) : null;
+        $instanceKey = null;
+
+        if (isset($_POST["artify_instance"])) {
+            $instanceKey = $this->sanitizeString($_POST["artify_instance"]);
+        } elseif (isset($_GET["artify_instance"])) {
+            $instanceKey = $this->sanitizeString($_GET["artify_instance"]);
+        }
         
         if(!isset($_SESSION["artify_sess"][$instanceKey])){
             die("La sesión ha caducado. Actualice su página para continuar.");
