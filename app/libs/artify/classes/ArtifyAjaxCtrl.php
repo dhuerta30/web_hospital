@@ -34,9 +34,13 @@ Class ArtifyAjaxCtrl {
             die("La sesión ha caducado. Actualice su página para continuar.");
         }
 
-        $artify = @unserialize($_SESSION["artify_sess"][$instanceKey]);
-        if ($artify === false) {
-            die("Ocurrió un error. Por favor, inténtelo de nuevo más tarde.");
+        $artify = @unserialize(
+            $_SESSION["artify_sess"][$instanceKey],
+            ['allowed_classes' => true]
+        );
+
+        if (!is_object($artify)) {
+            exit("Ocurrió un error. Por favor, inténtelo de nuevo más tarde.");
         }
 
         $action = isset($_POST["artify_data"]["action"]) ? $this->sanitizeString($_POST["artify_data"]["action"]) : null;
