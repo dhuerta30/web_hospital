@@ -30,10 +30,6 @@ class WebController
         if ($request->getMethod() === 'POST') {
             $param = (string) $request->post('buscar_noticias');
             $param = trim(mb_substr($param, 0, 100, 'UTF-8'));
-            if ($param === '') {
-                echo json_encode(['render' => '']);
-                return;
-            }
             $settings["includeTemplateCSS"] = false;
             $settings["includeTemplateJS"] = false;
             $artify = DB::ArtifyCrud(false, "pure","pure", $settings);
@@ -118,16 +114,16 @@ class WebController
                 $mes = $meses[(int)$fechaObj->format("n")];
                 $anio = $fechaObj->format("Y");
                 $fechaFormateada = "$dia de $mes de $anio";
-                $boton = $_ENV["BASE_URL"]."noticia/".rawurlencode((string) $item["slug"]);
-                $slug   = rawurlencode((string) $item["slug"]);
+                $slug = isset($item["slug"]) ? rawurlencode((string)$item["slug"]) : "";
+                $boton = $_ENV["BASE_URL"]."noticia/".$slug;
                 $imagen = Security::e(basename((string) $item["imagen"]));
 
                 $item["titulo"] = "<center><a href='".$_ENV["BASE_URL"]."noticia/".$slug."'><h3><strong>".Security::e($item["titulo"])."</strong></h3></a></center>";
                 $item["fecha"] = "<center><h5><i class='fa fa-calendar'></i> ".Security::e($fechaFormateada)."</h5></center>";
-                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'" data-fancybox="gallery" data-caption="Foto">
-                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$imagen.'">
+                $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.Security::e(basename((string)($imagen ?? ""))).'" data-fancybox="gallery" data-caption="Foto">
+                                    <img width="100%" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.Security::e(basename((string)($imagen ?? ""))).'">
                                    </a>';
-                $item["contenido"] = mb_strimwidth(strip_tags(html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8')), 0, 250, "...");
+                $item["contenido"] = Security::html($item["contenido"]);
                 $item["boton"] = "<a href='".Security::eUrl($boton)."' class=\"btn btn-info btn-block\">Ver más</a>";
             }
         }

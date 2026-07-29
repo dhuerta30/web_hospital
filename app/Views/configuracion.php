@@ -44,12 +44,6 @@
 @include('layouts/footer')
 <script src='{{ $_ENV["BASE_URL"] }}js/sweetalert2.all.min.js'></script>
 <script>
-/*
- * Mantenedores "Barra lateral izquierda" y "Barra lateral derecha".
- * Como ambos conviven en la misma página, NO se pueden usar selectores
- * globales: hay que limitar (scope) el mostrar/ocultar de imagen/video/url
- * al formulario (o modal) que realmente se está editando/agregando.
- */
 function artifyToggleContenido($scope){
     if(!$scope || !$scope.length) return;
 
@@ -93,7 +87,6 @@ function artifyToggleContenido($scope){
     }
 }
 
-// Devuelve el contenedor (formulario o cuerpo de modal) que contiene un elemento.
 function artifyScopeDe($el){
     var $scope = $el.closest("form");
     if(!$scope.length) $scope = $el.closest(".modal-body");
@@ -101,23 +94,17 @@ function artifyScopeDe($el){
     return $scope;
 }
 
-// Al abrir el formulario de edición/alta (puede venir en un modal), se aplica
-// el estado correcto SOLO sobre el formulario recién cargado.
 $(document).on("artify_after_ajax_action", function(event, obj, data){
     var dataAction = obj.getAttribute('data-action');
 
     if(dataAction === "edit" || dataAction === "add"){
-        // El botón que disparó la acción pertenece a su propio mantenedor.
         var $container = $(obj).closest(".artify-table-container");
-
-        // Cada select de tipo_contenido recién cargado define un formulario a ajustar.
         $container.find(".tipo_contenido select").each(function(){
             artifyToggleContenido(artifyScopeDe($(this)));
         });
     }
 });
 
-// Al cambiar manualmente el tipo de contenido, sólo afecta a su propio formulario.
 $(document).on("change", ".tipo_contenido select", function() {
     artifyToggleContenido(artifyScopeDe($(this)));
 });
