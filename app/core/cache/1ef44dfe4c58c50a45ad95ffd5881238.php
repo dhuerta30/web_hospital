@@ -1,4 +1,4 @@
-@include('layouts_web/header')
+<?php echo (new \App\core\ArtifyStencil())->render('layouts_web/header', []); ?>
 
 <style>
 div#artify_portfolio_0{
@@ -85,20 +85,20 @@ div#artify_portfolio_0{
                             <li>»</li>
                             <?php
                                 $url_actual = $_SERVER['REQUEST_URI'];
-                                if (strpos($url_actual, '/pagina/full/') !== false) {
-                                    $pagina = explode('/pagina/full/', $url_actual)[1];
+                                if (strpos($url_actual, '/noticia/full/') !== false) {
+                                    $noticia = explode('/noticia/full/', $url_actual)[1];
                                     ?>
                                     <li style="margin-left:15px;">
-                                        <a href="<?= $_ENV["BASE_URL"] ?>pagina/<?= $pagina ?>" class="btn-volver-columnas">
+                                        <a href="<?= $_ENV["BASE_URL"] ?>noticia/<?= $noticia ?>" class="btn-volver-columnas">
                                             Ver con columnas
                                         </a>
                                     </li>
                                     <?php
-                                } elseif (strpos($url_actual, '/pagina/') !== false) {
-                                    $pagina = explode('/pagina/', $url_actual)[1];
+                                } elseif (strpos($url_actual, '/noticia/') !== false) {
+                                    $noticia = explode('/noticia/', $url_actual)[1];
                                     ?>
                                     <li style="margin-left:15px;">
-                                        <a href="<?= $_ENV["BASE_URL"] ?>pagina/full/<?= $pagina ?>" class="btn-full">
+                                        <a href="<?= $_ENV["BASE_URL"] ?>noticia/full/<?= $noticia ?>" class="btn-full">
                                             Ver página completa
                                         </a>
                                     </li>
@@ -118,7 +118,7 @@ div#artify_portfolio_0{
                         <div class="texto">
                             <div class="contenido">
                                 <div class="pagina">
-                                    {!! $data['data'] !!}
+                                    <?php echo $data['data']; ?>
                                 </div>
                             </div>
                         </div>
@@ -193,8 +193,8 @@ div#artify_portfolio_0{
 
 <div id="artify-ajax-loader">
     <img width="300"
-         src="{{ $_ENV["BASE_URL"] }}app/libs/artify/images/ajax-loader.gif"
+         src="<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>app/libs/artify/images/ajax-loader.gif"
          class="artify-img-ajax-loader"/>
 </div>
 
-@include('layouts_web/footer')
+<?php echo (new \App\core\ArtifyStencil())->render('layouts_web/footer', []); ?>

@@ -96,6 +96,8 @@ class NoticiasController
             </div>
         </div>';
         $usuario = $_SESSION["usuario"][0]["nombre"];
+        $rol = $_SESSION["usuario"][0]["idrol"];
+         
         $artify->set_template($template);
         $artify->addPlugin("bootstrap-switch-master");
 
@@ -108,9 +110,16 @@ class NoticiasController
         $artify->fieldDataAttr("publicado_por", array("readonly"=>"true"));
         $artify->colRename("id_noticias", "ID");
         $artify->setSettings("searchbox", true);
-        $artify->setSettings("editbtn", true);
-        $artify->setSettings("clonebtn", true);
-        $artify->setSettings("delbtn", true);
+        if($rol == 2){
+            $artify->setSettings("addbtn", false);
+            $artify->setSettings("editbtn", false);
+            $artify->setSettings("clonebtn", false);
+            $artify->setSettings("delbtn", false);
+        } else {
+            $artify->setSettings("editbtn", true);
+            $artify->setSettings("clonebtn", true);
+            $artify->setSettings("delbtn", true);
+        }
         $artify->setSettings("encryption", true);
         $artify->setSettings("encryption", true);
         $artify->fieldTypes("imagen", "FILE_NEW");

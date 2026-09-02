@@ -1,6 +1,6 @@
-@include('layouts/header')
-@include('layouts/sidebar')
-<link href='{{ $_ENV["BASE_URL"] }}css/sweetalert2.min.css' rel="stylesheet">
+<?php echo (new \App\core\ArtifyStencil())->render('layouts/header', []); ?>
+<?php echo (new \App\core\ArtifyStencil())->render('layouts/sidebar', []); ?>
+<link href='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>css/sweetalert2.min.css' rel="stylesheet">
 <div class="content-wrapper">
     <section class="content">
         <div class="card mt-4">
@@ -8,29 +8,29 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        {!! $render !!}
-                        {!! $color !!}
+                        <?php echo $render; ?>
+                        <?php echo $color; ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        {!! $render_barra_lateral_izquierda !!}
+                        <?php echo $render_barra_lateral_izquierda; ?>
                     </div>
                      <div class="col-md-6">
-                        {!! $render_barra_lateral_derecha !!}
+                        <?php echo $render_barra_lateral_derecha; ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12">
-                        {!! $render_barra_inferior !!}
+                        <?php echo $render_barra_inferior; ?>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12">
-                        {!! $render_sociales !!}
+                        <?php echo $render_sociales; ?>
                     </div>
                 </div>
                 
@@ -39,10 +39,10 @@
     </section>
 </div>
 <div id="artify-ajax-loader">
-    <img width="300" src='{{ $_ENV["BASE_URL"] }}app/libs/artify/images/ajax-loader.gif' class="artify-img-ajax-loader"/>
+    <img width="300" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>app/libs/artify/images/ajax-loader.gif' class="artify-img-ajax-loader"/>
 </div>
-@include('layouts/footer')
-<script src='{{ $_ENV["BASE_URL"] }}js/sweetalert2.all.min.js'></script>
+<?php echo (new \App\core\ArtifyStencil())->render('layouts/footer', []); ?>
+<script src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>js/sweetalert2.all.min.js'></script>
 <script>
 /*
  * Mantenedores "Barra lateral izquierda" y "Barra lateral derecha".
@@ -130,12 +130,12 @@ $(document).on("artify_after_submission", function(event, obj, data) {
         $(".alert-danger").hide();
         $.ajax({
             type: "POST",
-            url: '{{ $_ENV["BASE_URL"] }}cargar_imagenes_configuracion',
+            url: '<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>cargar_imagenes_configuracion',
             dataType: "json",
             success: function(data){
-                $(".logo_login").attr("src", '{{ $_ENV["URL_ArtifyCrud"] }}' + 'artify/uploads/' + data[0].logo_login);
-                $(".logo_panel").attr("src", '{{ $_ENV["URL_ArtifyCrud"] }}' + 'artify/uploads/' + data[0].logo_panel);
-                $(".banner_superior").attr("src", '{{ $_ENV["URL_ArtifyCrud"] }}' + 'artify/uploads/' + data[0].banner_superior);
+                $(".logo_login").attr("src", '<?php echo htmlspecialchars($_ENV["URL_ArtifyCrud"], ENT_QUOTES, 'UTF-8'); ?>' + 'artify/uploads/' + data[0].logo_login);
+                $(".logo_panel").attr("src", '<?php echo htmlspecialchars($_ENV["URL_ArtifyCrud"], ENT_QUOTES, 'UTF-8'); ?>' + 'artify/uploads/' + data[0].logo_panel);
+                $(".banner_superior").attr("src", '<?php echo htmlspecialchars($_ENV["URL_ArtifyCrud"], ENT_QUOTES, 'UTF-8'); ?>' + 'artify/uploads/' + data[0].banner_superior);
             }
         });
 

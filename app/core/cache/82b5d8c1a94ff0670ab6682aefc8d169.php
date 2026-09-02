@@ -83,28 +83,6 @@ div#artify_portfolio_0{
                             <li><a href="<?= $_ENV["BASE_URL"] ?>">Inicio</a></li>
                             <li class="sep">/</li>
                             <li>»</li>
-                            <?php
-                                $url_actual = $_SERVER['REQUEST_URI'];
-                                if (strpos($url_actual, '/noticia/full/') !== false) {
-                                    $noticia = explode('/noticia/full/', $url_actual)[1];
-                                    ?>
-                                    <li style="margin-left:15px;">
-                                        <a href="<?= $_ENV["BASE_URL"] ?>noticia/<?= $noticia ?>" class="btn-volver-columnas">
-                                            Ver con columnas
-                                        </a>
-                                    </li>
-                                    <?php
-                                } elseif (strpos($url_actual, '/noticia/') !== false) {
-                                    $noticia = explode('/noticia/', $url_actual)[1];
-                                    ?>
-                                    <li style="margin-left:15px;">
-                                        <a href="<?= $_ENV["BASE_URL"] ?>noticia/full/<?= $noticia ?>" class="btn-full">
-                                            Ver página completa
-                                        </a>
-                                    </li>
-                                    <?php
-                                }
-                            ?>
                         </ul>
                         <div class="clearfix"></div>
                     </div>

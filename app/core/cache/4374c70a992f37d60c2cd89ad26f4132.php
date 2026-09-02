@@ -103,6 +103,9 @@
 	.sub-menu .menu-item-has-children > .sub-menu {
 		display: none;
 	}
+	.artify-table-container table tr.artify-header-row th, .artify-table-container .table tbody tr td {
+		white-space: normal!important;
+	}
 </style>
 </head>
 <body class="home page-template-default page page-id-49">

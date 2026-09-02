@@ -92,9 +92,16 @@ class PaginaController
         $artify->fieldDataAttr("publicado_por", array("readonly"=>"true"));
         $artify->colRename("id_pagina", "ID");
         $artify->setSettings("searchbox", true);
-        $artify->setSettings("editbtn", true);
-        $artify->setSettings("clonebtn", true);
-        $artify->setSettings("delbtn", true);
+        $rol = $_SESSION["usuario"][0]["idrol"];
+        if($rol == 2){
+            $artify->setSettings("editbtn", true);
+            $artify->setSettings("clonebtn", false);
+            $artify->setSettings("delbtn", false);
+        } else {
+            $artify->setSettings("editbtn", true);
+            $artify->setSettings("clonebtn", true);
+            $artify->setSettings("delbtn", true);
+        }
         $artify->setSettings("encryption", true);
         $artify->setSettings("encryption", true);
         $artify->fieldTypes("imagen", "FILE_NEW");

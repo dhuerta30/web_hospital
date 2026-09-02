@@ -42,13 +42,24 @@ class NoticiasModel
 
     private function slugify($string) {
         $string = mb_strtolower($string, 'UTF-8');
+
+        // Reemplazar acentos más comunes manualmente
         $buscar  = ['á','é','í','ó','ú','ñ','ü'];
         $reemplazar = ['a','e','i','o','u','n','u'];
         $string = str_replace($buscar, $reemplazar, $string);
+
+        // Reemplazar espacios por guiones
         $string = str_replace(' ', '-', $string);
+
+        // Eliminar caracteres que no sean letras, números o guiones
         $string = preg_replace('/[^a-z0-9\-]/', '', $string);
+
+        // Eliminar guiones duplicados
         $string = preg_replace('/-+/', '-', $string);
+
+        // Eliminar guiones al inicio o al final
         $string = trim($string, '-');
+
         return $string;
     }
 

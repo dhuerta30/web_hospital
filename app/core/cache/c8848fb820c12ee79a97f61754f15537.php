@@ -1,4 +1,4 @@
-@include('layouts_web/header')
+<?php echo (new \App\core\ArtifyStencil())->render('layouts_web/header', []); ?>
 <div id="content">
     <div class="container">
         <div class="row">
@@ -21,7 +21,7 @@
                         <div class="texto">
                             <div class="contenido">
                                 <div class="noticias_home">
-                                    {!! $data['data'] !!}
+                                    <?php echo $data['data']; ?>
                                 </div>
                             </div>
                         </div>
@@ -32,9 +32,9 @@
     </div>
 </div>
 <div id="artify-ajax-loader">
-    <img width="300" src='{{ $_ENV["BASE_URL"] }}app/libs/artify/images/ajax-loader.gif' class="artify-img-ajax-loader"/>
+    <img width="300" src='<?php echo htmlspecialchars($_ENV["BASE_URL"], ENT_QUOTES, 'UTF-8'); ?>app/libs/artify/images/ajax-loader.gif' class="artify-img-ajax-loader"/>
 </div>
-@include('layouts_web/footer')
+<?php echo (new \App\core\ArtifyStencil())->render('layouts_web/footer', []); ?>
 <script>
 $(document).on("click", "#boton", function(){
     let buscar_noticias = $(".buscar_noticias").val();
