@@ -1,17 +1,23 @@
 # =============================================================================
 #  Directorio de cargas — /app/libs/artify/uploads/
-#  INF-CIBER-2026-10, hallazgo 4.2 / remediación 6.6
+#  INF-CIBER-2026-10 (hallazgo 4.2 / remediación 6.6)
+#  Reforzado tras INF-CIBER-2026-11.
 #
 #  Este directorio recibe archivos subidos desde el panel. Si un atacante
-#  consigue depositar un .php aquí y el servidor lo ejecuta, obtiene ejecución
-#  remota de código. Estas reglas lo impiden aunque falle la validación de la
-#  aplicación.
+#  consigue depositar un script aquí y el servidor lo ejecuta, obtiene
+#  ejecución remota de código.
+#
+#  CAMBIO CLAVE respecto a la versión anterior: se pasa de LISTA NEGRA a
+#  LISTA BLANCA. La versión anterior enumeraba extensiones peligrosas y la
+#  verificación de agosto encontró que variantes no listadas (.phtm, .inc,
+#  .pgif, .phtaccess) se colaban. Ahora se DENIEGA TODO por defecto y sólo se
+#  sirven los tipos que el sitio realmente publica.
 # =============================================================================
 
-# 1. Nada de listados de directorio.
+# 1. Nada de listados de directorio ni ejecución CGI.
 Options -Indexes -ExecCGI
 
-# 2. Ningún archivo de este directorio se interpreta como script.
+# 2. Ningún archivo de este directorio se interpreta como script PHP.
 <IfModule mod_php.c>
     php_flag engine off
 </IfModule>
@@ -22,27 +28,35 @@ Options -Indexes -ExecCGI
     php_flag engine off
 </IfModule>
 
-RemoveHandler .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .pht .cgi .pl .py
-RemoveType .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .pht
+# Quitar cualquier handler/tipo que pudiera ejecutar código.
+<IfModule mod_mime.c>
+    RemoveHandler .php .php3 .php4 .php5 .php6 .php7 .php8 .phtml .phtm .phar .pht .phps .cgi .pl .py .sh .fcgi .fpl
+    RemoveType    .php .php3 .php4 .php5 .php6 .php7 .php8 .phtml .phtm .phar .pht .phps
+</IfModule>
 
-AddType text/plain .php .php3 .php4 .php5 .php7 .php8 .phtml .phar .pht .cgi .pl .py .sh
+# 3. LISTA BLANCA: denegar todo y permitir sólo lo que el sitio publica.
+<IfModule mod_authz_core.c>
+    # 3a. Por defecto, NADA es accesible.
+    <FilesMatch ".*">
+        Require all denied
+    </FilesMatch>
 
-# 3. Bloqueo explícito de extensiones ejecutables.
-<FilesMatch "\.(php|php3|php4|php5|php7|php8|phtml|phar|pht|shtml|cgi|pl|py|sh|bash|exe|htaccess)$">
-    Require all denied
-</FilesMatch>
+    # 3b. Excepción: sólo estos tipos de contenido estático se sirven.
+    <FilesMatch "\.(jpe?g|png|gif|webp|bmp|ico|pdf|docx?|xlsx?|pptx?|odt|ods|odp|txt|csv|mp4|webm|mp3|ogg)$">
+        Require all granted
+    </FilesMatch>
+</IfModule>
 
-# 4. Sólo se sirven los tipos que el sitio realmente publica.
-<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico|pdf|docx|xlsx|pptx|odt|ods|txt|csv|mp4|webm)$">
-    Require all granted
-</FilesMatch>
-
-# 5. Los SVG pueden contener JavaScript: se fuerza su descarga en vez de su
-#    renderizado en el contexto del dominio.
+# 4. Los SVG pueden contener JavaScript. No se listan en la lista blanca
+#    anterior a propósito; si en el futuro se necesitan, se sirven SIEMPRE
+#    como descarga y con una CSP que neutraliza cualquier script embebido.
 <IfModule mod_headers.c>
     <FilesMatch "\.svg$">
         Header set Content-Disposition "attachment"
         Header set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+    </FilesMatch>
+    <FilesMatch "\.svg$">
+        Require all granted
     </FilesMatch>
 
     Header always set X-Content-Type-Options "nosniff"

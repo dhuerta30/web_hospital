@@ -443,17 +443,58 @@ class Security
     /**
      * Extensiones que jamás deben aceptarse en el directorio de cargas,
      * porque el servidor podría ejecutarlas.
+     *
+     * Se endurece tras la verificación INF-CIBER-2026-11: la revisión dejó en
+     * el directorio de cargas archivos con extensiones que la lista negra
+     * anterior no cubría (.phtm, .inc, .pgif, .phtaccess). Ahora:
+     *   1. Se revisa CADA segmento del nombre, no sólo la última extensión,
+     *      para frustrar dobles extensiones tipo "foto.php.jpg" o
+     *      "shell.pht.png" en servidores mal configurados (mod_mime).
+     *   2. Se bloquea cualquier segmento que contenga la cadena "php".
+     *   3. La lista negra se amplía con las variantes observadas y otras
+     *      familias ejecutables (asp, jsp, etc.).
+     *
+     * Sigue siendo una defensa en profundidad: la protección principal es la
+     * lista blanca de tipos permitidos y el .htaccess del directorio de cargas.
      */
     public static function extensionEjecutable(string $nombreArchivo): bool
     {
         $prohibidas = [
-            'php', 'php3', 'php4', 'php5', 'php7', 'php8', 'phtml', 'phar',
-            'pht', 'shtml', 'cgi', 'pl', 'py', 'sh', 'bash', 'exe', 'htaccess',
+            // PHP y variantes
+            'php', 'php1', 'php2', 'php3', 'php4', 'php5', 'php6', 'php7', 'php8',
+            'phtml', 'phtm', 'pht', 'phps', 'phar', 'pgif', 'inc', 'hphp', 'ctp',
+            // Apache / configuración que altera el comportamiento del servidor
+            'htaccess', 'phtaccess', 'htpasswd', 'shtml', 'shtm', 'stm',
+            // Otros lenguajes que un servidor podría ejecutar
+            'cgi', 'pl', 'py', 'sh', 'bash', 'rb', 'lua', 'asp', 'aspx', 'jsp',
+            'jspx', 'cfm', 'cfc',
+            // Binarios / scripts de sistema
+            'exe', 'dll', 'so', 'bat', 'cmd', 'com', 'msi', 'jar', 'vbs', 'ws',
+            'wsf', 'ps1',
         ];
 
-        $ext = strtolower((string) pathinfo(basename($nombreArchivo), PATHINFO_EXTENSION));
+        $nombre = strtolower(basename($nombreArchivo));
 
-        return in_array($ext, $prohibidas, true);
+        // Revisar todos los segmentos separados por punto (dobles extensiones).
+        $segmentos = explode('.', $nombre);
+        // El primer segmento es el nombre base; el resto son extensiones.
+        array_shift($segmentos);
+
+        foreach ($segmentos as $seg) {
+            $seg = trim($seg);
+            if ($seg === '') {
+                continue;
+            }
+            if (in_array($seg, $prohibidas, true)) {
+                return true;
+            }
+            // Cualquier cosa que contenga "php" (p. ej. "php\x00", "php ", "pphp").
+            if (strpos($seg, 'php') !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /* =====================================================================
