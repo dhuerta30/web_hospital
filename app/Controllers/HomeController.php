@@ -125,7 +125,6 @@ class HomeController
 		}
 	}
 
-
 	public function cargar_imagenes_configuracion(){
 		$request = new Request();
 	
