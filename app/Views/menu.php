@@ -135,9 +135,7 @@ $(document).on("artify_after_submission", function(event, obj, data){
     let json = JSON.parse(data);
 
     if(json.message){
-
 		refrechMenu();
-
         $('.artify-back').click();
 		sortable();
 		sortableSubmenu();

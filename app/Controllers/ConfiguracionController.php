@@ -158,10 +158,6 @@ class ConfiguracionController
         $barra_lateral_izquierda->fieldCssClass("url", array("url"));
         $barra_lateral_izquierda->fieldCssClass("video", array("video"));
 
-        /*$barra_lateral_izquierda->fieldNotMandatory("imagen");
-        $barra_lateral_izquierda->fieldNotMandatory("video");
-        $barra_lateral_izquierda->fieldNotMandatory("url");*/
-
         $barra_lateral_izquierda->fieldTypes("tipo_contenido", "select");
         $barra_lateral_izquierda->fieldDataBinding("tipo_contenido", array("Imagen" => "Imagen", "Video" => "Video"), "", "", "array");
         $barra_lateral_izquierda->dbOrderBy("ordenar asc");
@@ -235,10 +231,6 @@ class ConfiguracionController
         $barra_lateral_derecha->fieldCssClass("imagen", array("imagen"));
         $barra_lateral_derecha->fieldCssClass("url", array("url"));
         $barra_lateral_derecha->fieldCssClass("video", array("video"));
-
-        /*$barra_lateral_derecha->fieldNotMandatory("imagen");
-        $barra_lateral_derecha->fieldNotMandatory("video");
-        $barra_lateral_derecha->fieldNotMandatory("url");*/
 
         $barra_lateral_derecha->fieldTypes("tipo_contenido", "select");
         $barra_lateral_derecha->fieldDataBinding("tipo_contenido", array("Imagen" => "Imagen", "Video" => "Video"), "", "", "array");

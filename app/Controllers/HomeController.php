@@ -677,7 +677,6 @@ class HomeController
 
 			$exportDirectory = realpath(__DIR__ . '/../libs/artify/uploads');
 
-			// Verificar si el directorio existe y, si no, intentar crearlo
 			if (!is_dir($exportDirectory) && !mkdir($exportDirectory, 0777, true)) {
 				die('Error al crear el directorio de exportación');
 			}
@@ -740,7 +739,7 @@ class HomeController
 		$artify = DB::ArtifyCrud();
 		$queryfy = $artify->getQueryfyObj();
 		$queryfy->where("id_menu", $idMenu, "=");
-		$queryfy->orderBy(array("orden_submenu asc")); // Ajusta el nombre de la columna de ordenación si es diferente
+		$queryfy->orderBy(array("orden_submenu asc"));
 		$data = $queryfy->select("submenu");
 		return $data;
 	}	
@@ -834,7 +833,6 @@ class HomeController
 		$tablas->setSettings("searchbox", true);
 		$tablas->setSettings("editbtn", false);
 		$tablas->setSettings("delbtn", true);
-		//$tablas->addWhereConditionActionButtons("delete", "nombre_tabla", "!=", array("configuracion"));
 
 		$tablas->setSettings("template", "crear_tablas");
 		$tablas->setSettings("function_filter_and_search", true);
