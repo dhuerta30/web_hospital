@@ -68,7 +68,6 @@ class ArtifyStencil
             $content
         );
 
-        // {{ $var }}
         $content = preg_replace_callback(
             '/\{\{\s*(.*?)\s*\}\}/s',
             fn($m) => "<?php echo htmlspecialchars({$m[1]}, ENT_QUOTES, 'UTF-8'); ?>",
