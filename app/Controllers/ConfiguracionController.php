@@ -47,47 +47,47 @@ class ConfiguracionController
         $artify->addCallback("before_update", [$this, "before_actualizar_configuracion"]);
         $artify->tableHeading('Configuración del Sistema');
         $html_template = '<div id="i57h" class="row pt-4">
-                                <div id="iyql" class="col-md"><div class="form-group">
-                                    <label id="iyvph" class="form-label">Logo Login:</label>
-                                    <img class="logo_login w-25 img-thumbnail" src="'.$_ENV["BASE_URL"]. "app/libs/artify/uploads/" . $img[0]["logo_login"].'">
-                                    <span id="i6jpb" class="editable">{logo_login}</span>
-                                    <p class="artify_help_block help-block form-text with-errors"></p>
-                                </div>
-                            </div>
-                            <div id="irlr1" class="col-md">
-                                <div class="form-group">
-                                    <label id="i9t5d" class="form-label">Logo Panel:</label>
-                                    <img class="logo_panel w-25 mb-3 img-thumbnail" src="'.$_ENV["BASE_URL"]. "app/libs/artify/uploads/" . $img[0]["logo_panel"].'">
-                                    <span id="iywri" class="editable">{logo_panel}</span>
-                                    <p class="artify_help_block help-block form-text with-errors"></p>
-                                    </div>
-                                </div>
-                            <div id="ijhw1" class="col-md">
-                                <div class="form-group">
-                                <label id="i3vek" class="form-label">Título Sistema:</label>
-                                <span id="ifa97" class="editable">{titulo_sistema}</span>
-                                <p class="artify_help_block help-block form-text with-errors"></p>
-                                </div>
-                            </div>
-                            <div id="ijhw1" class="col-md">
-                                <div class="form-group">
-                                <label id="i3vek" class="form-label">Color de Fondo Menu Panel:</label>
-                                <span id="ifa97" class="editable">{color_fondo_menu_panel}</span>
-                                <p class="artify_help_block help-block form-text with-errors"></p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="form-group">
-                                    <label id="i9t5d" class="form-label">Banner Superior:</label>
-                                    <img class="banner_superior w-50 mb-3 img-thumbnail" src="'.$_ENV["BASE_URL"]. "app/libs/artify/uploads/" . $img[0]["banner_superior"].'">
-                                    <span id="iywri" class="editable">{banner_superior}</span>
-                                    <p class="artify_help_block help-block form-text with-errors"></p>
-                                </div>
-                            </div>
-                        </div>';
+                <div id="iyql" class="col-md"><div class="form-group">
+                    <label id="iyvph" class="form-label">Logo Login:</label>
+                    <img class="logo_login w-25 img-thumbnail" src="'.$_ENV["BASE_URL"]. "app/libs/artify/uploads/" . $img[0]["logo_login"].'">
+                    <span id="i6jpb" class="editable">{logo_login}</span>
+                    <p class="artify_help_block help-block form-text with-errors"></p>
+                </div>
+            </div>
+            <div id="irlr1" class="col-md">
+                <div class="form-group">
+                    <label id="i9t5d" class="form-label">Logo Panel:</label>
+                    <img class="logo_panel w-25 mb-3 img-thumbnail" src="'.$_ENV["BASE_URL"]. "app/libs/artify/uploads/" . $img[0]["logo_panel"].'">
+                    <span id="iywri" class="editable">{logo_panel}</span>
+                    <p class="artify_help_block help-block form-text with-errors"></p>
+                    </div>
+                </div>
+            <div id="ijhw1" class="col-md">
+                <div class="form-group">
+                <label id="i3vek" class="form-label">Título Sistema:</label>
+                <span id="ifa97" class="editable">{titulo_sistema}</span>
+                <p class="artify_help_block help-block form-text with-errors"></p>
+                </div>
+            </div>
+            <div id="ijhw1" class="col-md">
+                <div class="form-group">
+                <label id="i3vek" class="form-label">Color de Fondo Menu Panel:</label>
+                <span id="ifa97" class="editable">{color_fondo_menu_panel}</span>
+                <p class="artify_help_block help-block form-text with-errors"></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label id="i9t5d" class="form-label">Banner Superior:</label>
+                    <img class="banner_superior w-50 mb-3 img-thumbnail" src="'.$_ENV["BASE_URL"]. "app/libs/artify/uploads/" . $img[0]["banner_superior"].'">
+                    <span id="iywri" class="editable">{banner_superior}</span>
+                    <p class="artify_help_block help-block form-text with-errors"></p>
+                </div>
+            </div>
+        </div>';
         $artify->set_template($html_template);
         $artify->setSettings('required', true);
         $artify->setSettings('hideAutoIncrement', true);
