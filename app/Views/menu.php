@@ -62,12 +62,8 @@ $(document).on("artify_after_ajax_action", function(event, obj, data){
 			success: function(data){
 				$("#artify-ajax-loader").hide();
 				$('.icono_menu, .icono_submenu').html(`<option>Seleccionar Icono</option>`);
-
-				// Recorre cada grupo de íconos
 				$.each(data[0].icons, function(index, group){
-					// Recorre cada ícono en el grupo
 					$.each(group.items, function(index, icon){
-						// Agrega cada ícono como una opción al menú desplegable
 						$('.icono_menu, .icono_submenu').append(`<option value="${icon}"><i class="${icon}"></i> ${icon}</option>`);
 					});
 				});
@@ -89,12 +85,8 @@ $(document).on("artify_after_ajax_action", function(event, obj, data){
 				let icono_menu = data['data'][0]['icono_menu'];
 
                 $('.icono_menu').html(`<option>Seleccionar Icono</option>`);
-                
-                // Recorre cada grupo de íconos
                 $.each(data["icons"][0].icons, function(index, group){
-                    // Recorre cada ícono en el grupo
                     $.each(group.items, function(index, icon){
-                        // Agrega cada ícono como una opción al menú desplegable
 						let selected = (icono_menu === icon) ? 'selected' : '';
                     	$('.icono_menu').append(`<option value="${icon}" ${selected}>${icon}</option>`);
                     });
@@ -115,12 +107,8 @@ $(document).on("artify_after_ajax_action", function(event, obj, data){
 				let icono_submenu = data['data'][0]['icono_submenu'];
 
                 $('.icono_submenu').html(`<option>Seleccionar Icono</option>`);
-                
-                // Recorre cada grupo de íconos
                 $.each(data["icons"][0].icons, function(index, group){
-                    // Recorre cada ícono en el grupo
                     $.each(group.items, function(index, icon){
-                        // Agrega cada ícono como una opción al menú desplegable
 						let selected = (icono_submenu === icon) ? 'selected' : '';
                     	$('.icono_submenu').append(`<option value="${icon}" ${selected}>${icon}</option>`);
                     });
@@ -159,7 +147,6 @@ $(document).on("artify_after_submission", function(event, obj, data){
             icon: "success",
             confirmButtonText: "Aceptar"
         }).then((result) => {
-			/* Read more about isConfirmed, isDenied below */
 			if (result.isConfirmed) {
 				$("[data-action='refresh']").click();
 			} else if (result.isDenied) {
