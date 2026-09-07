@@ -2,7 +2,6 @@
 
 require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 
-// Cargar variables de entorno antes de iniciar la sesión
 $dotenv = DotenvVault\DotenvVault::createImmutable(dirname(__DIR__, 3));
 $dotenv->safeLoad();
 
@@ -40,7 +39,6 @@ function buscador_tabla($data, $obj, $columnDB = array()) {
                 $search_col = $data['search_col'];
                 $search_text = $data['search_text'];
              
-                // Sanitize inputs to prevent SQL injection
                 $search_col = preg_replace('/[^a-zA-Z0-9_]/', '', $search_col);
                 $search_text = htmlspecialchars($search_text, ENT_QUOTES, 'UTF-8');
              
@@ -84,25 +82,18 @@ function format_sql_col_tabla($data, $obj, $columnDB = array()) {
  
     $default_cols = array();
     foreach ($columnDB as $column) {
-        // Aplicar la plantilla y ajustar los valores específicos de la columna
         $details = $template;
         $details['colname'] = ucfirst(str_replace('_', ' ', $column));
         $details['col'] = $column;
  
-        // Verificar si la columna está en la base de datos
         if (in_array($column, $columnNames)) {
-            // Columna existente en la base de datos
             $default_cols[$column] = $details;
         } else {
-            // Columna concatenada o que no está en la base de datos
             $default_cols[$column] = $details;
         }
     }
 
-     // Convertir las claves de $data a minúsculas
     $data = array_change_key_case($data, CASE_LOWER);
-
-    // Evitar duplicados y combinar datos de manera controlada
     foreach ($default_cols as $key => $value) {
         if (!array_key_exists($key, $data)) {
             $data[$key] = $value;
@@ -117,12 +108,9 @@ function eliminacion_masiva_tabla($data, $obj){
     $pk = $obj->getLangData("pk");
     $queryfy = $obj->getQueryfyObj();
  
-    // Obtener los IDs seleccionados del array
     $selected_ids = $data["selected_ids"];
  
-    // Asegurarse de que $selected_ids no esté vacío
     if (!empty($selected_ids)) {
-        // Recorrer cada ID y eliminar el producto correspondiente
         foreach ($selected_ids as $id) {
             $queryfy->where($pk, $id);
             $queryfy->delete($tabla);
