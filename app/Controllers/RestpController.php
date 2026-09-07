@@ -8,17 +8,6 @@ use App\core\Request;
 
 class RestpController
 {
-    /**
-     * Orígenes autorizados a consumir la API.
-     *
-     * ANTES: "Access-Control-Allow-Origin: *" junto a
-     * "Access-Control-Allow-Credentials: true". Esa combinación es inválida
-     * según la especificación CORS y, donde el navegador la tolera, permite a
-     * cualquier sitio de Internet invocar la API con las credenciales de la
-     * víctima. Ahora se responde el origen sólo si está en esta lista blanca.
-     *
-     * Agregar aquí los dominios propios que realmente consumen la API.
-     */
     private function origenesPermitidos(): array
     {
         $permitidos = [];
@@ -27,8 +16,6 @@ class RestpController
             $permitidos[] = rtrim($_ENV["DOMINIO"], "/");
         }
 
-        // Orígenes adicionales separados por coma en el .env:
-        // CORS_ORIGENES=https://otro.hospitaldemelipilla.cl,https://app.minsal.cl
         if (!empty($_ENV["CORS_ORIGENES"])) {
             foreach (explode(",", $_ENV["CORS_ORIGENES"]) as $origen) {
                 $origen = trim($origen);
@@ -48,7 +35,7 @@ class RestpController
         if ($origen !== "" && in_array($origen, $this->origenesPermitidos(), true)) {
             header("Access-Control-Allow-Origin: " . $origen);
             header("Access-Control-Allow-Credentials: true");
-            header("Vary: Origin"); // evita que una caché sirva la respuesta al origen equivocado
+            header("Vary: Origin");
         }
 
         header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
@@ -111,49 +98,35 @@ class RestpController
         $filtrar = $request->get('filtro_url');
 
         $filtro_url = isset($filtrar) ? $filtrar : null;
-         //print_r($tabla);
         $token = $request->get('token');
-        //print_r($token);
-      
-        //$all = $request->all();
-        //print_r($all);
-        // Parámetros para WHERE
-       
-        // Construir la URL base para la API
+        
         $url = $_ENV["DOMINIO"] . $_ENV["BASE_URL"] . 'api/' . $tabla;
 
-        // Agregar WHERE si está presente
         if ($filtro_url) {
-            // Si contiene tanto 'orderby' como 'where', agrega '/?'
             if (strpos($filtro_url, 'where') !== false) {
-                $url .= '/?' . $filtro_url; // Usar '/?' para combinar filtros
+                $url .= '/?' . $filtro_url;
             }
-            // Si contiene solo 'orderby', agrega '/'
+            
             else if (strpos($filtro_url, 'orderby') !== false) {
-                $url .= '/?' . $filtro_url; // Usar '/' para orderby
+                $url .= '/?' . $filtro_url;
             }
 
             else if (strpos($filtro_url, 'groupby') !== false) {
-                $url .= '/?' . $filtro_url; // Usar '/' para groupby
+                $url .= '/?' . $filtro_url;
             }
 
             else if (strpos($filtro_url, 'limit') !== false) {
-                $url .= '/?' . $filtro_url; // Usar '/' para limit
+                $url .= '/?' . $filtro_url;
             }
 
             else if (strpos($filtro_url, 'columns') !== false) {
-                $url .= '/?' . $filtro_url; // Usar '/?' para columns
+                $url .= '/?' . $filtro_url;
             } 
-            // Otros casos (where u otros filtros)
+           
             else {
-                $url .= '/' . $filtro_url; // Usar '/?' por defecto
+                $url .= '/' . $filtro_url;
             }
         }
-
-        // Debug: Mostrar URL generada y parámetros
-        //print_r($all);
-        //echo $url;
-        //die();
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -190,7 +163,6 @@ class RestpController
         $tabla = $request->post("tabla");
         $token = $request->post('token');
         $datos = $request->all();
-        //print_r($datos);
 
         if (!$tabla) {
             echo json_encode(['error' => 'Falta la tabla']);

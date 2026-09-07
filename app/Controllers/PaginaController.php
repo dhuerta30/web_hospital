@@ -133,7 +133,7 @@ class PaginaController
         if($data){
             foreach($data as &$item){
                 $titulo = str_replace('-', ' ', $item["titulo"]);
-                $titulo = str_replace(['ñ','Ñ'], ['n','N'], $titulo); // reemplazo de ñ por n
+                $titulo = str_replace(['ñ','Ñ'], ['n','N'], $titulo);
                 $item["titulo"] = $titulo;
                 $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'" data-fancybox="gallery" data-caption="Foto">
                                     <img width="150" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'">
