@@ -29,7 +29,12 @@ Class ArtifyAjaxCtrl {
         } elseif (isset($_GET["artify_instance"])) {
             $instanceKey = $this->sanitizeString($_GET["artify_instance"]);
         }
-        
+
+        if (!\App\core\Security::gridIdValido($instanceKey)) {
+            \App\core\Security::registrar("Grid ID inválido rechazado en el panel: " . substr((string) $instanceKey, 0, 40));
+            die("Solicitud no válida.");
+        }
+
         if(!isset($_SESSION["artify_sess"][$instanceKey])){
             die("La sesión ha caducado. Actualice su página para continuar.");
         }
@@ -50,6 +55,19 @@ Class ArtifyAjaxCtrl {
             $post = array_merge($_FILES, $post);
         }
         $data["post"] = $post;
+
+        $accionesQueModifican = [
+            "INSERT", "INSERT_CLOSE", "INSERT_BACK",
+            "UPDATE", "UPDATE_BACK", "UPDATE_CLOSE", "INLINE_BACK",
+            "DELETE", "DELETE_SELECTED", "CELL_UPDATE",
+            "SWITCH", "BTNSWITCH", "SAVE_CRUD_TABLE_DATA", "EMAIL",
+        ];
+        if (in_array(strtoupper((string) $action), $accionesQueModifican, true)
+            && !\App\core\Security::mismoOrigen()) {
+            \App\core\Security::registrar("Acción de escritura bloqueada por origen cruzado (CSRF): " . strtoupper((string) $action));
+            die("Solicitud rechazada por seguridad (origen no válido).");
+        }
+
         switch (strtoupper($action)) {
             case "VIEW":
                 echo $artify->render("VIEWFORM", $data);

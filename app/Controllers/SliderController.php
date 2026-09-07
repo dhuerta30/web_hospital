@@ -65,15 +65,13 @@ class SliderController
         $id = $data["id"];
         $queryfy = $obj->getQueryfyObj();
 
-        // Obtener imagen asociada al slider
         $queryfy->where("id_slider", $id);
         $result = $queryfy->select("slider");
 
         if ($result && isset($result[0]["imagen"])) {
             $imagen = $result[0]["imagen"];
 
-            // Actualizar tabla noticias
-            $queryfy2 = $obj->getQueryfyObj(); // nuevo objeto para evitar where acumulados
+            $queryfy2 = $obj->getQueryfyObj();
             $queryfy2->where("imagen", $imagen);
             $queryfy2->update("noticias", array("enviar_imagen_a_slider" => "2"));
         }

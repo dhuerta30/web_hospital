@@ -237,10 +237,8 @@ class NoticiasController
     public function formatTableDataCallBacknoticias($data, $obj){
         if($data){
             foreach($data as &$item){
-                // Reemplazamos '-' por espacio
                 $titulo = str_replace('-', ' ', $item["titulo"]);
 
-                // Reemplazar ñ/Ñ y quitar acentos
                 $titulo = strtr($titulo, [
                     'ñ' => 'n', 'Ñ' => 'N',
                     'á' => 'a', 'Á' => 'A',
@@ -252,13 +250,9 @@ class NoticiasController
                 ]);
 
                 $item["titulo"] = $titulo;
-
-                // Imagen con Fancybox
                 $item["imagen"] = '<a href="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'" data-fancybox="gallery" data-caption="Foto">
                                         <img width="100" src="'.$_ENV["BASE_URL"].'app/libs/artify/uploads/'.$item["imagen"].'">
                                 </a>';
-
-                // Contenido resumido
                 $item["contenido"] = mb_strimwidth(strip_tags(html_entity_decode($item["contenido"], ENT_QUOTES, 'UTF-8')), 0, 50, "...");
             }
         }
@@ -279,12 +273,9 @@ class NoticiasController
     private function slugify($string)
     {
         $string = mb_strtolower($string, 'UTF-8');
-        // translitera acentos: ó -> o, ñ -> n, etc.
         $string = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $string);
-        // permite letras, números, espacios Y guiones
         $string = preg_replace('/[^a-z0-9\s-]/', '', $string);
-        // espacios -> guion
-        $string = preg_replace('/[\s-]+/', '-', $string); // colapsa espacios y guiones juntos
+        $string = preg_replace('/[\s-]+/', '-', $string);
         $string = trim($string, '-');
         return $string;
     }
@@ -364,7 +355,7 @@ class NoticiasController
         $artify->fieldDataBinding("modulo", array("noticias" => "noticias"), "", "", "array");
         $artify->setSettings("required", false);
         $artify->fieldTypes("archivo", "FILE_NEW");
-        $artify->addCallback("before_insert", [$this, "carga_masiva"]); // devolución de llamada para antes de insertar los datos
+        $artify->addCallback("before_insert", [$this, "carga_masiva"]);
         $artify->fieldGroups("group1", array("archivo", "modulo"));
         $render = $artify->dbTable("carga_masiva")->render("insertform");
         $select2 = $artify->loadPluginJsCode("select2",".modulo");
