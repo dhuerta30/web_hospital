@@ -310,7 +310,6 @@ class ConfiguracionController
                 } else {
                     $item["video"] = html_entity_decode($item["video"]);
                 }
-                
             }
         }
         return $data;
@@ -345,7 +344,6 @@ class ConfiguracionController
                 } else {
                     $item["video"] = html_entity_decode($item["video"]);
                 }
-                
             }
         }
         return $data;
