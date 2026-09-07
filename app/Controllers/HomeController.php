@@ -142,32 +142,22 @@ class HomeController
 		$request = new Request();
 	
 		if ($request->getMethod() === 'POST') {
-			// Obtén la URL actual
 			$currentUrl = $_SERVER['REQUEST_URI'];
 			$id_sesion_usuario = $_SESSION["usuario"][0]["id"];
-
-			// Obtén el menú y submenús utilizando funciones existentes
 			$menu = HomeController::obtener_menu_por_id_usuario($id_sesion_usuario);
-
-			// Estructura para almacenar el menú
 			$menuHtml = '<nav class="mt-2">
 							<ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">';
-
 			foreach ($menu as $item) {
 				if ($_SESSION["usuario"][0]["idrol"] == 1 || $item["nombre_menu"] != "usuarios" && $item["visibilidad_menu"] != "Ocultar") {
-					// Obtiene submenús
 					$submenus = HomeController::Obtener_submenu_por_id_menu($item['id_menu'], $id_sesion_usuario);
 					$tieneSubmenus = ($item["submenu"] == "Si");
 					$subMenuAbierto = false;
-
-					// Verifica si algún submenú está activo
 					foreach ($submenus as $submenu) {
 						if (strpos($currentUrl, $submenu['url_submenu']) !== false) {
 							$subMenuAbierto = true;
 							break;
 						}
 					}
-
 					$menuHtml .= '<li class="nav-item' . ($subMenuAbierto ? ' menu-is-opening menu-open' : '') . '">';
 					if ($tieneSubmenus) {
 						$menuHtml .= '<a href="javascript:;" class="nav-link' . (strpos($currentUrl, $submenu['url_submenu']) !== false ? ' active' : '') . '">
@@ -203,8 +193,6 @@ class HomeController
 
 			$menuHtml .= '</ul>
 						</nav>';
-
-			// Retorna el HTML del menú
 			echo json_encode([$menuHtml]);
 		}
 	}
@@ -230,7 +218,6 @@ class HomeController
 					$submenuIds = isset($menu["submenuIds"]) ? $menu["submenuIds"] : [];
 					$checked = $menu["checked"];
 
-					// Procesar el menú principal
 					$existMenu = $queryfy->where('id_menu', $menuId)
 						->where('id_usuario', $userId)
 						->select('usuario_menu');
@@ -260,7 +247,6 @@ class HomeController
 							break;
 					}
 
-					// Procesar los submenús asociados al menú principal
 					foreach ($submenuIds as $submenuId) {
 						$id_submenu = $submenuId['id'];
 						$checked = $submenuId["checked"];
@@ -450,9 +436,6 @@ class HomeController
 		}
 
 		$queryfy = $obj->getQueryfyObj();
-		// SEGURO — sentencia preparada con parámetros vinculados (hallazgo 4.5 / remediación 6.3)
-		// ANTES (vulnerable a SQLi):
-		// $result = $queryfy->DBQuery("SELECT * FROM usuario WHERE usuario = '$user' OR email = '$email'");
 		$result = $queryfy->DBQuery(
 			"SELECT * FROM usuario WHERE usuario = :user OR email = :email",
 			[':user' => $user, ':email' => $email]
