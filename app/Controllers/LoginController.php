@@ -105,7 +105,6 @@ class LoginController {
 			echo "El usuario o la contraseña ingresada no coinciden.";
 			die();
 		}
-
 		return $data;
 	}
 
@@ -170,7 +169,6 @@ class LoginController {
 	public function recuperar($data, $obj)
 	{   
 		$email = htmlspecialchars($data['usuario']['email']);
-
 		if(empty($email)){
 			echo "Ingrese un correo para Recuperar su contraseña";
 			die(); 
