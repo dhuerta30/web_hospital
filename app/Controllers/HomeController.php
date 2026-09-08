@@ -3217,27 +3217,21 @@ class HomeController
 		
 		$queryfy = $obj->getQueryfyObj();
 
-		// Eliminar de usuario_menu
 		$queryfy->where("id_menu", $id_menu);
 		$queryfy->where("id_usuario", $id_usuario_session);
 		$queryfy->delete("usuario_menu");
 
-		// Buscar el id_submenu relacionado al id_menu
 		$queryfy->where("id_menu", $id_menu);
 		$id_menu_db = $queryfy->select("submenu");
 
-		// Verificar si se encontró el id_submenu
 		if (!empty($id_menu_db)) {
-			// Eliminar el submenu relacionado
 			$queryfy->where("id_submenu", $id_menu_db[0]["id_submenu"]);
 			$queryfy->delete("submenu");
 
-			// Eliminar de usuario_submenu relacionado
 			$queryfy->where("id_menu", $id_menu);
 			$queryfy->where("id_usuario", $id_usuario_session);
 			$queryfy->delete("usuario_submenu");
 		} else {
-			// Si no hay submenus, actualizar el campo "submenu" en la tabla menu
 			$queryfy->where("id_menu", $id_menu);
 			$queryfy->update("menu", array("submenu" => "No"));
 		}
