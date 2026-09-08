@@ -2180,7 +2180,6 @@ class HomeController
 			}
 		}
 
-		// Función para eliminar un directorio completo y su contenido
 		function eliminar_directorio_completo($dir)
 		{
 			if (!file_exists($dir)) {
@@ -2202,14 +2201,12 @@ class HomeController
 
 		if (!is_string($nameview)) {
 			echo "Error: el nombre de la vista no es una cadena válida.";
-			var_dump($nameview); // Para depuración
+			var_dump($nameview);
 			exit;
 		}
 		
-		// Construir la ruta asegurando que $nameview es una cadena
 		$templaesCrudDirPath = __DIR__ . '/../libs/artify/classes/templates/template_' . trim($nameview) . '/';
 		
-		// Verificar si la ruta es una cadena antes de usar file_exists()
 		if (is_string($templaesCrudDirPath) && file_exists($templaesCrudDirPath) && is_dir($templaesCrudDirPath)) {
 			try {
 				if (eliminar_directorio_completo($templaesCrudDirPath)) {
@@ -2238,7 +2235,6 @@ class HomeController
 	public function despues_de_insertar_modulos($data, $obj) {
 		$id_modulos = $data;
 
-		// Verificamos si las variables POST son arrays, si no, las dejamos en null.
 		$nivel_db = isset($_POST["nivel_db"]) && is_array($_POST["nivel_db"]) 
 			? $_POST["nivel_db"] : [];
 
@@ -2369,7 +2365,6 @@ class HomeController
 
 		$queryfy = $obj->getQueryfyObj();
 	
-		// Validación para el campo "nombre_modulo"
 		$queryfy->where("nombre_modulo", $nombre_modulo);
 		$db_result = $queryfy->select("modulos");
 		if ($db_result) {
@@ -2377,8 +2372,7 @@ class HomeController
 			die();
 		}
 
-		// Validación para el campo "controller_name"
-		$queryfy = $obj->getQueryfyObj(); // Restablecemos el objeto para una nueva consulta
+		$queryfy = $obj->getQueryfyObj();
 		$queryfy->where("controller_name", $controller_name);
 		$db_result = $queryfy->select("modulos");
 		if ($db_result) {
@@ -2386,8 +2380,7 @@ class HomeController
 			die();
 		}
 
-		// Validación para el campo "name_view"
-		$queryfy = $obj->getQueryfyObj(); // Restablecemos el objeto para una nueva consulta
+		$queryfy = $obj->getQueryfyObj();
 		$queryfy->where("name_view", $name_view);
 		$db_result = $queryfy->select("modulos");
 		if ($db_result) {
@@ -2395,7 +2388,7 @@ class HomeController
 			die();
 		}
 
-		$queryfy = $obj->getQueryfyObj(); // Restablecemos el objeto para una nueva consulta
+		$queryfy = $obj->getQueryfyObj();
 		$queryfy->where("file_callback", $file_callback);
 		$db_result = $queryfy->select("modulos");
 		if ($db_result) {
@@ -2675,26 +2668,20 @@ class HomeController
 	}
 
 	private function generatePHPFile($fileName, $phpCode) {
-		// Ruta específica para el directorio raíz de `\artify`
 		$filePath = __DIR__ . '/../../' . $fileName;
 
-		// Leer el contenido actual del archivo
 		$currentContent = file_exists($filePath) ? file_get_contents($filePath) : '';
 
-		// Si el archivo ya contiene el bloque de función, añadimos la nueva ruta dentro
 		if (strpos($currentContent, 'return function(ArtifyRouter $router)') !== false) {
-			// Agregar la nueva ruta antes del cierre `};`
 			$updatedContent = preg_replace(
 				'/(return function\(ArtifyRouter \$router\) \{)(.*)(\};)/s',
 				"$1$2\n    $phpCode\n$3",
 				$currentContent
 			);
 		} else {
-			// Si el archivo no contiene el bloque, crear todo el bloque de código desde cero
 			$updatedContent = "<?php\n\nuse App\\core\\ArtifyRouter;\n\nreturn function(ArtifyRouter \$router) {\n    $phpCode\n};";
 		}
 
-		// Guardar el contenido actualizado en el archivo
 		file_put_contents($filePath, $updatedContent);
 	}
 
@@ -2765,17 +2752,14 @@ class HomeController
 	}
 
 	private function limpiarTexto($texto) {
-        // Reemplazar espacios con guiones bajos
         $texto = str_replace(' ', '_', $texto);
     
-        // Eliminar acentos
         $texto = strtr($texto, [
             'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
             'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
             'ñ' => 'n', 'Ñ' => 'N'
         ]);
         
-        // Eliminar cualquier carácter no alfanumérico (opcional)
         $texto = preg_replace('/[^A-Za-z0-9_]/', '', $texto);
         
         return $texto;
@@ -2790,13 +2774,12 @@ class HomeController
 			$queryfy = $artify->getQueryfyObj();
 			$data = $queryfy->columnNames($lastSelected);
 	
-			// Verificar si $data es un array antes de filtrar
 			if (is_array($data)) {
 				$filteredData = array_filter($data, function($column) {
 					return strpos($column, 'id_') === 0;
 				});
 			} else {
-				$filteredData = []; // Si $data no es un array, establecer un array vacío
+				$filteredData = [];
 			}
 	
 			echo json_encode(["data" => $filteredData]);
@@ -2882,20 +2865,6 @@ class HomeController
 		}
 	}
 
-	/*public function obtenerTablaActual(){
-		$request = new Request();
-
-		if ($request->getMethod() === 'POST') {
-			$tabla = $request->post('tabla');
-
-			$artify = DB::ArtifyCrud();
-			$queryfy = $artify->getQueryfyObj();
-			$columnDB = $queryfy->tableFieldInfo($tabla);
-
-			echo json_encode(['columnas_tabla' => $columnDB]);
-		}
-	}*/
-
 	public function actualizar_orden_menu(){
 
 		$request = new Request();
@@ -2957,10 +2926,8 @@ class HomeController
 
 			$ruta_json = "http://" . $_SERVER['HTTP_HOST'] .$_ENV["BASE_URL"] . "js/icons.json";
 
-			// Lee el contenido del archivo JSON
 			$contenido_json = file_get_contents($ruta_json);
 
-			// Decodifica el contenido JSON a un array de PHP
 			$icons = json_decode($contenido_json, true);
 
         	echo json_encode(['data' => $data, 'icons' => $icons], JSON_UNESCAPED_UNICODE);
@@ -2982,10 +2949,8 @@ class HomeController
 
 			$ruta_json = "http://" . $_SERVER['HTTP_HOST'] .$_ENV["BASE_URL"] . "js/icons.json";
 
-			// Lee el contenido del archivo JSON
 			$contenido_json = file_get_contents($ruta_json);
 
-			// Decodifica el contenido JSON a un array de PHP
 			$icons = json_decode($contenido_json, true);
 
         	echo json_encode(['data' => $data, 'icons' => $icons], JSON_UNESCAPED_UNICODE);
