@@ -49,14 +49,12 @@ div#artify_portfolio_0{
     <div class="container">
         <div class="row">
             <?php if (!$fullWidth): ?>
-                <!-- Sidebar Izquierdo -->
                 <div class="col-md-3">
                     <div class="banners">
                         <?php
                         $env = $_ENV["BASE_URL"];
                         $izquierda = App\Controllers\WebController::barra_lateral_izquierda() ?: [];
                         ?>
-
                         <?php foreach($izquierda as $iz): ?>
                             <div class="banner banner-corto">
                                 <?php if($iz["tipo_contenido"] == "Imagen"): ?>
@@ -70,14 +68,9 @@ div#artify_portfolio_0{
                         <?php endforeach; ?>
                     </div>
                 </div>
-
             <?php endif; ?>
-
-            <!-- Contenido -->
             <div class="<?= $fullWidth ? 'col-md-12' : 'col-md-6' ?>">
-
                 <div id="main">
-
                     <div id="breadcrumbs">
                         <ul>
                             <li><a href="<?= $_ENV["BASE_URL"] ?>">Inicio</a></li>
@@ -108,7 +101,6 @@ div#artify_portfolio_0{
                         </ul>
                         <div class="clearfix"></div>
                     </div>
-
                     <div class="post">
                         <div class="post-header">
                             <h4></h4>
@@ -122,20 +114,12 @@ div#artify_portfolio_0{
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
                 </div>
-
             </div>
-
             <?php if (empty($fullWidth)): ?>
-
-                <!-- Sidebar Derecho -->
                 <div class="col-md-3">
-
                     <div id="sidebar">
-
                         <div class="buscar clearfix">
                             <label for="query">Buscar en el sitio</label>
                             <input class="form-control buscar_noticias" id="query" type="text">
@@ -143,7 +127,6 @@ div#artify_portfolio_0{
                                 <i class="fa fa-search"></i> Buscar
                             </button>
                         </div>
-
                         <?php
                         $redes = App\Controllers\WebController::redes_sociales() ?: [];
                         ?>
@@ -162,11 +145,9 @@ div#artify_portfolio_0{
                                 <?php endforeach; ?>
                             </ul>
                         </div>
-
                         <?php
                         $derecha = App\Controllers\WebController::barra_lateral_derecha() ?: [];
                         ?>
-
                         <div class="banners">
                             <?php foreach($derecha as $der): ?>
                                 <div class="banner banner-corto">
@@ -180,13 +161,9 @@ div#artify_portfolio_0{
                                 </div>
                             <?php endforeach; ?>
                         </div>
-
                     </div>
-
                 </div>
-
             <?php endif; ?>
-
         </div>
     </div>
 </div>
