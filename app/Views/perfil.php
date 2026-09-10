@@ -4,7 +4,6 @@
     <section class="content">
         <div class="card">
             <div class="card-body">
-
                 <div class="row">
                     <div class="col-md-3">
                         <div class="card p-3 upload_avatar">
@@ -23,8 +22,6 @@
                         {!! $render !!}
                     </div>
                 </div>
-
-
             </div>
         </div>
     </section>
