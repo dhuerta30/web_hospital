@@ -27,11 +27,11 @@ div#artify_portfolio_0{
 
 .pagina .artify-portfolio-row,
 .pagina .artify-portfolio-col,
-.pagina .artify-portfolio-col-data{
+.pagina .artify-portfolio-col-data {
     margin-bottom:0 !important;
 }
 
-.pagina .artify-portfolio-col-data:last-child{
+.pagina .artify-portfolio-col-data:last-child {
     padding-bottom:0 !important;
     margin-bottom:0 !important;
 }
