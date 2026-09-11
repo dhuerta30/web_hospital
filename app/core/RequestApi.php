@@ -11,7 +11,6 @@ class RequestApi
     {
         $this->method = $_SERVER['REQUEST_METHOD'];
 
-        // Si la solicitud es GET, obtiene los datos de la URL (query string)
         if ($this->method === 'POST') {
             $this->data = $this->getContentFromJson();
         }
@@ -19,7 +18,6 @@ class RequestApi
 
     public function post($key)
     {
-        // Solo permite obtener datos de $_POST si la solicitud es un POST
         return ($this->method === 'POST' && isset($this->data[$key])) ? $this->data[$key] : null;
     }
 

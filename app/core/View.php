@@ -9,7 +9,6 @@ class View
         $viewFile = __DIR__ . '/../Views/' . $viewName . '.php';
 
         if (file_exists($viewFile)) {
-            // Extraer variables con asignación por lista (list()) en lugar de extract()
             foreach ($data as $key => $value) {
                 $$key = $value;
             }
