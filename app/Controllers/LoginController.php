@@ -82,6 +82,14 @@ class LoginController {
 	public function login($data, $obj) {
 		$pass = $data['usuario']['password'];
 		$user = $data['usuario']['usuario'];
+
+		// Freno de fuerza bruta: identifica por IP + usuario.
+		$idIntento = ($_SERVER['REMOTE_ADDR'] ?? '?') . '|' . strtolower((string) $user);
+		if (Security::intentosExcedidos($idIntento)) {
+			Security::registrar("Login bloqueado por demasiados intentos: " . substr((string) $user, 0, 40));
+			echo "Demasiados intentos fallidos. Espere unos minutos e intente nuevamente.";
+			die();
+		}
 		
 		$queryfy = $obj->getQueryfyObj();
 		$queryfy->where("usuario", $user);
@@ -91,17 +99,22 @@ class LoginController {
 			if (password_verify($pass, $hash[0]['password'])) {
 				SessionManager::startSession();
 				SessionManager::regenerar();
+				Security::limpiarIntentos($idIntento);
 				$_SESSION["data"] = $data;
 
 				$obj->setLangData("no_data", "Bienvenido");
 				$obj->formRedirection($_ENV['BASE_URL']."modulos");
 			} else {
+				Security::registrarIntentoFallido($idIntento);
 				Security::registrar("Intento de acceso fallido para el usuario: " . substr((string) $user, 0, 40));
+				usleep(300000);
 				echo "El usuario o la contraseña ingresada no coinciden.";
 				die();
 			}
 		} else {
+			Security::registrarIntentoFallido($idIntento);
 			Security::registrar("Intento de acceso con usuario inexistente: " . substr((string) $user, 0, 40));
+			usleep(300000);
 			echo "El usuario o la contraseña ingresada no coinciden.";
 			die();
 		}

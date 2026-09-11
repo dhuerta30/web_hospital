@@ -12,8 +12,77 @@ class Security
 
     public static function boot(): void
     {
+        self::endurecerErrores();
         self::enviarCabeceras();
         self::configurarCookieSesion();
+    }
+
+    /**
+     * En producción, nunca mostrar errores al visitante (evita fuga de rutas,
+     * consultas y trazas). En desarrollo (APP_DEBUG=true) se dejan visibles.
+     */
+    public static function endurecerErrores(): void
+    {
+        $debug = filter_var($_ENV['APP_DEBUG'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        if ($debug) {
+            return;
+        }
+        @ini_set('display_errors', '0');
+        @ini_set('display_startup_errors', '0');
+        @ini_set('log_errors', '1');
+        error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+    }
+
+    /* =====================================================================
+       FRENO DE FUERZA BRUTA EN EL LOGIN
+       Almacén liviano en archivo temporal (sin tabla nueva). Clave por
+       IP + usuario. Tras $maximo fallos en $ventana segundos, se bloquea
+       hasta que expire la ventana.
+       ===================================================================== */
+
+    private static function rutaIntentos(string $clave): string
+    {
+        $dir = sys_get_temp_dir() . '/vueti_login';
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0700, true);
+        }
+        return $dir . '/' . hash('sha256', $clave) . '.json';
+    }
+
+    public static function intentosExcedidos(string $identificador, int $maximo = 5, int $ventanaSegundos = 900): bool
+    {
+        $ruta = self::rutaIntentos($identificador);
+        if (!is_file($ruta)) {
+            return false;
+        }
+        $reg = json_decode((string) @file_get_contents($ruta), true);
+        if (!is_array($reg)) {
+            return false;
+        }
+        if ((int) ($reg['inicio'] ?? 0) + $ventanaSegundos < time()) {
+            @unlink($ruta);
+            return false;
+        }
+        return (int) ($reg['contador'] ?? 0) >= $maximo;
+    }
+
+    public static function registrarIntentoFallido(string $identificador, int $ventanaSegundos = 900): void
+    {
+        $ruta = self::rutaIntentos($identificador);
+        $reg = is_file($ruta) ? json_decode((string) @file_get_contents($ruta), true) : null;
+        if (!is_array($reg) || ((int) ($reg['inicio'] ?? 0) + $ventanaSegundos < time())) {
+            $reg = ['inicio' => time(), 'contador' => 0];
+        }
+        $reg['contador'] = (int) ($reg['contador'] ?? 0) + 1;
+        @file_put_contents($ruta, json_encode($reg), LOCK_EX);
+    }
+
+    public static function limpiarIntentos(string $identificador): void
+    {
+        $ruta = self::rutaIntentos($identificador);
+        if (is_file($ruta)) {
+            @unlink($ruta);
+        }
     }
 
     public static function enviarCabeceras(): void
