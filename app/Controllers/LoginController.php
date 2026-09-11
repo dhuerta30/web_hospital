@@ -83,7 +83,6 @@ class LoginController {
 		$pass = $data['usuario']['password'];
 		$user = $data['usuario']['usuario'];
 
-		// Freno de fuerza bruta: identifica por IP + usuario.
 		$idIntento = ($_SERVER['REMOTE_ADDR'] ?? '?') . '|' . strtolower((string) $user);
 		if (Security::intentosExcedidos($idIntento)) {
 			Security::registrar("Login bloqueado por demasiados intentos: " . substr((string) $user, 0, 40));
