@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>web_hospital · Guía funcional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12202f; --ink-soft:#3d5063; --muted:#6b7d90;
+  --paper:#ffffff; --wash:#f4f7fa; --line:#e2e9f0;
+  --nav:#0f2338; --nav-soft:#20415f; --nav-text:#c4d6e7; --nav-dim:#8aa4bd;
+  --accent:#0e8f9b; --accent-strong:#0a6f79; --accent-wash:#e2f4f5;
+  --warn:#b9761d; --warn-wash:#fbf1df;
+  --code-bg:#0f2338; --code-text:#dfeaf3;
+  --radius:9px; --sidebar:288px; --toc:220px; --topbar:60px;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --display:"Space Grotesk","Inter",system-ui,sans-serif;
+}
+html[data-theme="dark"]{
+  --ink:#e6eef6; --ink-soft:#b3c3d3; --muted:#8299ac;
+  --paper:#0c1826; --wash:#0f2130; --line:#1f3548;
+  --accent:#2bb6c2; --accent-strong:#5fd0d9; --accent-wash:#123240;
+  --warn:#e0a24c; --warn-wash:#2a2113;
+  --code-bg:#081320; --code-text:#dfeaf3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;background:var(--nav);
+  display:flex;align-items:center;gap:20px;padding:0 22px;border-bottom:1px solid rgba(255,255,255,.06)}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;flex-shrink:0}
+.brand .mark{width:30px;height:30px;border-radius:7px;flex-shrink:0;background:linear-gradient(135deg,var(--accent),#0a6f79);
+  display:grid;place-items:center;color:#fff;font-family:var(--display);font-weight:700;font-size:16px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.brand .name{font-family:var(--display);font-weight:700;font-size:18px;color:#fff;letter-spacing:-.01em}
+.brand .ver{font-family:var(--mono);font-size:11px;color:var(--nav-dim);border:1px solid var(--nav-soft);padding:1px 7px;border-radius:20px;margin-left:2px}
+.topbar .spacer{flex:1}
+.searchbtn{display:flex;align-items:center;gap:10px;background:var(--nav-soft);color:var(--nav-text);
+  border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 12px;cursor:pointer;font-family:var(--sans);font-size:13.5px;min-width:240px;transition:border-color .15s}
+.searchbtn:hover{border-color:var(--accent)}
+.searchbtn .ph{flex:1;text-align:left;color:var(--nav-dim)}
+.searchbtn kbd{font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:2px 6px;color:var(--nav-text)}
+.iconbtn{background:transparent;border:1px solid var(--nav-soft);color:var(--nav-text);width:38px;height:38px;border-radius:8px;cursor:pointer;display:grid;place-items:center;font-size:16px}
+.iconbtn:hover{border-color:var(--accent)}
+.menutoggle{display:none}
+
+.shell{display:flex;padding-top:var(--topbar);max-width:1440px;margin:0 auto}
+.sidebar{width:var(--sidebar);flex-shrink:0;position:sticky;top:var(--topbar);height:calc(100vh - var(--topbar));
+  overflow-y:auto;padding:26px 14px 60px 24px;border-right:1px solid var(--line);background:var(--wash)}
+.sidebar .group{margin-bottom:22px}
+.sidebar .group > h4{font-family:var(--display);font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--muted);margin:0 0 8px 8px}
+.sidebar a{display:block;text-decoration:none;color:var(--ink-soft);font-size:14px;padding:6px 10px;border-radius:7px;margin:1px 0;transition:background .12s,color .12s;border-left:2px solid transparent}
+.sidebar a:hover{background:var(--paper);color:var(--ink)}
+.sidebar a.active{color:var(--accent-strong);background:var(--accent-wash);border-left-color:var(--accent);font-weight:600}
+
+.content{flex:1;min-width:0;display:flex;justify-content:center}
+.article{max-width:780px;width:100%;padding:44px 48px 120px}
+.toc{width:var(--toc);flex-shrink:0;position:sticky;top:var(--topbar);height:calc(100vh - var(--topbar));overflow-y:auto;padding:44px 24px 60px 8px}
+.toc h5{font-family:var(--display);font-size:12px;letter-spacing:.05em;color:var(--muted);margin:0 0 12px;font-weight:600}
+.toc a{display:block;text-decoration:none;color:var(--muted);font-size:12.5px;padding:4px 0 4px 12px;border-left:2px solid var(--line);transition:color .12s,border-color .12s}
+.toc a.sub{padding-left:24px}
+.toc a:hover{color:var(--ink)}
+.toc a.active{color:var(--accent-strong);border-left-color:var(--accent);font-weight:600}
+
+.eyebrow{font-family:var(--mono);font-size:12px;color:var(--accent-strong);margin:0 0 6px}
+.article h1{font-family:var(--display);font-size:34px;line-height:1.15;letter-spacing:-.02em;margin:0 0 12px;font-weight:700}
+.article h2{font-family:var(--display);font-size:23px;letter-spacing:-.01em;margin:46px 0 12px;padding-top:8px;font-weight:600;scroll-margin-top:calc(var(--topbar) + 16px)}
+.article h3{font-family:var(--display);font-size:17px;margin:30px 0 10px;font-weight:600;scroll-margin-top:calc(var(--topbar) + 16px)}
+.article section{scroll-margin-top:calc(var(--topbar) + 8px)}
+.article p{margin:12px 0;color:var(--ink)}
+.article section > p:first-of-type{font-size:17px;color:var(--ink-soft)}
+.article ul,.article ol{padding-left:22px;margin:12px 0}
+.article li{margin:6px 0}
+.article a.xref{color:var(--accent-strong);text-decoration:none;border-bottom:1px solid var(--accent-wash)}
+.article a.xref:hover{border-bottom-color:var(--accent)}
+
+code:not(pre code){font-family:var(--mono);font-size:.86em;background:var(--wash);border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--accent-strong)}
+pre{background:var(--code-bg);color:var(--code-text);border-radius:var(--radius);padding:18px 20px;overflow-x:auto;margin:18px 0;font-size:13.5px;line-height:1.7;border:1px solid rgba(255,255,255,.06)}
+pre code{font-family:var(--mono);white-space:pre}
+.tok-c{color:#7f97ac}
+
+.callout{border-radius:var(--radius);padding:14px 18px;margin:20px 0;font-size:14.5px;border:1px solid var(--line);background:var(--wash)}
+.callout.warn{background:var(--warn-wash);border-color:transparent;border-left:3px solid var(--warn)}
+.callout.tip{background:var(--accent-wash);border-color:transparent;border-left:3px solid var(--accent)}
+.callout .t{font-weight:600;font-family:var(--display);margin-right:6px}
+
+table.api{border-collapse:collapse;width:100%;margin:18px 0;font-size:13.5px}
+table.api th,table.api td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+table.api th{background:var(--wash);font-family:var(--display);font-weight:600}
+table.api td code{white-space:nowrap}
+
+.overlay{position:fixed;inset:0;background:rgba(6,16,26,.55);backdrop-filter:blur(3px);z-index:60;display:none;align-items:flex-start;justify-content:center;padding-top:11vh}
+.overlay.open{display:flex}
+.searchbox{width:min(640px,92vw);background:var(--paper);border-radius:14px;overflow:hidden;box-shadow:0 24px 70px rgba(6,16,26,.4);border:1px solid var(--line)}
+.searchbox .field{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.searchbox input{flex:1;border:0;outline:0;font-family:var(--sans);font-size:17px;background:transparent;color:var(--ink)}
+.searchbox .esc{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:5px;padding:2px 6px;color:var(--muted)}
+.results{max-height:52vh;overflow-y:auto;padding:8px}
+.results a{display:block;text-decoration:none;padding:11px 14px;border-radius:9px;color:var(--ink)}
+.results a:hover,.results a.cursor{background:var(--wash)}
+.results .cat{font-family:var(--mono);font-size:11px;color:var(--accent-strong);margin-bottom:2px}
+.results .ttl{font-family:var(--display);font-weight:600;font-size:15px}
+.results .snip{font-size:12.5px;color:var(--muted);margin-top:2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.results mark{background:var(--accent-wash);color:var(--accent-strong);border-radius:3px;padding:0 2px}
+.results .empty{padding:28px 14px;text-align:center;color:var(--muted);font-size:14px}
+.hl-flash{animation:flash 1.4s ease}
+@keyframes flash{0%,20%{background:var(--accent-wash)}100%{background:transparent}}
+@media (prefers-reduced-motion:reduce){.hl-flash{animation:none}}
+
+.scrim{display:none}
+@media(max-width:1100px){.toc{display:none}}
+@media(max-width:860px){
+  .searchbtn{min-width:0;width:42px;padding:8px}.searchbtn .ph,.searchbtn kbd{display:none}
+  .menutoggle{display:grid}
+  .sidebar{position:fixed;left:0;top:var(--topbar);z-index:35;transform:translateX(-100%);transition:transform .2s ease;box-shadow:6px 0 30px rgba(6,16,26,.18)}
+  .sidebar.open{transform:none}
+  .scrim.open{display:block;position:fixed;inset:var(--topbar) 0 0 0;background:rgba(6,16,26,.4);z-index:34}
+  .article{padding:30px 22px 100px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="iconbtn menutoggle" id="menuToggle" aria-label="Menú">☰</button>
+  <a class="brand" href="#vision">
+    <span class="mark">H</span>
+    <span class="name">web_hospital</span>
+    <span class="ver">guía funcional</span>
+  </a>
+  <div class="spacer"></div>
+  <button class="searchbtn" id="searchOpen" aria-label="Buscar">
+    <span>🔍</span><span class="ph">Buscar funcionalidad…</span>
+    <kbd id="kbdHint">⌘K</kbd>
+  </button>
+  <button class="iconbtn" id="themeToggle" aria-label="Cambiar tema">◐</button>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="content">
+    <article class="article" id="article">
+
+      <!-- ============ COMENZAR ============ -->
+      <section class="doc" id="vision" data-cat="Comenzar" data-title="Visión general">
+        <p class="eyebrow">Comenzar</p>
+        <h1>Sitio web_hospital · qué hace</h1>
+        <p>web_hospital es el sitio institucional del Hospital San José de Melipilla. Cumple dos funciones en un mismo sistema: es el <b>portal público</b> (noticias, páginas, menús y contenidos) y es un <b>panel de administración low-code</b> que permite crear y mantener módulos de datos sin programar. Ambos corren sobre el framework <a class="xref" href="#">Artify</a>.</p>
+        <h2 id="vg-dos-caras">Las dos caras del sistema</h2>
+        <ul>
+          <li><b>Sitio público</b> — lo que ve el ciudadano: inicio, noticias, páginas informativas, galería y navegación.</li>
+          <li><b>Panel de administración</b> — lo que usa el personal autorizado: gestión de contenidos, usuarios, permisos y el generador de módulos.</li>
+        </ul>
+        <h2 id="vg-roles">Perfiles de acceso</h2>
+        <p>El acceso al panel está controlado por roles. Existen dos: <b>Administrador</b> (control total, incluido el generador de módulos y la configuración) y <b>Usuario</b> (acceso acotado a los menús que se le habiliten).</p>
+        <div class="callout tip"><span class="t">Cómo leer esta guía.</span> Cada sección describe una funcionalidad: qué gestiona, dónde vive en el panel y qué datos maneja. Es documentación de uso, no de código; para lo técnico, ver la guía del framework Artify.</div>
+      </section>
+
+      <!-- ============ SITIO PÚBLICO ============ -->
+      <section class="doc" id="menus" data-cat="Sitio público" data-title="Menús de navegación">
+        <p class="eyebrow">Sitio público</p>
+        <h1>Menús de navegación</h1>
+        <p>La navegación del portal público es totalmente editable desde el panel (módulo <b>Web Menu</b>) y se organiza en tres niveles: menú principal, submenú y sub-submenú.</p>
+        <h2 id="menu-niveles">Estructura en tres niveles</h2>
+        <table class="api">
+          <tr><th>Nivel</th><th>Gestiona</th></tr>
+          <tr><td>Menú principal</td><td>Entradas de primer nivel, cada una con nombre, enlace y visibilidad.</td></tr>
+          <tr><td>Submenú</td><td>Opciones colgando de un menú principal.</td></tr>
+          <tr><td>Sub-submenú</td><td>Un tercer nivel para desgloses más finos.</td></tr>
+        </table>
+        <p>Cada entrada tiene un interruptor de <b>visibilidad</b>, de modo que se puede preparar contenido y publicarlo cuando corresponda sin borrarlo.</p>
+        <h2 id="menu-actual">Secciones publicadas hoy</h2>
+        <p>El menú principal contempla: Inicio, Nuestro Hospital, ¿Cómo me atiendo?, Información a los usuarios y el acceso a la Intranet. Bajo ellos cuelgan secciones como Quiénes Somos, Misión, Visión y Valores, Autoridades, Organigrama, Hospitalización, Atención Ambulatoria, Especialidades, Urgencias, Apoyo Clínico, OIRS, Sistema de Visitas, Hospital Amigo, GES y Ley Ricarte Soto, y Agendamiento.</p>
+        <div class="callout warn"><span class="t">Nota de seguridad (hallazgo 3.1).</span> La entrada «Intranet» del menú público apunta hoy al portal interno del hospital. Por recomendación del informe de ciberseguridad, esa dirección interna no debe quedar publicada hacia Internet: conviene mover ese acceso a una zona sólo para funcionarios. Se gestiona desde este mismo módulo, sin tocar código.</div>
+      </section>
+
+      <section class="doc" id="noticias" data-cat="Sitio público" data-title="Noticias">
+        <p class="eyebrow">Sitio público</p>
+        <h1>Noticias</h1>
+        <p>Publica y administra las noticias del portal. Cada noticia tiene título, un enlace amigable (slug), fecha, imagen, contenido y categoría, y registra quién la publicó.</p>
+        <h2 id="not-campos">Qué incluye una noticia</h2>
+        <table class="api">
+          <tr><th>Dato</th><th>Uso</th></tr>
+          <tr><td>Título y slug</td><td>Encabezado y URL legible de la noticia.</td></tr>
+          <tr><td>Fecha</td><td>Fecha de publicación mostrada al público.</td></tr>
+          <tr><td>Imagen</td><td>Imagen destacada de la noticia.</td></tr>
+          <tr><td>Enviar imagen al slider</td><td>Interruptor para que la imagen aparezca además en el carrusel de inicio.</td></tr>
+          <tr><td>Contenido y categoría</td><td>Cuerpo de la noticia y su clasificación.</td></tr>
+        </table>
+        <div class="callout tip"><span class="t">Relación con el slider.</span> La opción «enviar imagen al slider» conecta esta sección con el <a class="xref" href="#slider">carrusel de inicio</a>: una noticia destacada puede aparecer en portada automáticamente.</div>
+      </section>
+
+      <section class="doc" id="paginas" data-cat="Sitio público" data-title="Páginas">
+        <p class="eyebrow">Sitio público</p>
+        <h1>Páginas</h1>
+        <p>Gestiona las páginas informativas de contenido estable (a diferencia de las noticias, que son cronológicas). Comparten la misma estructura: título, slug, fecha, imagen, contenido y categoría.</p>
+        <p>Son las páginas detrás de secciones como Quiénes Somos, Misión y Visión, o la información de atención al usuario. Se enlazan desde los <a class="xref" href="#menus">menús</a>.</p>
+      </section>
+
+      <section class="doc" id="slider" data-cat="Sitio público" data-title="Slider de inicio">
+        <p class="eyebrow">Sitio público</p>
+        <h1>Slider de inicio</h1>
+        <p>Administra el carrusel de imágenes destacadas de la portada. Cada diapositiva tiene título, imagen, un enlace opcional y un texto de contenido.</p>
+        <p>Se alimenta de dos formas: manualmente desde este módulo, o automáticamente desde una <a class="xref" href="#noticias">noticia</a> marcada con «enviar imagen al slider».</p>
+      </section>
+
+      <section class="doc" id="galeria" data-cat="Sitio público" data-title="Galería">
+        <p class="eyebrow">Sitio público</p>
+        <h1>Galería de imágenes</h1>
+        <p>Repositorio de imágenes del sitio, cada una con un nombre y el archivo asociado. Sirve para bancos de fotos institucionales reutilizables en páginas y noticias.</p>
+      </section>
+
+      <section class="doc" id="barras" data-cat="Sitio público" data-title="Banners y barras">
+        <p class="eyebrow">Sitio público</p>
+        <h1>Banners y barras laterales</h1>
+        <p>Controla los espacios promocionales del portal fuera del contenido principal.</p>
+        <table class="api">
+          <tr><th>Zona</th><th>Contenido</th></tr>
+          <tr><td>Barra inferior</td><td>Banners con imagen y enlace al pie del sitio.</td></tr>
+          <tr><td>Barra lateral izquierda / derecha</td><td>Bloques con imagen o video y enlace, con orden configurable.</td></tr>
+        </table>
+      </section>
+
+      <section class="doc" id="redes" data-cat="Sitio público" data-title="Redes sociales">
+        <p class="eyebrow">Sitio público</p>
+        <h1>Redes sociales</h1>
+        <p>Administra los enlaces a las redes del hospital. Cada entrada tiene título, subtítulo, un ícono y la URL de destino, para mostrarse como accesos en el portal.</p>
+      </section>
+
+      <!-- ============ ADMINISTRACIÓN ============ -->
+      <section class="doc" id="acceso" data-cat="Administración" data-title="Acceso y perfil">
+        <p class="eyebrow">Administración</p>
+        <h1>Acceso y perfil</h1>
+        <p>El panel se abre con usuario y contraseña. Una vez dentro, cada persona tiene un menú <b>Perfil</b> para sus datos y un acceso <b>Salir</b> que cierra la sesión de forma segura.</p>
+        <div class="callout tip"><span class="t">Seguridad del acceso.</span> El ingreso usa contraseñas cifradas, regenera la sesión al autenticar y limita los intentos fallidos. Detalle técnico en la guía del framework (Sesión y autenticación).</div>
+      </section>
+
+      <section class="doc" id="usuarios" data-cat="Administración" data-title="Usuarios">
+        <p class="eyebrow">Administración</p>
+        <h1>Usuarios</h1>
+        <p>Alta, edición y baja de las cuentas del panel. Cada usuario tiene nombre, correo, nombre de usuario, contraseña, rol, estado (activo/inactivo) y avatar. El rol determina qué puede hacer dentro del sistema.</p>
+        <table class="api">
+          <tr><th>Dato</th><th>Uso</th></tr>
+          <tr><td>Usuario y contraseña</td><td>Credenciales de acceso (la contraseña se guarda cifrada).</td></tr>
+          <tr><td>Rol</td><td>Administrador o Usuario; define permisos.</td></tr>
+          <tr><td>Estado</td><td>Permite desactivar una cuenta sin eliminarla.</td></tr>
+          <tr><td>Token API</td><td>Credencial para el consumo de la API cuando corresponde.</td></tr>
+        </table>
+      </section>
+
+      <section class="doc" id="permisos" data-cat="Administración" data-title="Roles y acceso a menús">
+        <p class="eyebrow">Administración</p>
+        <h1>Roles y acceso a menús</h1>
+        <p>Además del rol general, el sistema permite un control fino: el módulo <b>Acceso Menús</b> define, usuario por usuario, qué menús y submenús del panel puede ver cada persona.</p>
+        <p>Así, dos cuentas con rol «Usuario» pueden tener vistas distintas del panel según lo que se les habilite, sin necesidad de crear roles nuevos.</p>
+      </section>
+
+      <section class="doc" id="navegacion-panel" data-cat="Administración" data-title="Navegación del panel">
+        <p class="eyebrow">Administración</p>
+        <h1>Navegación del panel</h1>
+        <p>El menú del panel de administración es a su vez editable (módulo <b>Mantenedor Menu</b>) y hoy agrupa: Usuarios, Perfil, Respalda tus Datos, Mantenedor Menu, Acceso Menús, Generador de Módulos, Documentación, Noticias, Carga Masiva, Web Menu, Slider, Configuración y Páginas.</p>
+      </section>
+
+      <!-- ============ GENERADOR LOW-CODE ============ -->
+      <section class="doc" id="generador" data-cat="Generador low-code" data-title="Generador de módulos">
+        <p class="eyebrow">Generador low-code</p>
+        <h1>Generador de módulos</h1>
+        <p>Es la funcionalidad más potente del sistema: permite crear un mantenedor CRUD completo sobre cualquier tabla, sin escribir código. Cada módulo generado obtiene listado, formularios, búsqueda, filtros y acciones, todo configurable desde una interfaz.</p>
+        <h2 id="gen-opciones">Qué se puede configurar por módulo</h2>
+        <ul>
+          <li>Qué columnas se muestran en la grilla y con qué nombre.</li>
+          <li>Qué campos aparecen en los formularios de alta y de edición, y cuáles son obligatorios.</li>
+          <li>Buscador, filtros por campo y tipo de filtro.</li>
+          <li>Acciones por fila, selección múltiple y borrado masivo.</li>
+          <li>Paginación, cantidad de registros por página y numeración de columnas.</li>
+          <li>Edición en línea (estilo planilla) sobre la grilla.</li>
+          <li>Uniones entre tablas (interna e izquierda) y <a class="xref" href="#anidadas">tablas anidadas</a>.</li>
+          <li>Exportación a <a class="xref" href="#pdf">PDF</a>, con consulta a medida.</li>
+          <li>Protección por login y reCAPTCHA en formularios públicos.</li>
+        </ul>
+        <div class="callout tip"><span class="t">Por qué importa.</span> La mayoría de los mantenedores del sitio se definen aquí como datos, no como código. Esto acelera cambios y reduce el mantenimiento, aunque concentra mucha lógica en la configuración: conviene documentar cada módulo relevante que se cree.</div>
+      </section>
+
+      <section class="doc" id="crear-tablas" data-cat="Generador low-code" data-title="Creador de tablas">
+        <p class="eyebrow">Generador low-code</p>
+        <h1>Creador de tablas</h1>
+        <p>Permite crear y modificar tablas de la base de datos desde el panel, definiendo cada campo: nombre, tipo, longitud, si es autoincremental, si es índice y si admite nulos. Es el paso previo para luego generar su módulo CRUD.</p>
+      </section>
+
+      <section class="doc" id="paneles" data-cat="Generador low-code" data-title="Creador de paneles">
+        <p class="eyebrow">Generador low-code</p>
+        <h1>Creador de paneles</h1>
+        <p>Arma paneles o tableros personalizados definiendo cuántas columnas tiene el panel y qué accesos directos incluye (cada uno con título, ícono y URL). Sirve para construir pantallas de inicio a medida para distintos perfiles.</p>
+      </section>
+
+      <section class="doc" id="anidadas" data-cat="Generador low-code" data-title="Tablas anidadas">
+        <p class="eyebrow">Generador low-code</p>
+        <h1>Tablas anidadas</h1>
+        <p>Un módulo puede mostrar dentro de cada fila una segunda grilla relacionada (por ejemplo, un registro y sus detalles). Las tablas anidadas configuran ese segundo nivel con sus propias opciones de columnas, filtros y acciones.</p>
+      </section>
+
+      <section class="doc" id="carga-masiva" data-cat="Generador low-code" data-title="Carga masiva">
+        <p class="eyebrow">Generador low-code</p>
+        <h1>Carga masiva</h1>
+        <p>Permite importar registros en lote a un módulo desde un archivo, en lugar de cargarlos uno por uno. Se indica el archivo y el módulo de destino.</p>
+        <div class="callout warn"><span class="t">Cuidado con los archivos.</span> Las cargas se validan y se almacenan con nombre aleatorio; evita subir planillas con datos sensibles que no correspondan al módulo. Ver la política de cargas en la guía del framework.</div>
+      </section>
+
+      <!-- ============ CONFIGURACIÓN ============ -->
+      <section class="doc" id="marca" data-cat="Configuración" data-title="Marca del sistema">
+        <p class="eyebrow">Configuración</p>
+        <h1>Marca del sistema</h1>
+        <p>Personaliza la identidad visual del panel y del acceso: logo del login, logo del panel, título del sistema, color de fondo del menú y banner superior. Un cambio aquí se refleja en toda la interfaz administrativa.</p>
+      </section>
+
+      <section class="doc" id="pdf" data-cat="Configuración" data-title="Exportación a PDF">
+        <p class="eyebrow">Configuración</p>
+        <h1>Exportación a PDF</h1>
+        <p>Define cómo se generan los PDF que producen los módulos: logo del documento y marca de agua. Cada módulo puede activar su exportación y usar una consulta a medida para el contenido del PDF.</p>
+      </section>
+
+      <section class="doc" id="api" data-cat="Configuración" data-title="API y tokens">
+        <p class="eyebrow">Configuración</p>
+        <h1>API y tokens</h1>
+        <p>Configura la API del sistema: la generación y autenticación de tokens JWT y su tiempo de caducidad. Es lo que permite que aplicaciones externas consuman datos de forma controlada.</p>
+        <div class="callout warn"><span class="t">Recomendación de seguridad.</span> Mantén la ejecución de consultas SQL crudas desactivada y la lista de orígenes acotada. Detalle en la guía del framework (API REST y JWT).</div>
+      </section>
+
+      <section class="doc" id="respaldos" data-cat="Configuración" data-title="Respaldos">
+        <p class="eyebrow">Configuración</p>
+        <h1>Respaldos</h1>
+        <p>El módulo <b>Respalda tus Datos</b> genera copias de la información y registra cada respaldo con el usuario que lo hizo, el archivo, la fecha y la hora.</p>
+        <div class="callout warn"><span class="t">Dónde se guardan.</span> Los respaldos (archivos <code>.sql</code>) nunca deben quedar accesibles desde Internet en la raíz del sitio. Guárdalos fuera del área pública. Es justamente uno de los puntos del informe de ciberseguridad.</div>
+      </section>
+
+      <!-- ============ REFERENCIA ============ -->
+      <section class="doc" id="modelo" data-cat="Referencia" data-title="Modelo de datos">
+        <p class="eyebrow">Referencia</p>
+        <h1>Modelo de datos por área</h1>
+        <p>Resumen de las tablas del sistema agrupadas por función, como mapa de referencia rápido.</p>
+        <table class="api">
+          <tr><th>Área</th><th>Tablas</th></tr>
+          <tr><td>Contenido público</td><td><code>noticias</code>, <code>pagina</code>, <code>slider</code>, <code>galeria</code>, <code>categorias</code>, <code>redes_sociales</code>, <code>barra_inferior</code>, <code>barra_lateral_izquierda</code>, <code>barra_lateral_derecha</code></td></tr>
+          <tr><td>Navegación pública</td><td><code>menu_web</code>, <code>submenu_web</code>, <code>submenudos_web</code></td></tr>
+          <tr><td>Usuarios y permisos</td><td><code>usuario</code>, <code>rol</code>, <code>usuario_menu</code>, <code>usuario_submenu</code></td></tr>
+          <tr><td>Navegación del panel</td><td><code>menu</code>, <code>submenu</code></td></tr>
+          <tr><td>Generador low-code</td><td><code>modulos</code>, <code>anidada</code>, <code>renombrar_campos_grilla</code>, <code>crear_tablas</code>, <code>estructura_tabla</code>, <code>creador_de_panel</code>, <code>custom_panel</code>, <code>carga_masiva</code></td></tr>
+          <tr><td>Personas</td><td><code>personas</code>, <code>empleados</code></td></tr>
+          <tr><td>Configuración</td><td><code>configuracion</code>, <code>configuraciones_api</code>, <code>configuraciones_pdf</code></td></tr>
+          <tr><td>Operación</td><td><code>backup</code></td></tr>
+        </table>
+        <div class="callout tip"><span class="t">Alcance.</span> Esta guía describe las funcionalidades a partir del modelo de datos del sistema. Amplía cada módulo con capturas de pantalla del panel cuando la presentes, para que sirva también como manual de usuario.</div>
+      </section>
+
+    </article>
+
+    <aside class="toc" id="toc"><h5>En esta página</h5><div id="tocList"></div></aside>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="searchbox" role="dialog" aria-label="Buscar">
+    <div class="field"><span>🔍</span>
+      <input id="searchInput" type="text" placeholder="Buscar funcionalidad…" autocomplete="off" spellcheck="false">
+      <span class="esc">Esc</span>
+    </div>
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const sections = Array.from(document.querySelectorAll('section.doc'));
+  const CAT_ORDER = ['Comenzar','Sitio público','Administración','Generador low-code','Configuración','Referencia'];
+
+  const sidebar = $('#sidebar'), byCat = {};
+  sections.forEach(s => { const c=s.dataset.cat||'Otros'; (byCat[c]=byCat[c]||[]).push(s); });
+  CAT_ORDER.filter(c=>byCat[c]).forEach(cat=>{
+    const g=document.createElement('div'); g.className='group';
+    const h=document.createElement('h4'); h.textContent=cat; g.appendChild(h);
+    byCat[cat].forEach(s=>{ const a=document.createElement('a'); a.href='#'+s.id; a.textContent=s.dataset.title; a.dataset.target=s.id; g.appendChild(a); });
+    sidebar.appendChild(g);
+  });
+  const navLinks = Array.from(sidebar.querySelectorAll('a'));
+
+  const index = sections.map(s => { const c=s.cloneNode(true); return { id:s.id, title:s.dataset.title, cat:s.dataset.cat, text:c.textContent.replace(/\s+/g,' ').trim() }; });
+
+  const tocList = $('#tocList');
+  function buildToc(section){
+    tocList.innerHTML='';
+    section.querySelectorAll('h2[id], h3[id]').forEach(h=>{
+      const a=document.createElement('a'); a.href='#'+h.id; a.textContent=h.textContent;
+      if(h.tagName==='H3') a.className='sub'; a.dataset.target=h.id; tocList.appendChild(a);
+    });
+  }
+  let current=null;
+  const spy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const id=e.target.id;
+    navLinks.forEach(a=>a.classList.toggle('active',a.dataset.target===id));
+    if(current!==id){current=id;buildToc(e.target);}}});},{rootMargin:'-45% 0px -50% 0px',threshold:0});
+  sections.forEach(s=>spy.observe(s)); buildToc(sections[0]);
+
+  const heads=Array.from(document.querySelectorAll('.article h2[id], .article h3[id]'));
+  const hspy=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){
+    tocList.querySelectorAll('a').forEach(a=>a.classList.toggle('active',a.dataset.target===e.target.id));}});},{rootMargin:'-20% 0px -70% 0px',threshold:0});
+  heads.forEach(h=>hspy.observe(h));
+
+  const overlay=$('#overlay'),input=$('#searchInput'),results=$('#results');
+  let cursor=-1,hits=[];
+  function openSearch(){overlay.classList.add('open');input.value='';render('');input.focus();}
+  function closeSearch(){overlay.classList.remove('open');cursor=-1;}
+  function esc(t){return t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+  function snippet(text,q){const i=text.toLowerCase().indexOf(q.toLowerCase());
+    if(i<0)return esc(text.slice(0,120));const s=Math.max(0,i-40);
+    const raw=(s>0?'…':'')+text.slice(s,i+q.length+80);
+    return esc(raw).replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');}
+  function render(q){q=q.trim();
+    if(!q){hits=index.slice();results.innerHTML=hits.map((h,i)=>row(h,i,'')).join('');cursor=-1;return;}
+    const ql=q.toLowerCase();
+    hits=index.map(h=>{let s=0;if(h.title.toLowerCase().includes(ql))s+=10;if(h.text.toLowerCase().includes(ql))s+=3;return{h,s};})
+      .filter(r=>r.s>0).sort((a,b)=>b.s-a.s).map(r=>r.h);
+    results.innerHTML=hits.length?hits.map((h,i)=>row(h,i,q)).join(''):'<div class="empty">Sin resultados para “'+esc(q)+'”.</div>';
+    cursor=hits.length?0:-1;paint();}
+  function row(h,i,q){return '<a href="#'+h.id+'" data-i="'+i+'"><div class="cat">'+esc(h.cat)+'</div><div class="ttl">'+esc(h.title)+'</div><div class="snip">'+snippet(h.text,q||h.title)+'</div></a>';}
+  function paint(){const rs=results.querySelectorAll('a');rs.forEach((r,i)=>r.classList.toggle('cursor',i===cursor));if(rs[cursor])rs[cursor].scrollIntoView({block:'nearest'});}
+  function goTo(id){closeSearch();const el=document.getElementById(id);if(el){el.scrollIntoView();el.classList.remove('hl-flash');void el.offsetWidth;el.classList.add('hl-flash');}}
+  input.addEventListener('input',()=>render(input.value));
+  results.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();goTo(a.getAttribute('href').slice(1));});
+  document.addEventListener('keydown',e=>{const mod=e.metaKey||e.ctrlKey;
+    if(mod&&e.key.toLowerCase()==='k'){e.preventDefault();overlay.classList.contains('open')?closeSearch():openSearch();return;}
+    if(!overlay.classList.contains('open'))return;
+    if(e.key==='Escape')closeSearch();
+    else if(e.key==='ArrowDown'){e.preventDefault();cursor=Math.min(cursor+1,hits.length-1);paint();}
+    else if(e.key==='ArrowUp'){e.preventDefault();cursor=Math.max(cursor-1,0);paint();}
+    else if(e.key==='Enter'&&hits[cursor]){e.preventDefault();goTo(hits[cursor].id);}});
+  $('#searchOpen').addEventListener('click',openSearch);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeSearch();});
+  if(!/Mac|iPhone|iPad/.test(navigator.platform))$('#kbdHint').textContent='Ctrl K';
+
+  const scrim=$('#scrim');
+  $('#menuToggle').addEventListener('click',()=>{sidebar.classList.toggle('open');scrim.classList.toggle('open');});
+  scrim.addEventListener('click',()=>{sidebar.classList.remove('open');scrim.classList.remove('open');});
+  navLinks.forEach(a=>a.addEventListener('click',()=>{sidebar.classList.remove('open');scrim.classList.remove('open');}));
+  $('#themeToggle').addEventListener('click',()=>{const h=document.documentElement;h.dataset.theme=h.dataset.theme==='dark'?'light':'dark';});
+})();
+</script>
+</body>
+</html>

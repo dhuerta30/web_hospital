@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artify · Documentación del framework</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#12202f; --ink-soft:#3d5063; --muted:#6b7d90;
+  --paper:#ffffff; --wash:#f4f7fa; --line:#e2e9f0;
+  --nav:#0f2338; --nav-soft:#20415f; --nav-text:#c4d6e7; --nav-dim:#8aa4bd;
+  --accent:#0e8f9b; --accent-strong:#0a6f79; --accent-wash:#e2f4f5;
+  --warn:#b9761d; --warn-wash:#fbf1df;
+  --code-bg:#0f2338; --code-text:#dfeaf3;
+  --radius:9px; --sidebar:288px; --toc:220px; --topbar:60px;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --sans:"Inter",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --display:"Space Grotesk","Inter",system-ui,sans-serif;
+}
+html[data-theme="dark"]{
+  --ink:#e6eef6; --ink-soft:#b3c3d3; --muted:#8299ac;
+  --paper:#0c1826; --wash:#0f2130; --line:#1f3548;
+  --accent:#2bb6c2; --accent-strong:#5fd0d9; --accent-wash:#123240;
+  --warn:#e0a24c; --warn-wash:#2a2113;
+  --code-bg:#081320; --code-text:#dfeaf3;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;font-family:var(--sans);color:var(--ink);background:var(--paper);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;
+  background:var(--nav);display:flex;align-items:center;gap:20px;
+  padding:0 22px;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;flex-shrink:0}
+.brand .mark{
+  width:30px;height:30px;border-radius:7px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--accent),#0a6f79);
+  display:grid;place-items:center;color:#fff;font-family:var(--display);
+  font-weight:700;font-size:18px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15);
+}
+.brand .name{font-family:var(--display);font-weight:700;font-size:19px;color:#fff;letter-spacing:-.01em}
+.brand .ver{font-family:var(--mono);font-size:11px;color:var(--nav-dim);
+  border:1px solid var(--nav-soft);padding:1px 7px;border-radius:20px;margin-left:2px}
+.topbar .spacer{flex:1}
+.searchbtn{
+  display:flex;align-items:center;gap:10px;background:var(--nav-soft);color:var(--nav-text);
+  border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 12px;cursor:pointer;
+  font-family:var(--sans);font-size:13.5px;min-width:240px;transition:border-color .15s;
+}
+.searchbtn:hover{border-color:var(--accent)}
+.searchbtn .ph{flex:1;text-align:left;color:var(--nav-dim)}
+.searchbtn kbd{font-family:var(--mono);font-size:11px;background:rgba(0,0,0,.25);
+  border:1px solid rgba(255,255,255,.12);border-radius:5px;padding:2px 6px;color:var(--nav-text)}
+.iconbtn{background:transparent;border:1px solid var(--nav-soft);color:var(--nav-text);
+  width:38px;height:38px;border-radius:8px;cursor:pointer;display:grid;place-items:center;font-size:16px}
+.iconbtn:hover{border-color:var(--accent)}
+.menutoggle{display:none}
+
+/* ---------- Layout ---------- */
+.shell{display:flex;padding-top:var(--topbar);max-width:1440px;margin:0 auto}
+.sidebar{
+  width:var(--sidebar);flex-shrink:0;position:sticky;top:var(--topbar);
+  height:calc(100vh - var(--topbar));overflow-y:auto;padding:26px 14px 60px 24px;
+  border-right:1px solid var(--line);background:var(--wash);
+}
+.sidebar .group{margin-bottom:22px}
+.sidebar .group > h4{
+  font-family:var(--display);font-size:12px;font-weight:600;letter-spacing:.06em;
+  color:var(--muted);margin:0 0 8px 8px;
+}
+.sidebar a{
+  display:block;text-decoration:none;color:var(--ink-soft);font-size:14px;
+  padding:6px 10px;border-radius:7px;margin:1px 0;transition:background .12s,color .12s;
+  border-left:2px solid transparent;
+}
+.sidebar a:hover{background:var(--paper);color:var(--ink)}
+.sidebar a.active{color:var(--accent-strong);background:var(--accent-wash);
+  border-left-color:var(--accent);font-weight:600}
+
+.content{flex:1;min-width:0;display:flex;justify-content:center}
+.article{max-width:780px;width:100%;padding:44px 48px 120px}
+.toc{
+  width:var(--toc);flex-shrink:0;position:sticky;top:var(--topbar);
+  height:calc(100vh - var(--topbar));overflow-y:auto;padding:44px 24px 60px 8px;
+}
+.toc h5{font-family:var(--display);font-size:12px;letter-spacing:.05em;color:var(--muted);
+  margin:0 0 12px;font-weight:600}
+.toc a{display:block;text-decoration:none;color:var(--muted);font-size:12.5px;
+  padding:4px 0 4px 12px;border-left:2px solid var(--line);transition:color .12s,border-color .12s}
+.toc a.sub{padding-left:24px}
+.toc a:hover{color:var(--ink)}
+.toc a.active{color:var(--accent-strong);border-left-color:var(--accent);font-weight:600}
+
+/* ---------- Article content ---------- */
+.eyebrow{font-family:var(--mono);font-size:12px;color:var(--accent-strong);margin:0 0 6px}
+.article h1{font-family:var(--display);font-size:34px;line-height:1.15;letter-spacing:-.02em;
+  margin:0 0 12px;font-weight:700}
+.article h2{font-family:var(--display);font-size:23px;letter-spacing:-.01em;margin:46px 0 12px;
+  padding-top:8px;font-weight:600;scroll-margin-top:calc(var(--topbar) + 16px)}
+.article h3{font-family:var(--display);font-size:17px;margin:30px 0 10px;font-weight:600;
+  scroll-margin-top:calc(var(--topbar) + 16px)}
+.article section{scroll-margin-top:calc(var(--topbar) + 8px)}
+.article p{margin:12px 0;color:var(--ink)}
+.article section > p:first-of-type{font-size:17px;color:var(--ink-soft)}
+.article ul,.article ol{padding-left:22px;margin:12px 0}
+.article li{margin:6px 0}
+.article a.xref{color:var(--accent-strong);text-decoration:none;border-bottom:1px solid var(--accent-wash)}
+.article a.xref:hover{border-bottom-color:var(--accent)}
+.lead-divider{height:1px;background:var(--line);border:0;margin:34px 0}
+
+code:not(pre code){font-family:var(--mono);font-size:.86em;background:var(--wash);
+  border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:var(--accent-strong)}
+pre{background:var(--code-bg);color:var(--code-text);border-radius:var(--radius);
+  padding:18px 20px;overflow-x:auto;margin:18px 0;font-size:13.5px;line-height:1.7;
+  border:1px solid rgba(255,255,255,.06)}
+pre code{font-family:var(--mono);white-space:pre}
+.tok-c{color:#7f97ac}     /* comentario */
+.tok-k{color:#7fd4de}     /* palabra clave */
+.tok-s{color:#a7d98b}     /* string */
+.tok-v{color:#e6b673}     /* variable */
+.tok-f{color:#8fb7ff}     /* función/clase */
+
+.callout{border-radius:var(--radius);padding:14px 18px;margin:20px 0;font-size:14.5px;
+  border:1px solid var(--line);background:var(--wash)}
+.callout.warn{background:var(--warn-wash);border-color:transparent;border-left:3px solid var(--warn)}
+.callout.tip{background:var(--accent-wash);border-color:transparent;border-left:3px solid var(--accent)}
+.callout .t{font-weight:600;font-family:var(--display);margin-right:6px}
+
+table.api{border-collapse:collapse;width:100%;margin:18px 0;font-size:13.5px}
+table.api th,table.api td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+table.api th{background:var(--wash);font-family:var(--display);font-weight:600}
+table.api td code{white-space:nowrap}
+
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:20px;
+  background:var(--accent-wash);color:var(--accent-strong);margin-left:8px;vertical-align:middle}
+
+/* ---------- Search modal ---------- */
+.overlay{position:fixed;inset:0;background:rgba(6,16,26,.55);backdrop-filter:blur(3px);
+  z-index:60;display:none;align-items:flex-start;justify-content:center;padding-top:11vh}
+.overlay.open{display:flex}
+.searchbox{width:min(640px,92vw);background:var(--paper);border-radius:14px;overflow:hidden;
+  box-shadow:0 24px 70px rgba(6,16,26,.4);border:1px solid var(--line)}
+.searchbox .field{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+.searchbox input{flex:1;border:0;outline:0;font-family:var(--sans);font-size:17px;background:transparent;color:var(--ink)}
+.searchbox .esc{font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:5px;padding:2px 6px;color:var(--muted)}
+.results{max-height:52vh;overflow-y:auto;padding:8px}
+.results a{display:block;text-decoration:none;padding:11px 14px;border-radius:9px;color:var(--ink)}
+.results a:hover,.results a.cursor{background:var(--wash)}
+.results .cat{font-family:var(--mono);font-size:11px;color:var(--accent-strong);margin-bottom:2px}
+.results .ttl{font-family:var(--display);font-weight:600;font-size:15px}
+.results .snip{font-size:12.5px;color:var(--muted);margin-top:2px;overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.results mark{background:var(--accent-wash);color:var(--accent-strong);border-radius:3px;padding:0 2px}
+.results .empty{padding:28px 14px;text-align:center;color:var(--muted);font-size:14px}
+.hl-flash{animation:flash 1.4s ease}
+@keyframes flash{0%,20%{background:var(--accent-wash)}100%{background:transparent}}
+@media (prefers-reduced-motion:reduce){.hl-flash{animation:none}}
+
+/* ---------- Responsive ---------- */
+.scrim{display:none}
+@media(max-width:1100px){.toc{display:none}}
+@media(max-width:860px){
+  .searchbtn{min-width:0;width:42px;padding:8px}
+  .searchbtn .ph,.searchbtn kbd{display:none}
+  .menutoggle{display:grid}
+  .sidebar{position:fixed;left:0;top:var(--topbar);z-index:35;transform:translateX(-100%);
+    transition:transform .2s ease;box-shadow:6px 0 30px rgba(6,16,26,.18)}
+  .sidebar.open{transform:none}
+  .scrim.open{display:block;position:fixed;inset:var(--topbar) 0 0 0;background:rgba(6,16,26,.4);z-index:34}
+  .article{padding:30px 22px 100px}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <button class="iconbtn menutoggle" id="menuToggle" aria-label="Menú">☰</button>
+  <a class="brand" href="#introduccion">
+    <span class="mark">A</span>
+    <span class="name">Artify</span>
+    <span class="ver">v1.x</span>
+  </a>
+  <div class="spacer"></div>
+  <button class="searchbtn" id="searchOpen" aria-label="Buscar">
+    <span>🔍</span><span class="ph">Buscar en la documentación…</span>
+    <kbd id="kbdHint">⌘K</kbd>
+  </button>
+  <button class="iconbtn" id="themeToggle" aria-label="Cambiar tema">◐</button>
+</header>
+
+<div class="shell">
+  <nav class="sidebar" id="sidebar"><!-- generado por JS --></nav>
+  <div class="scrim" id="scrim"></div>
+
+  <div class="content">
+    <article class="article" id="article">
+
+      <!-- ===================== COMENZAR ===================== -->
+      <section class="doc" id="introduccion" data-cat="Comenzar" data-title="Introducción">
+        <p class="eyebrow">Comenzar</p>
+        <h1>El framework Artify</h1>
+        <p>Artify es un framework PHP a medida, con patrón MVC, pensado para construir aplicaciones de gestión y mantenedores CRUD con muy poco código. Da soporte al sitio institucional y a las herramientas internas del Hospital San José de Melipilla.</p>
+        <p>Esta documentación está dirigida a quien deba mantener o extender el proyecto. Asume conocimiento de PHP y de un framework MVC (si vienes de Laravel, la estructura te resultará familiar).</p>
+        <h2 id="intro-piezas">Piezas principales</h2>
+        <ul>
+          <li><b>ArtifyRouter</b> — enrutado desde un único <code>index.php</code>.</li>
+          <li><b>Queryfy</b> — constructor de consultas sobre PDO con sentencias preparadas.</li>
+          <li><b>Artify CRUD</b> — generador de grillas: tablas, formularios, validación y cargas.</li>
+          <li><b>ArtifyStencil</b> — motor de plantillas para las vistas.</li>
+          <li><b>Security</b> — capa central de seguridad (cabeceras, sesión, CSRF, cargas).</li>
+          <li><b>arco</b> — consola de línea de comandos para generar controladores y modelos.</li>
+        </ul>
+        <h2 id="intro-stack">Stack y dependencias</h2>
+        <p>PHP 8.x, PDO (MySQL/MariaDB), Composer para autoload y dependencias, y un front-end sobre Bootstrap. El desarrollo local usa Laragon; el despliegue es en cPanel/Linux.</p>
+        <div class="callout tip"><span class="t">Documento vivo.</span> Amplía cada sección a medida que el framework evolucione: esta guía es también la evidencia de mantenibilidad que respalda la continuidad del proyecto.</div>
+      </section>
+
+      <section class="doc" id="arquitectura" data-cat="Comenzar" data-title="Arquitectura">
+        <p class="eyebrow">Comenzar</p>
+        <h1>Arquitectura y estructura</h1>
+        <p>Todo el tráfico entra por <code>index.php</code> (front controller), que arranca la seguridad, resuelve la ruta y delega en un controlador. El controlador usa modelos y Queryfy para los datos, y devuelve una vista renderizada con ArtifyStencil.</p>
+        <h2 id="arq-arbol">Estructura de carpetas</h2>
+        <pre><code><span class="tok-c">/</span>
+<span class="tok-c">├─</span> index.php            <span class="tok-c"># front controller: boot + rutas</span>
+<span class="tok-c">├─</span> .env                 <span class="tok-c"># configuración y credenciales (NO se publica)</span>
+<span class="tok-c">├─</span> arco                 <span class="tok-c"># consola CLI (generadores)</span>
+<span class="tok-c">├─</span> app/
+<span class="tok-c">│  ├─</span> core/             <span class="tok-c"># ArtifyRouter, ArtifyStencil, SessionManager, Token, DB, Security</span>
+<span class="tok-c">│  ├─</span> Controllers/      <span class="tok-c"># controladores de la aplicación</span>
+<span class="tok-c">│  ├─</span> Models/           <span class="tok-c"># modelos</span>
+<span class="tok-c">│  ├─</span> Views/            <span class="tok-c"># plantillas</span>
+<span class="tok-c">│  └─</span> libs/artify/      <span class="tok-c"># librería Artify + Queryfy + cargas</span>
+<span class="tok-c">└─</span> servidor/            <span class="tok-c"># config de referencia (FUERA del webroot)</span></code></pre>
+        <h2 id="arq-flujo">Flujo de una petición</h2>
+        <ol>
+          <li>El servidor reescribe todas las URL hacia <code>index.php</code> (ver <a class="xref" href="#despliegue">Despliegue</a>).</li>
+          <li><code>Security::boot()</code> aplica cabeceras, cookies seguras y ocultamiento de errores.</li>
+          <li><code>ArtifyRouter</code> compara la URL con las rutas declaradas y ejecuta el método del controlador.</li>
+          <li>El controlador consulta datos con Queryfy o con Artify CRUD.</li>
+          <li>Se devuelve HTML renderizado con ArtifyStencil, o JSON para las llamadas AJAX/API.</li>
+        </ol>
+      </section>
+
+      <section class="doc" id="instalacion" data-cat="Comenzar" data-title="Instalación y entorno">
+        <p class="eyebrow">Comenzar</p>
+        <h1>Instalación y entorno</h1>
+        <p>Clona el proyecto, instala dependencias y configura el archivo <code>.env</code>. En local se trabaja con Laragon (Apache + PHP + MariaDB).</p>
+        <h2 id="inst-pasos">Puesta en marcha local</h2>
+        <pre><code><span class="tok-c"># 1. dependencias</span>
+composer install
+
+<span class="tok-c"># 2. copia y edita la configuración</span>
+cp .env.example .env
+
+<span class="tok-c"># 3. sirve el proyecto (Laragon) y visita el host virtual</span></code></pre>
+        <h2 id="inst-env">Variables de entorno</h2>
+        <p>El <code>.env</code> centraliza configuración y credenciales. Nunca se sube al control de versiones ni queda accesible desde el navegador.</p>
+        <table class="api">
+          <tr><th>Clave</th><th>Descripción</th></tr>
+          <tr><td><code>BASE_URL</code></td><td>URL base de la aplicación, usada para redirecciones y assets.</td></tr>
+          <tr><td><code>APP_DEBUG</code></td><td><code>true</code> en desarrollo; <code>false</code> en producción (oculta errores).</td></tr>
+          <tr><td><code>ENABLE_JWTAUTH</code></td><td>Activa la autenticación por token en la API REST.</td></tr>
+          <tr><td><code>ALLOW_QUERY_EXECUTION</code></td><td>Debe ser <code>false</code>: desactiva el modo de SQL crudo en la API.</td></tr>
+        </table>
+        <div class="callout warn"><span class="t">Seguridad.</span> En producción define <code>APP_DEBUG=false</code> y <code>ALLOW_QUERY_EXECUTION=false</code>. Ver <a class="xref" href="#seguridad">Seguridad</a>.</div>
+      </section>
+
+      <!-- ===================== NÚCLEO ===================== -->
+      <section class="doc" id="enrutado" data-cat="Núcleo" data-title="Enrutado">
+        <p class="eyebrow">Núcleo</p>
+        <h1>Enrutado</h1>
+        <p>Las rutas se declaran en <code>index.php</code> sobre una instancia de <code>ArtifyRouter</code>. Cada ruta asocia un verbo HTTP y un patrón de URL a un método de controlador.</p>
+        <h2 id="rt-boot">index.php</h2>
+        <pre><code><span class="tok-k">require</span> <span class="tok-s">'vendor/autoload.php'</span>;
+
+<span class="tok-k">use</span> <span class="tok-f">App\core\Security</span>;
+<span class="tok-k">use</span> <span class="tok-f">App\core\ArtifyRouter</span>;
+
+<span class="tok-f">Security</span>::<span class="tok-f">boot</span>();            <span class="tok-c">// cabeceras, cookies, errores</span>
+
+<span class="tok-v">$router</span> = <span class="tok-k">new</span> <span class="tok-f">ArtifyRouter</span>();
+<span class="tok-v">$router</span>-&gt;<span class="tok-f">get</span>(<span class="tok-s">'modulos'</span>, [<span class="tok-f">HomeController</span>::<span class="tok-k">class</span>, <span class="tok-s">'modulos'</span>]);
+<span class="tok-v">$router</span>-&gt;<span class="tok-f">post</span>(<span class="tok-s">'login'</span>,   [<span class="tok-f">LoginController</span>::<span class="tok-k">class</span>, <span class="tok-s">'index'</span>]);
+<span class="tok-v">$router</span>-&gt;<span class="tok-f">run</span>();</code></pre>
+        <h2 id="rt-params">Parámetros de ruta</h2>
+        <p>Los segmentos dinámicos se capturan y llegan como argumentos del método.</p>
+        <pre><code><span class="tok-v">$router</span>-&gt;<span class="tok-f">get</span>(<span class="tok-s">'usuario/{id}'</span>, [<span class="tok-f">UserController</span>::<span class="tok-k">class</span>, <span class="tok-s">'show'</span>]);
+<span class="tok-c">// public function show($id) { ... }</span></code></pre>
+        <div class="callout tip"><span class="t">Despliegue en subcarpeta.</span> Si el sitio no está en la raíz del dominio, ajusta <code>BASE_URL</code> y el <code>mod_rewrite</code>; ver <a class="xref" href="#despliegue">Despliegue</a>.</div>
+      </section>
+
+      <section class="doc" id="controladores" data-cat="Núcleo" data-title="Controladores">
+        <p class="eyebrow">Núcleo</p>
+        <h1>Controladores</h1>
+        <p>Un controlador agrupa métodos que responden a rutas. Viven en <code>app/Controllers</code> y se generan con la consola <a class="xref" href="#arco">arco</a>.</p>
+        <pre><code><span class="tok-k">namespace</span> <span class="tok-f">App\Controllers</span>;
+
+<span class="tok-k">use</span> <span class="tok-f">App\core\DB</span>;
+<span class="tok-k">use</span> <span class="tok-f">App\core\SessionManager</span>;
+
+<span class="tok-k">class</span> <span class="tok-f">NoticiasController</span>
+{
+    <span class="tok-k">public function</span> <span class="tok-f">__construct</span>()
+    {
+        <span class="tok-f">SessionManager</span>::<span class="tok-f">startSession</span>();
+        <span class="tok-k">if</span> (!<span class="tok-f">SessionManager</span>::<span class="tok-f">get</span>(<span class="tok-s">'usuario'</span>)) {
+            <span class="tok-f">Redirect</span>::<span class="tok-f">to</span>(<span class="tok-s">'login'</span>);   <span class="tok-c">// guardián de sesión</span>
+        }
+    }
+
+    <span class="tok-k">public function</span> <span class="tok-f">index</span>()
+    {
+        <span class="tok-v">$artify</span> = <span class="tok-f">DB</span>::<span class="tok-f">ArtifyCrud</span>();
+        <span class="tok-k">echo</span> <span class="tok-v">$artify</span>-&gt;<span class="tok-f">dbTable</span>(<span class="tok-s">'noticias'</span>)-&gt;<span class="tok-f">render</span>();
+    }
+}</code></pre>
+        <div class="callout warn"><span class="t">Regla.</span> Todo controlador de administración debe validar la sesión en su constructor. Ver <a class="xref" href="#autenticacion">Sesión y autenticación</a>.</div>
+      </section>
+
+      <section class="doc" id="modelos" data-cat="Núcleo" data-title="Modelos">
+        <p class="eyebrow">Núcleo</p>
+        <h1>Modelos</h1>
+        <p>Los modelos encapsulan el acceso a una tabla o a una consulta concreta. Se apoyan en Queryfy para no escribir SQL a mano.</p>
+        <pre><code><span class="tok-k">namespace</span> <span class="tok-f">App\Models</span>;
+
+<span class="tok-k">use</span> <span class="tok-f">App\core\DB</span>;
+
+<span class="tok-k">class</span> <span class="tok-f">UserModel</span>
+{
+    <span class="tok-k">public function</span> <span class="tok-f">select_users</span>()
+    {
+        <span class="tok-v">$q</span> = <span class="tok-f">DB</span>::<span class="tok-f">Queryfy</span>();
+        <span class="tok-k">return</span> <span class="tok-v">$q</span>-&gt;<span class="tok-f">select</span>(<span class="tok-s">'usuario'</span>);
+    }
+}</code></pre>
+        <p>Genera el esqueleto con <code>php arco MakeModel UserModel</code>.</p>
+      </section>
+
+      <section class="doc" id="stencil" data-cat="Núcleo" data-title="ArtifyStencil (vistas)">
+        <p class="eyebrow">Núcleo</p>
+        <h1>ArtifyStencil · vistas</h1>
+        <p>ArtifyStencil renderiza plantillas de <code>app/Views</code> pasándoles datos. Separa la lógica del controlador de la presentación.</p>
+        <pre><code><span class="tok-v">$stencil</span> = <span class="tok-k">new</span> <span class="tok-f">ArtifyStencil</span>();
+<span class="tok-k">echo</span> <span class="tok-v">$stencil</span>-&gt;<span class="tok-f">render</span>(<span class="tok-s">'login'</span>, [
+    <span class="tok-s">'login'</span> =&gt; <span class="tok-v">$login</span>,
+]);</code></pre>
+        <div class="callout warn"><span class="t">Escapa siempre la salida.</span> Al imprimir valores de usuario en una vista, usa el escape de <code>Security</code> para evitar XSS. Ver <a class="xref" href="#seguridad">Seguridad</a>.</div>
+      </section>
+
+      <!-- ===================== DATOS ===================== -->
+      <section class="doc" id="queryfy" data-cat="Datos" data-title="Queryfy">
+        <p class="eyebrow">Datos</p>
+        <h1>Queryfy · constructor de consultas</h1>
+        <p>Queryfy construye y ejecuta consultas SQL sobre PDO usando <b>sentencias preparadas</b> en todas sus operaciones, de modo que los valores nunca se concatenan en el SQL. Es la defensa de base contra la inyección SQL.</p>
+        <h2 id="qf-basico">Operaciones básicas</h2>
+        <pre><code><span class="tok-v">$q</span> = <span class="tok-f">DB</span>::<span class="tok-f">Queryfy</span>();
+
+<span class="tok-c">// SELECT con filtro</span>
+<span class="tok-v">$q</span>-&gt;<span class="tok-f">where</span>(<span class="tok-s">'estado'</span>, <span class="tok-s">'activo'</span>);
+<span class="tok-v">$filas</span> = <span class="tok-v">$q</span>-&gt;<span class="tok-f">select</span>(<span class="tok-s">'noticias'</span>);
+
+<span class="tok-c">// INSERT</span>
+<span class="tok-v">$q</span>-&gt;<span class="tok-f">insert</span>(<span class="tok-s">'noticias'</span>, [<span class="tok-s">'titulo'</span> =&gt; <span class="tok-v">$titulo</span>, <span class="tok-s">'cuerpo'</span> =&gt; <span class="tok-v">$cuerpo</span>]);
+
+<span class="tok-c">// UPDATE</span>
+<span class="tok-v">$q</span>-&gt;<span class="tok-f">where</span>(<span class="tok-s">'id'</span>, <span class="tok-v">$id</span>);
+<span class="tok-v">$q</span>-&gt;<span class="tok-f">update</span>(<span class="tok-s">'noticias'</span>, [<span class="tok-s">'titulo'</span> =&gt; <span class="tok-v">$titulo</span>]);</code></pre>
+        <div class="callout warn"><span class="t">Estado compartido.</span> Una misma instancia de Queryfy <b>acumula</b> las condiciones <code>where()</code>. Si reutilizas el objeto para varias consultas seguidas, arrastrarás filtros de la consulta anterior (fue la causa del bug de tickets de almuerzo duplicados). Pide una instancia nueva por consulta lógica o limpia el estado entre llamadas.</div>
+      </section>
+
+      <section class="doc" id="crud" data-cat="Datos" data-title="Artify CRUD">
+        <p class="eyebrow">Datos</p>
+        <h1>Artify CRUD · mantenedores</h1>
+        <p>El componente CRUD de Artify se obtiene con <code>DB::ArtifyCrud()</code> y genera formularios y mantenedores a partir de una tabla: define la tabla base, los campos que participan del formulario y los callbacks del ciclo. Es la pieza más productiva del framework.</p>
+        <h2 id="crud-real">Ejemplo real · formulario de acceso</h2>
+        <p>Este es el patrón tal como se usa hoy en el proyecto (el formulario de login): se declaran los campos del formulario, se registra un callback que se ejecuta antes de procesar, se fija la tabla base y se renderiza.</p>
+        <pre><code><span class="tok-v">$artify</span> = <span class="tok-f">DB</span>::<span class="tok-f">ArtifyCrud</span>();
+
+<span class="tok-v">$artify</span>-&gt;<span class="tok-f">formFields</span>([<span class="tok-s">'usuario'</span>, <span class="tok-s">'password'</span>]);
+<span class="tok-v">$artify</span>-&gt;<span class="tok-f">addCallback</span>(<span class="tok-s">'before_select'</span>, [<span class="tok-v">$this</span>, <span class="tok-s">'login'</span>]);
+<span class="tok-v">$artify</span>-&gt;<span class="tok-f">setLangData</span>(<span class="tok-s">'login'</span>, <span class="tok-s">'Ingresar'</span>);
+
+<span class="tok-v">$login</span> = <span class="tok-v">$artify</span>-&gt;<span class="tok-f">dbTable</span>(<span class="tok-s">'usuario'</span>)-&gt;<span class="tok-f">render</span>(<span class="tok-s">'selectform'</span>);</code></pre>
+        <h2 id="crud-metodos">Métodos del ciclo</h2>
+        <table class="api">
+          <tr><th>Método</th><th>Rol</th></tr>
+          <tr><td><code>dbTable(tabla)</code></td><td>Fija la tabla base sobre la que opera el CRUD.</td></tr>
+          <tr><td><code>formFields([...])</code></td><td>Define qué campos participan del formulario.</td></tr>
+          <tr><td><code>addCallback(evento, cb)</code></td><td>Engancha lógica al ciclo (p. ej. <code>before_select</code>).</td></tr>
+          <tr><td><code>render(modo)</code></td><td>Genera la salida del componente (formulario, mantenedor, etc.).</td></tr>
+        </table>
+        <h2 id="crud-callbacks">Callbacks</h2>
+        <p>Los callbacks permiten intervenir el ciclo: por ejemplo, hashear una contraseña antes de insertar, o autenticar en el formulario de login.</p>
+        <pre><code><span class="tok-v">$artify</span>-&gt;<span class="tok-f">addCallback</span>(<span class="tok-s">'before_select'</span>, [<span class="tok-v">$this</span>, <span class="tok-s">'login'</span>]);</code></pre>
+        <div class="callout tip"><span class="t">Por completar.</span> Documenta aquí el resto de la API del CRUD (validaciones, acciones por fila, cargas de archivos) a medida que la confirmes contra el código, para que un mantenedor futuro tenga la referencia completa.</div>
+      </section>
+
+      <!-- ===================== SEGURIDAD ===================== -->
+      <section class="doc" id="autenticacion" data-cat="Seguridad" data-title="Sesión y autenticación">
+        <p class="eyebrow">Seguridad</p>
+        <h1>Sesión y autenticación</h1>
+        <p><code>SessionManager</code> centraliza el manejo de sesión: arranque, expiración por inactividad, rotación del identificador y cierre. El login usa <code>password_verify</code> y regenera el ID de sesión para evitar la fijación.</p>
+        <h2 id="auth-login">Flujo de login</h2>
+        <pre><code><span class="tok-k">if</span> (<span class="tok-f">password_verify</span>(<span class="tok-v">$pass</span>, <span class="tok-v">$hash</span>[<span class="tok-s">0</span>][<span class="tok-s">'password'</span>])) {
+    <span class="tok-f">SessionManager</span>::<span class="tok-f">startSession</span>();
+    <span class="tok-f">SessionManager</span>::<span class="tok-f">regenerar</span>();        <span class="tok-c">// anti-fijación</span>
+    <span class="tok-f">Security</span>::<span class="tok-f">limpiarIntentos</span>(<span class="tok-v">$idIntento</span>);
+    <span class="tok-c">// ... acceso concedido</span>
+} <span class="tok-k">else</span> {
+    <span class="tok-f">Security</span>::<span class="tok-f">registrarIntentoFallido</span>(<span class="tok-v">$idIntento</span>);
+    <span class="tok-k">echo</span> <span class="tok-s">'El usuario o la contraseña no coinciden.'</span>;
+}</code></pre>
+        <h2 id="auth-fuerza-bruta">Freno de fuerza bruta</h2>
+        <p>El login se bloquea tras 5 intentos fallidos por IP + usuario en 15 minutos, con un pequeño retardo por fallo. El mensaje de error es genérico para no revelar si el usuario existe.</p>
+        <div class="callout warn"><span class="t">Guardián.</span> Recuerda validar <code>SessionManager::get('usuario')</code> en el constructor de cada controlador de administración.</div>
+      </section>
+
+      <section class="doc" id="seguridad" data-cat="Seguridad" data-title="Seguridad (clase Security)">
+        <p class="eyebrow">Seguridad</p>
+        <h1>Seguridad · clase Security</h1>
+        <p>Toda la postura de seguridad de la aplicación está concentrada en <code>App\core\Security</code>, que se arranca al inicio de cada petición con <code>Security::boot()</code>. Concentrarla en un solo lugar hace que auditarla y endurecerla sea directo.</p>
+        <h2 id="sec-boot">Qué hace boot()</h2>
+        <ul>
+          <li>Envía las cabeceras de seguridad y la política CSP.</li>
+          <li>Configura la cookie de sesión: <code>HttpOnly</code>, <code>SameSite=Lax</code>, <code>Secure</code> bajo HTTPS.</li>
+          <li>Oculta los errores en producción (<code>APP_DEBUG=false</code>).</li>
+        </ul>
+        <h2 id="sec-cabeceras">Cabeceras enviadas</h2>
+        <table class="api">
+          <tr><th>Cabecera</th><th>Propósito</th></tr>
+          <tr><td><code>Content-Security-Policy</code></td><td>Restringe orígenes de scripts, estilos y recursos.</td></tr>
+          <tr><td><code>X-Content-Type-Options</code></td><td><code>nosniff</code>: evita adivinación de tipo MIME.</td></tr>
+          <tr><td><code>X-Frame-Options</code></td><td><code>DENY</code>: previene clickjacking.</td></tr>
+          <tr><td><code>Referrer-Policy</code></td><td>Limita la fuga de la URL de origen.</td></tr>
+          <tr><td><code>Strict-Transport-Security</code></td><td>Fuerza HTTPS (sólo bajo TLS).</td></tr>
+        </table>
+        <h2 id="sec-csrf">CSRF · verificación de mismo-origen</h2>
+        <p>Las acciones que modifican datos en el panel (alta, edición, borrado) exigen que la petición provenga del propio sitio (<code>Security::mismoOrigen()</code>). Combinado con la cookie <code>SameSite=Lax</code>, bloquea la falsificación de peticiones entre sitios sin necesidad de tocar el front-end.</p>
+        <h2 id="sec-gridid">Validación de Grid ID</h2>
+        <p>El identificador de instancia de grilla se valida con <code>Security::gridIdValido()</code> (patrón alfanumérico estricto) antes de usarse, cerrando cualquier intento de path traversal.</p>
+        <h2 id="sec-cargas">Cargas seguras</h2>
+        <p>Los archivos subidos reciben un nombre aleatorio (<code>nombreArchivoSeguro</code>) y se rechazan las extensiones ejecutables (<code>extensionEjecutable</code>, que además detecta dobles extensiones). El directorio de cargas sirve sólo una lista blanca de tipos y bloquea la ejecución de scripts por <code>.htaccess</code>.</p>
+        <div class="callout warn"><span class="t">Pendiente para el 10.</span> Endurecer la CSP quitando <code>'unsafe-inline'</code> de <code>script-src</code>: primero en modo <code>Report-Only</code>, migrar scripts en línea a nonces, y recién entonces retirarlo.</div>
+      </section>
+
+      <section class="doc" id="api" data-cat="Seguridad" data-title="API REST y JWT">
+        <p class="eyebrow">Seguridad</p>
+        <h1>API REST y JWT</h1>
+        <p>El framework expone una API REST por recurso (<code>api/{tabla}</code>) protegida con autenticación JWT y CORS por lista blanca de orígenes. El <code>RestpController</code> consume esos recursos para listar, insertar, actualizar y eliminar.</p>
+        <h2 id="api-modo-query">Restricción del modo query</h2>
+        <p>La API incluye una operación capaz de ejecutar SQL crudo, gobernada por <code>ALLOW_QUERY_EXECUTION</code>. En producción debe permanecer en <code>false</code>: el sitio opera por recurso y no necesita SQL arbitrario.</p>
+        <pre><code><span class="tok-c"># .env</span>
+ENABLE_JWTAUTH=<span class="tok-s">true</span>
+ALLOW_QUERY_EXECUTION=<span class="tok-s">false</span></code></pre>
+        <div class="callout warn"><span class="t">CORS.</span> No uses comodín <code>*</code> con credenciales: mantén la lista blanca de orígenes permitidos.</div>
+      </section>
+
+      <!-- ===================== HERRAMIENTAS ===================== -->
+      <section class="doc" id="arco" data-cat="Herramientas" data-title="Consola arco">
+        <p class="eyebrow">Herramientas</p>
+        <h1>Consola arco</h1>
+        <p><code>arco</code> es la consola de línea de comandos del framework (equivalente a Artisan). Genera el esqueleto de controladores y modelos para no escribirlos a mano.</p>
+        <pre><code><span class="tok-c"># crea app/Controllers/ReportesController.php</span>
+php arco MakeController ReportesController
+
+<span class="tok-c"># crea app/Models/ReporteModel.php</span>
+php arco MakeModel ReporteModel</code></pre>
+        <div class="callout tip"><span class="t">Extiende arco.</span> Documenta aquí cada comando nuevo que agregues, para que un mantenedor futuro conozca el catálogo completo.</div>
+      </section>
+
+      <section class="doc" id="despliegue" data-cat="Herramientas" data-title="Despliegue y seguridad">
+        <p class="eyebrow">Herramientas</p>
+        <h1>Despliegue y checklist</h1>
+        <p>El despliegue es en cPanel/Linux. La capa de servidor (redirección HTTPS, cabeceras y bloqueo de archivos sensibles) vive en el <code>.htaccess</code> raíz y en la carpeta de referencia <code>servidor/</code>.</p>
+        <h2 id="dep-htaccess">.htaccess raíz</h2>
+        <p>Reescribe todo hacia <code>index.php</code>, fuerza HTTPS, aplica cabeceras como respaldo del servidor y deniega la descarga de archivos sensibles (<code>.sql</code>, <code>.env</code>, <code>error_log</code>, <code>composer.*</code>, etc.).</p>
+        <h2 id="dep-servidor">Carpeta servidor/</h2>
+        <p>Contiene la configuración TLS de referencia para Apache y Nginx y un script de inventario de cargas. <b>No</b> forma parte de la aplicación: guárdala fuera del <code>public_html</code>.</p>
+        <h2 id="dep-checklist">Checklist antes de publicar</h2>
+        <ol>
+          <li>Ejecuta <code>php -l</code> sobre los archivos modificados y prueba el login en local.</li>
+          <li>Define <code>APP_DEBUG=false</code> y <code>ALLOW_QUERY_EXECUTION=false</code> en el <code>.env</code>.</li>
+          <li>Borra del webroot cualquier dump <code>.sql</code>, <code>error_log</code> o archivo de prueba.</li>
+          <li>Verifica el TLS (objetivo A/A-) y confirma las cabeceras con la herramienta del área de ciberseguridad.</li>
+        </ol>
+        <div class="callout tip"><span class="t">Gestión continua.</span> Incorpora el sitio al inventario de activos con revisión periódica: la seguridad es un proceso, no un esfuerzo puntual.</div>
+      </section>
+
+    </article>
+
+    <aside class="toc" id="toc">
+      <h5>En esta página</h5>
+      <div id="tocList"></div>
+    </aside>
+  </div>
+</div>
+
+<!-- Search modal -->
+<div class="overlay" id="overlay">
+  <div class="searchbox" role="dialog" aria-label="Buscar">
+    <div class="field">
+      <span>🔍</span>
+      <input id="searchInput" type="text" placeholder="Buscar temas, clases, métodos…" autocomplete="off" spellcheck="false">
+      <span class="esc">Esc</span>
+    </div>
+    <div class="results" id="results"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const sections = Array.from(document.querySelectorAll('section.doc'));
+
+  // ----- Category order for the sidebar -----
+  const CAT_ORDER = ['Comenzar','Núcleo','Datos','Seguridad','Herramientas'];
+
+  // ----- Build sidebar -----
+  const sidebar = $('#sidebar');
+  const byCat = {};
+  sections.forEach(s => {
+    const cat = s.dataset.cat || 'Otros';
+    (byCat[cat] = byCat[cat] || []).push(s);
+  });
+  CAT_ORDER.filter(c => byCat[c]).forEach(cat => {
+    const g = document.createElement('div'); g.className = 'group';
+    const h = document.createElement('h4'); h.textContent = cat; g.appendChild(h);
+    byCat[cat].forEach(s => {
+      const a = document.createElement('a');
+      a.href = '#' + s.id; a.textContent = s.dataset.title; a.dataset.target = s.id;
+      g.appendChild(a);
+    });
+    sidebar.appendChild(g);
+  });
+  const navLinks = Array.from(sidebar.querySelectorAll('a'));
+
+  // ----- Build search index -----
+  const index = sections.map(s => {
+    const clone = s.cloneNode(true);
+    const text = clone.textContent.replace(/\s+/g,' ').trim();
+    return { id:s.id, title:s.dataset.title, cat:s.dataset.cat, text };
+  });
+
+  // ----- Scrollspy (sidebar + TOC) -----
+  const tocList = $('#tocList');
+  function buildToc(section){
+    tocList.innerHTML = '';
+    const heads = section.querySelectorAll('h2[id], h3[id]');
+    heads.forEach(h => {
+      const a = document.createElement('a');
+      a.href = '#' + h.id; a.textContent = h.textContent;
+      if (h.tagName === 'H3') a.className = 'sub';
+      a.dataset.target = h.id;
+      tocList.appendChild(a);
+    });
+  }
+  let currentSection = null;
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        const id = e.target.id;
+        navLinks.forEach(a => a.classList.toggle('active', a.dataset.target === id));
+        if (currentSection !== id){
+          currentSection = id;
+          buildToc(e.target);
+        }
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  sections.forEach(s => spy.observe(s));
+  buildToc(sections[0]);
+
+  // TOC sub-heading highlight
+  const heads = Array.from(document.querySelectorAll('.article h2[id], .article h3[id]'));
+  const headSpy = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting){
+        const links = tocList.querySelectorAll('a');
+        links.forEach(a => a.classList.toggle('active', a.dataset.target === e.target.id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+  heads.forEach(h => headSpy.observe(h));
+
+  // ----- Search modal -----
+  const overlay = $('#overlay'), input = $('#searchInput'), results = $('#results');
+  let cursor = -1, hits = [];
+
+  function openSearch(){ overlay.classList.add('open'); input.value=''; render(''); input.focus(); }
+  function closeSearch(){ overlay.classList.remove('open'); cursor=-1; }
+
+  function escapeHtml(t){ return t.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+  function snippet(text, q){
+    const i = text.toLowerCase().indexOf(q.toLowerCase());
+    if (i < 0) return escapeHtml(text.slice(0,120));
+    const start = Math.max(0, i-40);
+    const raw = (start>0?'…':'') + text.slice(start, i+q.length+80);
+    const re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+    return escapeHtml(raw).replace(re,'<mark>$1</mark>');
+  }
+  function render(q){
+    q = q.trim();
+    if (!q){
+      hits = index.slice();
+      results.innerHTML = hits.map((h,i)=>row(h,i,'')).join('');
+      cursor = -1; return;
+    }
+    const ql = q.toLowerCase();
+    hits = index
+      .map(h => {
+        const t = h.title.toLowerCase(), x = h.text.toLowerCase();
+        let score = 0;
+        if (t.includes(ql)) score += 10;
+        if (x.includes(ql)) score += 3;
+        return { h, score };
+      })
+      .filter(r => r.score > 0)
+      .sort((a,b)=>b.score-a.score)
+      .map(r => r.h);
+    results.innerHTML = hits.length
+      ? hits.map((h,i)=>row(h,i,q)).join('')
+      : '<div class="empty">Sin resultados para “'+escapeHtml(q)+'”.</div>';
+    cursor = hits.length ? 0 : -1; paintCursor();
+  }
+  function row(h,i,q){
+    return '<a href="#'+h.id+'" data-i="'+i+'">'
+      + '<div class="cat">'+escapeHtml(h.cat)+'</div>'
+      + '<div class="ttl">'+escapeHtml(h.title)+'</div>'
+      + '<div class="snip">'+snippet(h.text, q||h.title)+'</div></a>';
+  }
+  function paintCursor(){
+    const rows = results.querySelectorAll('a');
+    rows.forEach((r,i)=>r.classList.toggle('cursor', i===cursor));
+    if (rows[cursor]) rows[cursor].scrollIntoView({block:'nearest'});
+  }
+  function goTo(id){
+    closeSearch();
+    const el = document.getElementById(id);
+    if (el){ el.scrollIntoView(); el.classList.remove('hl-flash'); void el.offsetWidth; el.classList.add('hl-flash'); }
+  }
+
+  input.addEventListener('input', () => render(input.value));
+  results.addEventListener('click', e => {
+    const a = e.target.closest('a'); if (!a) return;
+    e.preventDefault(); goTo(a.getAttribute('href').slice(1));
+  });
+  document.addEventListener('keydown', e => {
+    const mod = e.metaKey || e.ctrlKey;
+    if (mod && e.key.toLowerCase() === 'k'){ e.preventDefault(); overlay.classList.contains('open')?closeSearch():openSearch(); return; }
+    if (!overlay.classList.contains('open')) return;
+    if (e.key === 'Escape') closeSearch();
+    else if (e.key === 'ArrowDown'){ e.preventDefault(); cursor=Math.min(cursor+1,hits.length-1); paintCursor(); }
+    else if (e.key === 'ArrowUp'){ e.preventDefault(); cursor=Math.max(cursor-1,0); paintCursor(); }
+    else if (e.key === 'Enter' && hits[cursor]){ e.preventDefault(); goTo(hits[cursor].id); }
+  });
+  $('#searchOpen').addEventListener('click', openSearch);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+
+  // Mac vs others hint
+  if (!/Mac|iPhone|iPad/.test(navigator.platform)) $('#kbdHint').textContent = 'Ctrl K';
+
+  // ----- Mobile sidebar -----
+  const scrim = $('#scrim');
+  $('#menuToggle').addEventListener('click', () => { sidebar.classList.toggle('open'); scrim.classList.toggle('open'); });
+  scrim.addEventListener('click', () => { sidebar.classList.remove('open'); scrim.classList.remove('open'); });
+  navLinks.forEach(a => a.addEventListener('click', () => { sidebar.classList.remove('open'); scrim.classList.remove('open'); }));
+
+  // ----- Theme toggle (in-memory) -----
+  $('#themeToggle').addEventListener('click', () => {
+    const html = document.documentElement;
+    html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
+  });
+})();
+</script>
+</body>
+</html>

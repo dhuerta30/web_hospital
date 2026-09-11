@@ -23,17 +23,14 @@ class CrudService
     }
 
     private function limpiarTexto($texto) {
-        // Reemplazar espacios con guiones bajos
         $texto = str_replace(' ', '_', $texto);
     
-        // Eliminar acentos
         $texto = strtr($texto, [
             'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
             'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
             'ñ' => 'n', 'Ñ' => 'N'
         ]);
         
-        // Eliminar cualquier carácter no alfanumérico (opcional)
         $texto = preg_replace('/[^A-Za-z0-9_]/', '', $texto);
         
         return $texto;
