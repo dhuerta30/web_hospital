@@ -17,10 +17,6 @@ class Security
         self::configurarCookieSesion();
     }
 
-    /**
-     * En producción, nunca mostrar errores al visitante (evita fuga de rutas,
-     * consultas y trazas). En desarrollo (APP_DEBUG=true) se dejan visibles.
-     */
     public static function endurecerErrores(): void
     {
         $debug = filter_var($_ENV['APP_DEBUG'] ?? false, FILTER_VALIDATE_BOOLEAN);
@@ -32,13 +28,6 @@ class Security
         @ini_set('log_errors', '1');
         error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
     }
-
-    /* =====================================================================
-       FRENO DE FUERZA BRUTA EN EL LOGIN
-       Almacén liviano en archivo temporal (sin tabla nueva). Clave por
-       IP + usuario. Tras $maximo fallos en $ventana segundos, se bloquea
-       hasta que expire la ventana.
-       ===================================================================== */
 
     private static function rutaIntentos(string $clave): string
     {
