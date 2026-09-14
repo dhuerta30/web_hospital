@@ -35,7 +35,6 @@ body{
   line-height:1.6;-webkit-font-smoothing:antialiased;
 }
 
-/* ---------- Top bar ---------- */
 .topbar{
   position:fixed;top:0;left:0;right:0;height:var(--topbar);z-index:40;
   background:var(--nav);display:flex;align-items:center;gap:20px;
@@ -66,7 +65,6 @@ body{
 .iconbtn:hover{border-color:var(--accent)}
 .menutoggle{display:none}
 
-/* ---------- Layout ---------- */
 .shell{display:flex;padding-top:var(--topbar);max-width:1440px;margin:0 auto}
 .sidebar{
   width:var(--sidebar);flex-shrink:0;position:sticky;top:var(--topbar);
@@ -101,7 +99,6 @@ body{
 .toc a:hover{color:var(--ink)}
 .toc a.active{color:var(--accent-strong);border-left-color:var(--accent);font-weight:600}
 
-/* ---------- Article content ---------- */
 .eyebrow{font-family:var(--mono);font-size:12px;color:var(--accent-strong);margin:0 0 6px}
 .article h1{font-family:var(--display);font-size:34px;line-height:1.15;letter-spacing:-.02em;
   margin:0 0 12px;font-weight:700}
@@ -124,11 +121,11 @@ pre{background:var(--code-bg);color:var(--code-text);border-radius:var(--radius)
   padding:18px 20px;overflow-x:auto;margin:18px 0;font-size:13.5px;line-height:1.7;
   border:1px solid rgba(255,255,255,.06)}
 pre code{font-family:var(--mono);white-space:pre}
-.tok-c{color:#7f97ac}     /* comentario */
-.tok-k{color:#7fd4de}     /* palabra clave */
-.tok-s{color:#a7d98b}     /* string */
-.tok-v{color:#e6b673}     /* variable */
-.tok-f{color:#8fb7ff}     /* función/clase */
+.tok-c{color:#7f97ac}
+.tok-k{color:#7fd4de}
+.tok-s{color:#a7d98b}
+.tok-v{color:#e6b673}
+.tok-f{color:#8fb7ff}
 
 .callout{border-radius:var(--radius);padding:14px 18px;margin:20px 0;font-size:14.5px;
   border:1px solid var(--line);background:var(--wash)}
@@ -144,7 +141,6 @@ table.api td code{white-space:nowrap}
 .pill{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 8px;border-radius:20px;
   background:var(--accent-wash);color:var(--accent-strong);margin-left:8px;vertical-align:middle}
 
-/* ---------- Search modal ---------- */
 .overlay{position:fixed;inset:0;background:rgba(6,16,26,.55);backdrop-filter:blur(3px);
   z-index:60;display:none;align-items:flex-start;justify-content:center;padding-top:11vh}
 .overlay.open{display:flex}
@@ -166,7 +162,6 @@ table.api td code{white-space:nowrap}
 @keyframes flash{0%,20%{background:var(--accent-wash)}100%{background:transparent}}
 @media (prefers-reduced-motion:reduce){.hl-flash{animation:none}}
 
-/* ---------- Responsive ---------- */
 .scrim{display:none}
 @media(max-width:1100px){.toc{display:none}}
 @media(max-width:860px){
@@ -205,7 +200,6 @@ table.api td code{white-space:nowrap}
   <div class="content">
     <article class="article" id="article">
 
-      <!-- ===================== COMENZAR ===================== -->
       <section class="doc" id="introduccion" data-cat="Comenzar" data-title="Introducción">
         <p class="eyebrow">Comenzar</p>
         <h1>El framework Artify</h1>
@@ -279,7 +273,6 @@ cp .env.example .env
         <div class="callout warn"><span class="t">Seguridad.</span> En producción mantén <code>ALLOW_QUERY_EXECUTION=false</code>. <code>APP_DEBUG</code> es una variable opcional que el código lee: si no se define, los errores quedan ocultos por defecto. Ver <a class="xref" href="#seguridad">Seguridad</a>.</div>
       </section>
 
-      <!-- ===================== NÚCLEO ===================== -->
       <section class="doc" id="enrutado" data-cat="Núcleo" data-title="Enrutado">
         <p class="eyebrow">Núcleo</p>
         <h1>Enrutado</h1>
@@ -370,7 +363,6 @@ cp .env.example .env
         <div class="callout warn"><span class="t">Escapa siempre la salida.</span> Al imprimir valores de usuario en una vista, usa el escape de <code>Security</code> para evitar XSS. Ver <a class="xref" href="#seguridad">Seguridad</a>.</div>
       </section>
 
-      <!-- ===================== DATOS ===================== -->
       <section class="doc" id="queryfy" data-cat="Datos" data-title="Queryfy">
         <p class="eyebrow">Datos</p>
         <h1>Queryfy · constructor de consultas</h1>
@@ -418,7 +410,6 @@ cp .env.example .env
         <div class="callout tip"><span class="t">Por completar.</span> Documenta aquí el resto de la API del CRUD (validaciones, acciones por fila, cargas de archivos) a medida que la confirmes contra el código, para que un mantenedor futuro tenga la referencia completa.</div>
       </section>
 
-      <!-- ===================== SEGURIDAD ===================== -->
       <section class="doc" id="autenticacion" data-cat="Seguridad" data-title="Sesión y autenticación">
         <p class="eyebrow">Seguridad</p>
         <h1>Sesión y autenticación</h1>
@@ -485,7 +476,6 @@ ALLOW_QUERY_EXECUTION=<span class="tok-s">false</span></code></pre>
         <div class="callout warn"><span class="t">CORS.</span> No uses comodín <code>*</code> con credenciales: mantén la lista blanca de orígenes permitidos.</div>
       </section>
 
-      <!-- ===================== HERRAMIENTAS ===================== -->
       <section class="doc" id="arco" data-cat="Herramientas" data-title="Consola arco">
         <p class="eyebrow">Herramientas</p>
         <h1>Consola arco</h1>
@@ -527,7 +517,6 @@ php arco list
   </div>
 </div>
 
-<!-- Search modal -->
 <div class="overlay" id="overlay">
   <div class="searchbox" role="dialog" aria-label="Buscar">
     <div class="field">
@@ -545,10 +534,8 @@ php arco list
   const $ = s => document.querySelector(s);
   const sections = Array.from(document.querySelectorAll('section.doc'));
 
-  // ----- Category order for the sidebar -----
   const CAT_ORDER = ['Comenzar','Núcleo','Datos','Seguridad','Herramientas'];
 
-  // ----- Build sidebar -----
   const sidebar = $('#sidebar');
   const byCat = {};
   sections.forEach(s => {
@@ -567,14 +554,12 @@ php arco list
   });
   const navLinks = Array.from(sidebar.querySelectorAll('a'));
 
-  // ----- Build search index -----
   const index = sections.map(s => {
     const clone = s.cloneNode(true);
     const text = clone.textContent.replace(/\s+/g,' ').trim();
     return { id:s.id, title:s.dataset.title, cat:s.dataset.cat, text };
   });
 
-  // ----- Scrollspy (sidebar + TOC) -----
   const tocList = $('#tocList');
   function buildToc(section){
     tocList.innerHTML = '';
@@ -603,7 +588,6 @@ php arco list
   sections.forEach(s => spy.observe(s));
   buildToc(sections[0]);
 
-  // TOC sub-heading highlight
   const heads = Array.from(document.querySelectorAll('.article h2[id], .article h3[id]'));
   const headSpy = new IntersectionObserver(entries => {
     entries.forEach(e => {
@@ -615,7 +599,6 @@ php arco list
   }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
   heads.forEach(h => headSpy.observe(h));
 
-  // ----- Search modal -----
   const overlay = $('#overlay'), input = $('#searchInput'), results = $('#results');
   let cursor = -1, hits = [];
 
@@ -689,16 +672,13 @@ php arco list
   $('#searchOpen').addEventListener('click', openSearch);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
 
-  // Mac vs others hint
   if (!/Mac|iPhone|iPad/.test(navigator.platform)) $('#kbdHint').textContent = 'Ctrl K';
 
-  // ----- Mobile sidebar -----
   const scrim = $('#scrim');
   $('#menuToggle').addEventListener('click', () => { sidebar.classList.toggle('open'); scrim.classList.toggle('open'); });
   scrim.addEventListener('click', () => { sidebar.classList.remove('open'); scrim.classList.remove('open'); });
   navLinks.forEach(a => a.addEventListener('click', () => { sidebar.classList.remove('open'); scrim.classList.remove('open'); }));
 
-  // ----- Theme toggle (in-memory) -----
   $('#themeToggle').addEventListener('click', () => {
     const html = document.documentElement;
     html.dataset.theme = html.dataset.theme === 'dark' ? 'light' : 'dark';
