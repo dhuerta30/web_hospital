@@ -225,10 +225,6 @@ class Queryfy
         }
     }
 
-    /**
-     * Connect to sql server database based on the connection parameter.
-     *
-     */
     private function connectSQLServer()
     {
 
@@ -241,9 +237,6 @@ class Queryfy
         }
     }
 
-    /**
-     * Commits result to the database, if there is no rollback
-     */
     public function commitTransaction()
     {
         try {
@@ -256,13 +249,6 @@ class Queryfy
         }
     }
 
-    /**
-     * Insert new records in a table using associative array. Instead of writing long insert queries, you needs to pass
-     * array of keys(columns) and values(insert values). This function will automatically create query for you and inserts data.
-     * @param   string   $dbTableName              The name of the table to insert new records.
-     * @param   array    $insertData               Associative array with key as column name and values as column value.
-     *
-     */
     public function insert($dbTableName, $insertData)
     {
 
@@ -291,53 +277,6 @@ class Queryfy
         }
     }
 
-
-    public function send_email_public($to, $from, $file = null, $subject = null, $message = '', $html = true)
-    {
-        //self::sendMail($subject, $to, $message, "sales@xcrud.com", $file);
-
-        require_once(dirname(__FILE__) . "/library/mailer/src/Exception.php");
-        require_once(dirname(__FILE__) . "/library/mailer/src/PHPMailer.php");
-        require_once(dirname(__FILE__) . "/library/mailer/src/SMTP.php");
-
-        define("HOST", PDOModel::$mail_host);
-        define("PORT", PDOModel::$mail_port);
-        define("SMTPAUTH", PDOModel::$smtp_auth);
-        define("USERNAME", PDOModel::$username);
-        define("PASSWORD", PDOModel::$password);
-        define("SMTPSECURE", PDOModel::$smtpsecure);
-
-        $mail = new PHPMailer(true);
-        //Server settings
-        $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = "smtp.gmail.com";                     //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                //Enable SMTP authentication
-        $mail->Username   = "daniel.telematico@gmail.com";                    //SMTP username
-        $mail->Password   = "zdkbgrxsnjmyyzrj";                            //SMTP password
-        $mail->SMTPSecure = "tls";            //Enable implicit TLS encryption
-        $mail->Port       = 587;                                  //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-        $mail->CharSet = 'UTF-8';
-        //Recipients
-        $mail->setFrom($from, 'Procedimiento');
-        $mail->addAddress($to, "");
-        //$mail->addAttachment($file, $file);
-
-        //Content
-        $mail->isHTML(true);                                  //Set email format to HTML
-        $mail->Subject = $subject;
-        $mail->Body    = $message;
-
-        $mail->Send();
-        return $mail;
-    }
-
-    /**
-     * Insert batch of new records in a table using associative array. Instead of writing long insert queries, you needs to pass
-     * array of keys(columns) and values(insert values). This function will automatically create query for you and inserts data.
-     * @param   string   $dbTableName              The name of the table to insert new records.
-     * @param   array    $insertBatchData               Array of Associative array with key as column name and values as column value.
-     *
-     */
     public function insertBatch($dbTableName, $insertBatchData)
     {
 

@@ -137,6 +137,10 @@ class Security
             return;
         }
 
+        if (!empty($_ENV['APP_NAME'])) {
+            session_name(preg_replace('/[^A-Za-z0-9_]/', '', $_ENV['APP_NAME']));
+        }
+
         ini_set('session.use_strict_mode', '1');
         ini_set('session.use_only_cookies', '1');
         ini_set('session.cookie_httponly', '1');

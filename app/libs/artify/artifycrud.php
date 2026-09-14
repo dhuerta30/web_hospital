@@ -5,7 +5,7 @@ require_once dirname(__DIR__, 3) . "/vendor/autoload.php";
 $dotenv = DotenvVault\DotenvVault::createImmutable(dirname(__DIR__, 3));
 $dotenv->safeLoad();
 
-@session_name($_ENV["APP_NAME"]);
+\App\core\Security::configurarCookieSesion();
 @session_start();
 /*enable this for development purpose */
 //ini_set('display_startup_errors', 1);
@@ -28,40 +28,43 @@ if (isset($_REQUEST["artify_instance"])) {
 
 function buscador_tabla($data, $obj, $columnDB = array()) {
     $queryfy = $obj->getQueryfyObj();
-    $tabla = $obj->getLangData("tabla");
+    $tabla   = $obj->getLangData("tabla");
 
     $columnNames = $queryfy->columnNames($tabla);
- 
-    $whereClause = "";
- 
-    if(isset($data["action"]) && $data["action"] == "search"){
-        if (isset($data['search_col']) && isset($data['search_text'])) {
-                $search_col = $data['search_col'];
-                $search_text = $data['search_text'];
-             
-                $search_col = preg_replace('/[^a-zA-Z0-9_]/', '', $search_col);
-                $search_text = htmlspecialchars($search_text, ENT_QUOTES, 'UTF-8');
-             
-            if ($search_text !== '') { 
-                if ($search_col !== 'all') {
-                    $whereClause = "WHERE $search_col LIKE '%$search_text%'";
-                } else {
-                    $whereConditions = [];
-                    foreach ($columnNames as $columnName) {
-                        $whereConditions[] = "$columnName LIKE '%$search_text%'";
-                    }
-                    $whereClause = "WHERE " . implode(" OR ", $whereConditions);
+
+    if (isset($data["action"]) && $data["action"] == "search"
+        && isset($data['search_col'], $data['search_text'])) {
+
+        $search_col  = $data['search_col'];
+        $search_text = (string) $data['search_text'];
+
+        if ($search_text !== '') {
+            $like    = '%' . $search_text . '%';
+            $params  = [];
+            $where   = '';
+
+            if ($search_col !== 'all') {
+                if (!in_array($search_col, $columnNames, true)) {
+                    return $data;
                 }
+                $where = "WHERE `$search_col` LIKE :busq";
+                $params['busq'] = $like;
+            } else {
+                $conds = [];
+                foreach ($columnNames as $i => $columnName) {
+                    $ph = "busq$i";
+                    $conds[]      = "`$columnName` LIKE :$ph";
+                    $params[$ph]  = $like;
+                }
+                $where = "WHERE " . implode(" OR ", $conds);
             }
- 
-            $query = "SELECT id as ID, name as Name 
-            FROM $tabla
-            $whereClause";
- 
-            $obj->setQuery($query);
+
+            $query = "SELECT id AS ID, name AS Name FROM `$tabla` $where";
+
+            $obj->setQuery($query, $params);
         }
     }
- 
+
     return $data;
 }
 
