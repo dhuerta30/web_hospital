@@ -218,7 +218,7 @@ table.api td code{white-space:nowrap}
           <li><b>Artify CRUD</b> — generador de grillas: tablas, formularios, validación y cargas.</li>
           <li><b>ArtifyStencil</b> — motor de plantillas para las vistas.</li>
           <li><b>Security</b> — capa central de seguridad (cabeceras, sesión, CSRF, cargas).</li>
-          <li><b>arco</b> — consola de línea de comandos para generar controladores y modelos.</li>
+          <li><b>arco</b> — consola de línea de comandos para generar controladores, modelos, vistas, tablas, CRUD y más.</li>
         </ul>
         <h2 id="intro-stack">Stack y dependencias</h2>
         <p>PHP 8.x, PDO (MySQL/MariaDB), Composer para autoload y dependencias, y un front-end sobre Bootstrap. El desarrollo local usa Laragon; el despliegue es en cPanel/Linux.</p>
@@ -267,12 +267,16 @@ cp .env.example .env
         <p>El <code>.env</code> centraliza configuración y credenciales. Nunca se sube al control de versiones ni queda accesible desde el navegador.</p>
         <table class="api">
           <tr><th>Clave</th><th>Descripción</th></tr>
-          <tr><td><code>BASE_URL</code></td><td>URL base de la aplicación, usada para redirecciones y assets.</td></tr>
-          <tr><td><code>APP_DEBUG</code></td><td><code>true</code> en desarrollo; <code>false</code> en producción (oculta errores).</td></tr>
-          <tr><td><code>ENABLE_JWTAUTH</code></td><td>Activa la autenticación por token en la API REST.</td></tr>
+          <tr><td><code>APP_NAME</code></td><td>Nombre de la aplicación (se usa, entre otros, como nombre de la sesión).</td></tr>
+          <tr><td><code>BASE_URL</code> / <code>DOMINIO</code></td><td>URL base y dominio del sitio; usados en redirecciones y verificación de origen.</td></tr>
+          <tr><td><code>DB_HOST</code>, <code>DB_NAME</code>, <code>DB_USER</code>, <code>DB_PASS</code></td><td>Conexión a la base de datos.</td></tr>
+          <tr><td><code>ENABLE_JWTAUTH</code></td><td>Activa la autenticación por token JWT en la API.</td></tr>
           <tr><td><code>ALLOW_QUERY_EXECUTION</code></td><td>Debe ser <code>false</code>: desactiva el modo de SQL crudo en la API.</td></tr>
+          <tr><td><code>ALLOW_ORIGIN_HEADER</code></td><td>Orígenes permitidos para CORS (lista blanca).</td></tr>
+          <tr><td><code>UPLOAD_FOLDER</code> / <code>UPLOAD_URL</code></td><td>Ruta y URL del directorio de cargas.</td></tr>
+          <tr><td><code>ENABLE_CACHE</code> / <code>ENABLE_LOGS</code></td><td>Interruptores de caché de plantillas y de registro de eventos.</td></tr>
         </table>
-        <div class="callout warn"><span class="t">Seguridad.</span> En producción define <code>APP_DEBUG=false</code> y <code>ALLOW_QUERY_EXECUTION=false</code>. Ver <a class="xref" href="#seguridad">Seguridad</a>.</div>
+        <div class="callout warn"><span class="t">Seguridad.</span> En producción mantén <code>ALLOW_QUERY_EXECUTION=false</code>. <code>APP_DEBUG</code> es una variable opcional que el código lee: si no se define, los errores quedan ocultos por defecto. Ver <a class="xref" href="#seguridad">Seguridad</a>.</div>
       </section>
 
       <!-- ===================== NÚCLEO ===================== -->
@@ -281,21 +285,30 @@ cp .env.example .env
         <h1>Enrutado</h1>
         <p>Las rutas se declaran en <code>index.php</code> sobre una instancia de <code>ArtifyRouter</code>. Cada ruta asocia un verbo HTTP y un patrón de URL a un método de controlador.</p>
         <h2 id="rt-boot">index.php</h2>
-        <pre><code><span class="tok-k">require</span> <span class="tok-s">'vendor/autoload.php'</span>;
+        <pre><code><span class="tok-k">require</span>(<span class="tok-s">'vendor/autoload.php'</span>);
+<span class="tok-v">$dotenv</span> = <span class="tok-f">DotenvVault\DotenvVault</span>::<span class="tok-f">createImmutable</span>(__DIR__);
+<span class="tok-v">$dotenv</span>-&gt;<span class="tok-f">safeLoad</span>();
 
-<span class="tok-k">use</span> <span class="tok-f">App\core\Security</span>;
 <span class="tok-k">use</span> <span class="tok-f">App\core\ArtifyRouter</span>;
+<span class="tok-k">use</span> <span class="tok-f">App\core\Request</span>;
+<span class="tok-k">use</span> <span class="tok-f">App\core\Security</span>;
 
 <span class="tok-f">Security</span>::<span class="tok-f">boot</span>();            <span class="tok-c">// cabeceras, cookies, errores</span>
 
 <span class="tok-v">$router</span> = <span class="tok-k">new</span> <span class="tok-f">ArtifyRouter</span>();
-<span class="tok-v">$router</span>-&gt;<span class="tok-f">get</span>(<span class="tok-s">'modulos'</span>, [<span class="tok-f">HomeController</span>::<span class="tok-k">class</span>, <span class="tok-s">'modulos'</span>]);
-<span class="tok-v">$router</span>-&gt;<span class="tok-f">post</span>(<span class="tok-s">'login'</span>,   [<span class="tok-f">LoginController</span>::<span class="tok-k">class</span>, <span class="tok-s">'index'</span>]);
-<span class="tok-v">$router</span>-&gt;<span class="tok-f">run</span>();</code></pre>
+
+<span class="tok-c">// Ruta = patrón de URL  -&gt;  'Controlador@método'</span>
+<span class="tok-v">$router</span>-&gt;<span class="tok-f">get</span>(<span class="tok-s">'/'</span>,        <span class="tok-s">'WebController@index'</span>);
+<span class="tok-v">$router</span>-&gt;<span class="tok-f">get</span>(<span class="tok-s">'/login'</span>,   <span class="tok-s">'LoginController@index'</span>);
+<span class="tok-v">$router</span>-&gt;<span class="tok-f">get</span>(<span class="tok-s">'/modulos'</span>, <span class="tok-s">'HomeController@modulos'</span>);
+<span class="tok-v">$router</span>-&gt;<span class="tok-f">post</span>(<span class="tok-s">'/Restp/insertar'</span>, <span class="tok-s">'RestpController@insertar'</span>);
+
+<span class="tok-v">$request</span> = <span class="tok-k">new</span> <span class="tok-f">Request</span>();
+<span class="tok-v">$router</span>-&gt;<span class="tok-f">dispatch</span>(<span class="tok-v">$request</span>);</code></pre>
         <h2 id="rt-params">Parámetros de ruta</h2>
         <p>Los segmentos dinámicos se capturan y llegan como argumentos del método.</p>
-        <pre><code><span class="tok-v">$router</span>-&gt;<span class="tok-f">get</span>(<span class="tok-s">'usuario/{id}'</span>, [<span class="tok-f">UserController</span>::<span class="tok-k">class</span>, <span class="tok-s">'show'</span>]);
-<span class="tok-c">// public function show($id) { ... }</span></code></pre>
+        <pre><code><span class="tok-v">$router</span>-&gt;<span class="tok-f">get</span>(<span class="tok-s">'/noticia/{titulo}'</span>, <span class="tok-s">'WebController@noticia'</span>);
+<span class="tok-c">// public function noticia($titulo) { ... }</span></code></pre>
         <div class="callout tip"><span class="t">Despliegue en subcarpeta.</span> Si el sitio no está en la raíz del dominio, ajusta <code>BASE_URL</code> y el <code>mod_rewrite</code>; ver <a class="xref" href="#despliegue">Despliegue</a>.</div>
       </section>
 
@@ -343,7 +356,7 @@ cp .env.example .env
         <span class="tok-k">return</span> <span class="tok-v">$q</span>-&gt;<span class="tok-f">select</span>(<span class="tok-s">'usuario'</span>);
     }
 }</code></pre>
-        <p>Genera el esqueleto con <code>php arco MakeModel UserModel</code>.</p>
+        <p>Genera el esqueleto con la consola <a class="xref" href="#arco">arco</a> (consulta <code>php arco list</code> para el nombre exacto del comando).</p>
       </section>
 
       <section class="doc" id="stencil" data-cat="Núcleo" data-title="ArtifyStencil (vistas)">
@@ -456,10 +469,17 @@ cp .env.example .env
       <section class="doc" id="api" data-cat="Seguridad" data-title="API REST y JWT">
         <p class="eyebrow">Seguridad</p>
         <h1>API REST y JWT</h1>
-        <p>El framework expone una API REST por recurso (<code>api/{tabla}</code>) protegida con autenticación JWT y CORS por lista blanca de orígenes. El <code>RestpController</code> consume esos recursos para listar, insertar, actualizar y eliminar.</p>
+        <p>El framework expone una API REST bajo el prefijo <code>/Restp</code>, protegida con token JWT y CORS por lista blanca de orígenes. El <code>RestpController</code> resuelve las operaciones de listar, insertar, actualizar y eliminar.</p>
         <h2 id="api-modo-query">Restricción del modo query</h2>
         <p>La API incluye una operación capaz de ejecutar SQL crudo, gobernada por <code>ALLOW_QUERY_EXECUTION</code>. En producción debe permanecer en <code>false</code>: el sitio opera por recurso y no necesita SQL arbitrario.</p>
-        <pre><code><span class="tok-c"># .env</span>
+        <pre><code><span class="tok-c"># Rutas de la API (declaradas en index.php)</span>
+POST /Restp/generarToken
+GET  /Restp/listar/{tabla}/{token}
+POST /Restp/insertar
+POST /Restp/actualizar
+POST /Restp/eliminar
+
+<span class="tok-c"># .env</span>
 ENABLE_JWTAUTH=<span class="tok-s">true</span>
 ALLOW_QUERY_EXECUTION=<span class="tok-s">false</span></code></pre>
         <div class="callout warn"><span class="t">CORS.</span> No uses comodín <code>*</code> con credenciales: mantén la lista blanca de orígenes permitidos.</div>
@@ -469,12 +489,14 @@ ALLOW_QUERY_EXECUTION=<span class="tok-s">false</span></code></pre>
       <section class="doc" id="arco" data-cat="Herramientas" data-title="Consola arco">
         <p class="eyebrow">Herramientas</p>
         <h1>Consola arco</h1>
-        <p><code>arco</code> es la consola de línea de comandos del framework (equivalente a Artisan). Genera el esqueleto de controladores y modelos para no escribirlos a mano.</p>
-        <pre><code><span class="tok-c"># crea app/Controllers/ReportesController.php</span>
-php arco MakeController ReportesController
+        <p><code>arco</code> es la consola de línea de comandos del framework (basada en Symfony Console). Incluye generadores de controladores, modelos, vistas, tablas, controladores CRUD, plantillas CRUD, middleware y migraciones de base de datos.</p>
+        <pre><code><span class="tok-c"># ver todos los comandos disponibles y su sintaxis exacta</span>
+php arco list
 
-<span class="tok-c"># crea app/Models/ReporteModel.php</span>
-php arco MakeModel ReporteModel</code></pre>
+<span class="tok-c"># generadores incluidos (nombres exactos: ver 'php arco list'):</span>
+<span class="tok-c">#   controladores, modelos y vistas</span>
+<span class="tok-c">#   crear / eliminar tablas, CRUD y plantillas CRUD</span>
+<span class="tok-c">#   middleware y migraciones de base de datos</span></code></pre>
         <div class="callout tip"><span class="t">Extiende arco.</span> Documenta aquí cada comando nuevo que agregues, para que un mantenedor futuro conozca el catálogo completo.</div>
       </section>
 
@@ -489,7 +511,7 @@ php arco MakeModel ReporteModel</code></pre>
         <h2 id="dep-checklist">Checklist antes de publicar</h2>
         <ol>
           <li>Ejecuta <code>php -l</code> sobre los archivos modificados y prueba el login en local.</li>
-          <li>Define <code>APP_DEBUG=false</code> y <code>ALLOW_QUERY_EXECUTION=false</code> en el <code>.env</code>.</li>
+          <li>Mantén <code>ALLOW_QUERY_EXECUTION=false</code> en el <code>.env</code> (y, opcionalmente, <code>APP_DEBUG=false</code>).</li>
           <li>Borra del webroot cualquier dump <code>.sql</code>, <code>error_log</code> o archivo de prueba.</li>
           <li>Verifica el TLS (objetivo A/A-) y confirma las cabeceras con la herramienta del área de ciberseguridad.</li>
         </ol>
