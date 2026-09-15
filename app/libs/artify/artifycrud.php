@@ -26,48 +26,6 @@ if (isset($_REQUEST["artify_instance"])) {
     $fomplusajax->handleRequest();
 }
 
-function buscador_tabla($data, $obj, $columnDB = array()) {
-    $queryfy = $obj->getQueryfyObj();
-    $tabla   = $obj->getLangData("tabla");
-
-    $columnNames = $queryfy->columnNames($tabla);
-
-    if (isset($data["action"]) && $data["action"] == "search"
-        && isset($data['search_col'], $data['search_text'])) {
-
-        $search_col  = $data['search_col'];
-        $search_text = (string) $data['search_text'];
-
-        if ($search_text !== '') {
-            $like    = '%' . $search_text . '%';
-            $params  = [];
-            $where   = '';
-
-            if ($search_col !== 'all') {
-                if (!in_array($search_col, $columnNames, true)) {
-                    return $data;
-                }
-                $where = "WHERE `$search_col` LIKE :busq";
-                $params['busq'] = $like;
-            } else {
-                $conds = [];
-                foreach ($columnNames as $i => $columnName) {
-                    $ph = "busq$i";
-                    $conds[]      = "`$columnName` LIKE :$ph";
-                    $params[$ph]  = $like;
-                }
-                $where = "WHERE " . implode(" OR ", $conds);
-            }
-
-            $query = "SELECT id AS ID, name AS Name FROM `$tabla` $where";
-
-            $obj->setQuery($query, $params);
-        }
-    }
-
-    return $data;
-}
-
 function format_sql_col_tabla($data, $obj, $columnDB = array()) {
     $queryfy = $obj->getQueryfyObj();
     $tabla = $obj->getLangData("tabla");
@@ -150,13 +108,12 @@ function carga_masiva_nmedicos_insertar($data, $obj){
         $error_msg = array("message" => "", "error" => "No se ha subido ningún Archivo", "redirectionurl" => "");
         die(json_encode($error_msg));
     } else {
-        if ($extension != "xlsx") { /* comprobamos si la extensión del archivo es diferente de excel */
-            //unlink(__DIR__ . "/uploads/".$archivo); /* eliminamos el archivo que se subió */
+        if ($extension != "xlsx") {
             $error_msg = array("message" => "", "error" => "El Archivo Subido no es un Archivo Excel Válido", "redirectionurl" => "");
             die(json_encode($error_msg));
         } else {
 
-            $records = $queryfy->excelToArray("uploads/".$archivo); /* Acá capturamos el nombre del archivo excel a importar */
+            $records = $queryfy->excelToArray("uploads/".$archivo);
 
             $sql = array();
             foreach ($records as $Excelval) {
@@ -231,43 +188,41 @@ function actualizar_notificar_paciente($data, $obj){
 }
 
 function formatTableColCallBack($data, $obj){
-    // Definir la nueva columna y su valor
     $newColumns = [
         'Imprimir' => [
-            'colname' => 'Imprimir', // Nombre visible de la columna
-            'tooltip' => '', // Tooltip, si es necesario
-            'attr' => '', // Atributos adicionales, si es necesario
-            'sort' => '', // Indicar si la columna es ordenable
-            'col' => 'imprimir', // Nombre interno de la columna
-            'type' => 'text', // Tipo de columna
+            'colname' => 'Imprimir',
+            'tooltip' => '',
+            'attr' => '',
+            'sort' => '',
+            'col' => 'imprimir',
+            'type' => 'text',
         ],
         'resultados' => [
-            'colname' => 'Resultados', // Nombre visible de la columna
-            'tooltip' => '', // Tooltip, si es necesario
-            'attr' => '', // Atributos adicionales, si es necesario
-            'sort' => '', // Indicar si la columna es ordenable
-            'col' => 'resultados', // Nombre interno de la columna
-            'type' => 'text', // Tipo de columna
+            'colname' => 'Resultados',
+            'tooltip' => '',
+            'attr' => '',
+            'sort' => '',
+            'col' => 'resultados',
+            'type' => 'text',
         ],
         'traza' => [
-            'colname' => 'Traza', // Nombre visible de la columna
-            'tooltip' => '', // Tooltip, si es necesario
-            'attr' => '', // Atributos adicionales, si es necesario
-            'sort' => '', // Indicar si la columna es ordenable
-            'col' => 'traza', // Nombre interno de la columna
-            'type' => 'text', // Tipo de columna
+            'colname' => 'Traza',
+            'tooltip' => '',
+            'attr' => '',
+            'sort' => '',
+            'col' => 'traza',
+            'type' => 'text',
         ],
         'edicion' => [
-            'colname' => 'Edición', // Nombre visible de la columna
-            'tooltip' => '', // Tooltip, si es necesario
-            'attr' => '', // Atributos adicionales, si es necesario
-            'sort' => '', // Indicar si la columna es ordenable
-            'col' => 'edicion', // Nombre interno de la columna
-            'type' => 'text', // Tipo de columna
+            'colname' => 'Edición',
+            'tooltip' => '',
+            'attr' => '',
+            'sort' => '',
+            'col' => 'edicion',
+            'type' => 'text',
         ]
     ];
 
-    // Agregar las nuevas columnas al array $data
     foreach ($newColumns as $key => $column) {
         $data[$key] = $column;
     }
@@ -281,7 +236,6 @@ function actualizar_solicitudesapa($data, $obj){
 }  
 
 function formatTableDataCallBack($data, $obj){
-        // Definir los nombres y valores de las nuevas columnas
         $newColumns = [
         'Imprimir' => function($row){
             return '<a class="btn btn-light btn-sm ver_solicitudes" href="javascript:;" title="Imprimir" data-id="'.$row['Idsolicitud'].'">
@@ -314,14 +268,11 @@ function formatTableDataCallBack($data, $obj){
         }
     ];
 
-    // Iterar sobre cada fila de datos y agregar las nuevas columnas
     foreach ($data as &$row) {
         foreach ($newColumns as $colName => $value) {
             if (is_callable($value)) {
-                // Si el valor es una función, llámala con la fila actual
                 $row[$colName] = $value($row);
             } else {
-                // Si el valor no es una función, asígnalo directamente
                 $row[$colName] = $value;
             }
         }
@@ -354,8 +305,7 @@ function actualizar_resultados($data, $obj){
     if ($fecharesultadoDateTime) {
         $fecharesultadoMysql = $fecharesultadoDateTime->format('Y-m-d H:i:s');
     } else {
-        // Manejar el error si la fecha no tiene el formato esperado
-        $fecharesultadoMysql = null; // O puedes elegir otro valor por defecto
+        $fecharesultadoMysql = null;
     }
 
     if ($critico == 'si') {
@@ -388,44 +338,6 @@ function actualizar_resultados($data, $obj){
     return $data;
 }
 
-
-function search_table($data, $obj) {
-    if (isset($data["action"]) && $data["action"] == "search") {
-        if (isset($data['search_col']) && isset($data['search_text'])) {
-            $search_col = $data['search_col'];
-            $search_text = $data['search_text'];
-
-            // Limpiar condiciones previas
-            $obj->clearWhereConditions();
-
-            // Si se busca por 'all', aplicar condiciones a todas las columnas relevantes
-            if ($search_col == 'all') {
-                $obj->where("Idsolicitud", "%$search_text%", "LIKE", "OR")
-                    ->where("fechatoma", "%$search_text%", "LIKE", "OR")
-                    ->where("rut", "%$search_text%", "LIKE", "OR")
-                    ->where("CONCAT(nombres, ' ', apaterno, ' ', amaterno)", "%$search_text%", "LIKE", "OR")
-                    ->where("tipomuestra", "%$search_text%", "LIKE", "OR")
-                    ->where("servicio", "%$search_text%", "LIKE", "OR")
-                    ->where("dgclinico", "%$search_text%", "LIKE", "OR")
-                    ->where("organo", "%$search_text%", "LIKE", "OR")
-                    ->where("nmedico", "%$search_text%", "LIKE", "OR")
-                    ->where("centroderivacion", "%$search_text%", "LIKE", "OR")
-                    ->where("estado", "%$search_text%", "LIKE");
-                    
-            } else {
-                // Aplicar condición en la columna específica
-                if ($search_col == 'nombres') {
-                    $obj->where("CONCAT(nombres, ' ', apaterno, ' ', amaterno)", "%$search_text%", "LIKE");
-                } else {
-                    $obj->where($search_col, "%$search_text%", "LIKE");
-                }
-            }
-        }
-    }
-    return $data;
-}
-
-
 function beforeTableDataCallBackCriticos($data, $obj){
     if(isset($data['search_col']) && $data['search_col'] == 'all'){
         $obj->setSearchOperator("LIKE");
@@ -433,7 +345,6 @@ function beforeTableDataCallBackCriticos($data, $obj){
         if (isset($data['search_text'])) {
             $date = DateTime::createFromFormat('d-m-Y H:i:s', $data['search_text']);
 
-            // Si se ha logrado convertir a una fecha válida
             if ($date) {
                 $data['search_text'] = $date->format('Y-m-d H:i:s');
             }
@@ -585,14 +496,14 @@ function carga_masiva_prestaciones_insertar($data, $obj){
         $error_msg = array("message" => "", "error" => "No se ha subido ningún Archivo", "redirectionurl" => "");
         die(json_encode($error_msg));
     } else {
-        if ($extension != "xlsx") { /* comprobamos si la extensión del archivo es diferente de excel */
-            unlink(__DIR__ . "/uploads/".$archivo); /* eliminamos el archivo que se subió */
+        if ($extension != "xlsx") {
+            unlink(__DIR__ . "/uploads/".$archivo);
             $error_msg = array("message" => "", "error" => "El Archivo Subido no es un Archivo Excel Válido", "redirectionurl" => "");
             die(json_encode($error_msg));
 
         } else {
 
-            $records = $queryfy->excelToArray("uploads/".$archivo); /* Acá capturamos el nombre del archivo excel a importar */
+            $records = $queryfy->excelToArray("uploads/".$archivo);
 
             $sql = array();
             foreach ($records as $Excelval) {
@@ -656,15 +567,6 @@ function insertar_procedimientos($data, $obj){
 }
 
 function eliminar_detalle_solicitud($data, $obj){
-    /*$id = $data["id"];
-    
-    $queryfy = $obj->getQueryfyObj();
-    $queryfy->where("id_detalle_de_solicitud", $id);
-    $result = $queryfy->select("detalle_de_solicitud");
-    
-    $id_datos_paciente = $result[0]["id_datos_paciente"];
-    $queryfy->where("id_datos_paciente", $id_datos_paciente);
-    $queryfy->delete("diagnostico_antecedentes_paciente");*/
     return $data;
 }
 
@@ -672,42 +574,6 @@ function before_sql_data_estat($data, $obj){
     //print_r($data);
     return $data;
 }
-
-/*function editar_procedimientos($data, $obj){
-    $id_datos_paciente = $data['datos_paciente']['id_datos_paciente'];
-    $estado = $data["detalle_de_solicitud"]["estado"];
-    $fecha = $data["detalle_de_solicitud"]["fecha"];
-    $fecha_solicitud = $data["detalle_de_solicitud"]["fecha_solicitud"];
-    $fundamento = $data['diagnostico_antecedentes_paciente']['fundamento'];
-    $adjuntar = $data['diagnostico_antecedentes_paciente']['adjuntar'];
-    $id_detalle_de_solicitud = $data["detalle_de_solicitud"]["id_detalle_de_solicitud"];
-    $id_diagnostico_antecedentes_paciente = $data["diagnostico_antecedentes_paciente"]["id_diagnostico_antecedentes_paciente"];
- 
-    $queryfy = $obj->getQueryfyObj();
-    $queryfy->where("id_detalle_de_solicitud", $id_detalle_de_solicitud, "=");
-    $data_detalle = $queryfy->select("detalle_de_solicitud");
-   
-    $queryfy->where("id_diagnostico_antecedentes_paciente", $id_diagnostico_antecedentes_paciente, "=");
-    $data_diagnostico = $queryfy->select("diagnostico_antecedentes_paciente");
-    
-    if($data_detalle && $data_diagnostico){
-        $queryfy->where("id_detalle_de_solicitud", $id_detalle_de_solicitud, "=", "AND");
-        $queryfy->update("detalle_de_solicitud", array("fecha" => $fecha, "estado" => $estado));
-
-        $queryfy->where("id_diagnostico_antecedentes_paciente", $id_diagnostico_antecedentes_paciente);
-        $queryfy->update("diagnostico_antecedentes_paciente", array("fundamento" => $fundamento, "adjuntar" => basename($adjuntar)));
-
-        $success = array("message" => "Operación realizada con éxito", "error" => [], "redirectionurl" => "");
-        die(json_encode($success));
-    }
-
-    $newdata = array();
-    $newdata['datos_paciente']['id_datos_paciente'] = $id_datos_paciente;
-    $newdata['diagnostico_antecedentes_paciente']['estado'] = $estado;
-    $newdata['diagnostico_antecedentes_paciente']['diagnostico'] = $data['diagnostico_antecedentes_paciente']['diagnostico'];
-
-    return $newdata;
-}*/
 
 function editar_procedimientos($data, $obj){
     $id_datos_paciente = $data["datos_paciente"]["id_datos_paciente"];
@@ -723,18 +589,15 @@ function editar_procedimientos($data, $obj){
     $queryfy->joinTables("detalle_de_solicitud", "detalle_de_solicitud.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
     $queryfy->joinTables("diagnostico_antecedentes_paciente", "diagnostico_antecedentes_paciente.id_datos_paciente = datos_paciente.id_datos_paciente", "INNER JOIN");
 
-    // Filtrar por ID y Fecha
     $queryfy->where("datos_paciente.id_datos_paciente", $id_datos_paciente);
     $queryfy->where("detalle_de_solicitud.fecha_solicitud", $fecha_solicitud);
 
-    // Condiciones para verificar si los valores son diferentes
     $queryfy->where("detalle_de_solicitud.estado", $estado, "=");
     $queryfy->where("detalle_de_solicitud.fecha", $fecha, "=");
     $queryfy->where("diagnostico_antecedentes_paciente.diagnostico", $diagnostico, "=");
     $queryfy->where("diagnostico_antecedentes_paciente.fundamento", $fundamento, "=");
     $queryfy->where("diagnostico_antecedentes_paciente.adjuntar", $adjuntar, "=");
 
-     // Seleccionar para verificar si existen registros con condiciones diferentes
     $result = $queryfy->select("datos_paciente");
     
     if ($result) {
@@ -868,17 +731,14 @@ function actualizar_configuracion_api($data, $obj){
 }
 
 function limpiarTexto($texto) {
-    // Reemplazar espacios con guiones bajos
     $texto = str_replace(' ', '_', $texto);
 
-    // Eliminar acentos
     $texto = strtr($texto, [
         'á' => 'a', 'é' => 'e', 'í' => 'i', 'ó' => 'o', 'ú' => 'u',
         'Á' => 'A', 'É' => 'E', 'Í' => 'I', 'Ó' => 'O', 'Ú' => 'U',
         'ñ' => 'n', 'Ñ' => 'N'
     ]);
     
-    // Eliminar cualquier carácter no alfanumérico (opcional)
     $texto = preg_replace('/[^A-Za-z0-9_]/', '', $texto);
     
     return $texto;
@@ -887,23 +747,19 @@ function limpiarTexto($texto) {
 function deleteRouteFromFile($controller_name, $name_view) {
     $fileName = "app/core/extra_routes.php";
     $filePath = __DIR__ . '/../../../' . $fileName;
-    
-    // Verificar si el archivo existe antes de proceder
+
     if (!file_exists($filePath)) {
         echo "El archivo $fileName no existe.";
         return;
     }
 
-    // Leer el contenido del archivo línea por línea
     $lines = file($filePath);
     $phpCode = "\$router->get('/{$controller_name}', '{$controller_name}Controller@{$name_view}');";
 
-    // Filtrar las líneas para excluir la que contiene la ruta que queremos eliminar
     $updatedLines = array_filter($lines, function ($line) use ($phpCode) {
         return trim($line) !== $phpCode;
     });
 
-    // Guardar el contenido actualizado en el archivo
     if (count($lines) !== count($updatedLines)) {
         file_put_contents($filePath, implode("", $updatedLines));
         echo "La ruta ha sido eliminada.";
